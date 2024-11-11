@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"module": "NodeNext",
+		"target": "ESNext",
+		"moduleResolution": "NodeNext",
+		"esModuleInterop": true,
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"skipLibCheck": true,
+		"declaration": true,
+		"removeComments": true,
+		"incremental": true,
+		"resolveJsonModule": true,
+		"declarationMap": true
+	}
+}
