@@ -6,15 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "biome check --write ./src",
+    "lint:unsafe": "biome check --write --unsafe ./src"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
     "@ant-design/nextjs-registry": "^1.0.2",
+    "@ant-design/plots": "^2.3.2",
     "antd": "^5.22.3",
+    "clsx": "^2.1.1",
     "next": "14.2.20",
+    "next-intl": "^3.26.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "recharts": "^2.14.1",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@types/node": "^20",

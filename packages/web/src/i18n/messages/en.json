@@ -1,0 +1,90 @@
+{
+	"Common": {
+		"loading": "Loading...",
+		"error": "Error!",
+		"save": "Save",
+		"cancel": "Cancel",
+		"delete": "Delete",
+		"edit": "Edit",
+		"add": "Add",
+		"deleteConfirmation": "Are you sure you want to delete this item?",
+		"yes": "Yes",
+		"no": "No"
+	},
+	"Navbar": {
+		"dashboard": "Dashboard",
+		"settings": "Settings",
+		"logout": "Logout"
+	},
+	"Dashboard": {
+		"title": "Okane Personal Finance Dashboard",
+		"totalBalance": "Total Balance",
+		"monthlyIncome": "Monthly Income",
+		"monthlyExpenses": "Monthly Expenses",
+		"savingsRate": "Savings Rate",
+		"spendingHistory": "Spending History",
+		"spendingByCategory": "Spending by Category",
+		"savingsGoalsProgress": "Savings Goals Progress",
+		"recentTransactions": "Recent Transactions",
+		"addTransaction": "Add Transaction",
+		"addNewTransaction": "Add New Transaction",
+		"date": "Date",
+		"dateRequired": "Please select a date!",
+		"description": "Description",
+		"descriptionRequired": "Please input a description!",
+		"amount": "Amount",
+		"amountRequired": "Please input an amount!",
+		"category": "Category",
+		"categoryRequired": "Please select a category!",
+		"food": "Food",
+		"utilities": "Utilities",
+		"entertainment": "Entertainment",
+		"other": "Other"
+	},
+	"SpendingHistoryChart": {
+		"week": "Week",
+		"month": "Month",
+		"year": "Year",
+		"tenYears": "10 Years"
+	},
+	"SpendingCategoryChart": {
+		"week": "Week",
+		"month": "Month",
+		"year": "Year",
+		"tenYears": "10 Years"
+	},
+	"SavingsGoalsProgress": {
+		"emergencyFund": "Emergency Fund",
+		"vacation": "Vacation",
+		"newCar": "New Car"
+	},
+	"Login": {
+		"title": "Login",
+		"username": "Username",
+		"password": "Password",
+		"loginButton": "Log in",
+		"usernameRequired": "Please input your Username!",
+		"passwordRequired": "Please input your Password!",
+		"loginSuccess": "Login successful!",
+		"noAccount": "Don't have an account?",
+		"registerNow": "Register now!"
+	},
+	"Register": {
+		"title": "Register",
+		"username": "Username",
+		"email": "Email",
+		"password": "Password",
+		"confirmPassword": "Confirm Password",
+		"registerButton": "Register",
+		"usernameRequired": "Please input your username!",
+		"emailRequired": "Please input your E-mail!",
+		"invalidEmail": "The input is not valid E-mail!",
+		"passwordRequired": "Please input your password!",
+		"passwordMin": "Password must be at least 6 characters long",
+		"confirmPasswordRequired": "Please confirm your password!",
+		"passwordsDoNotMatch": "The two passwords that you entered do not match!",
+		"registrationSuccess": "Registration successful!",
+		"haveAccount": "Already have an account?",
+		"loginNow": "Login now!"
+	}
+}
