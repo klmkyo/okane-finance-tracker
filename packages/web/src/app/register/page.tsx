@@ -7,6 +7,8 @@ import Link from 'next/link'
 import React from 'react'
 
 interface RegisterFormValues {
+	firstName: string
+	lastName: string
 	username: string
 	email: string
 	password: string
@@ -32,6 +34,34 @@ export default function RegisterPage() {
 					layout="vertical"
 					scrollToFirstError
 				>
+					<div className="flex items-stretch gap-4">
+						<Form.Item
+							name="firstName"
+							className="flex-1"
+							rules={[
+								{
+									required: true,
+									message: t('firstNameRequired'),
+									whitespace: true,
+								},
+							]}
+						>
+							<Input placeholder={t('firstName')} />
+						</Form.Item>
+						<Form.Item
+							name="lastName"
+							className="flex-1"
+							rules={[
+								{
+									required: true,
+									message: t('lastNameRequired'),
+									whitespace: true,
+								},
+							]}
+						>
+							<Input placeholder={t('lastName')} />
+						</Form.Item>
+					</div>
 					<Form.Item
 						name="username"
 						rules={[

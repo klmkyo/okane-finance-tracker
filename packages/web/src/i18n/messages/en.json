@@ -85,6 +85,8 @@
 		"passwordsDoNotMatch": "The two passwords that you entered do not match!",
 		"registrationSuccess": "Registration successful!",
 		"haveAccount": "Already have an account?",
-		"loginNow": "Login now!"
+		"loginNow": "Login now!",
+		"firstName": "First Name",
+		"lastName": "Last Name"
 	}
 }
