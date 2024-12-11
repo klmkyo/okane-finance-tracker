@@ -87,6 +87,10 @@
 		"haveAccount": "Already have an account?",
 		"loginNow": "Login now!",
 		"firstName": "First Name",
-		"lastName": "Last Name"
+		"lastName": "Last Name",
+		"firstNameRequired": "Please input your first name!",
+		"lastNameRequired": "Please input your last name!",
+		"registrationFailed": "Registration failed: {reason}",
+		"unknownError": "Unknown error occurred"
 	}
 }

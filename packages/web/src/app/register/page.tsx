@@ -1,9 +1,11 @@
 'use client'
 
+import { ApiException, api } from '@/common/api/api'
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, message } from 'antd'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 interface RegisterFormValues {
@@ -18,10 +20,21 @@ interface RegisterFormValues {
 export default function RegisterPage() {
 	const [form] = Form.useForm()
 	const t = useTranslations('Register')
+	const router = useRouter()
 
-	const onFinish = (values: RegisterFormValues) => {
-		console.log('Success:', values)
-		message.success(t('registrationSuccess'))
+	const onFinish = async (values: RegisterFormValues) => {
+		try {
+			await api.post('/auth/register', values)
+			message.success(t('registrationSuccess'))
+			form.resetFields()
+			router.push('/login')
+		} catch (error) {
+			if (error instanceof ApiException) {
+				message.error(t('registrationFailed', { reason: error.message }))
+			} else {
+				message.error(t('registrationFailed', { reason: t('unknownError') }))
+			}
+		}
 	}
 
 	return (
@@ -88,7 +101,7 @@ export default function RegisterPage() {
 						rules={[
 							{ required: true, message: t('passwordRequired') },
 							{
-								min: 6,
+								min: 8,
 								message: t('passwordMin'),
 							},
 						]}
