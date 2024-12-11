@@ -1,35 +1,56 @@
 'use client'
 
+import { useLogout } from '@/common/hooks/useLogout'
+import { useUser } from '@/common/hooks/useUser'
 import { LogoutOutlined, SettingOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Menu } from 'antd'
+import { Button, Dropdown, Menu, Modal } from 'antd'
+import { ItemType } from 'antd/es/menu/interface'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
-
-const user = {
-	name: 'Jan Kowalski',
-	email: 'jan@example.com',
-	avatar: '/avatar.png',
-}
+import React, { useMemo, useCallback } from 'react'
 
 const Navbar: React.FC = () => {
-	const t = useTranslations('Navbar')
+	const t = useTranslations()
+	const { user } = useUser()
+	const logout = useLogout()
 
-	const items = useMemo(
+	const handleLogout = useCallback(async () => {
+		Modal.confirm({
+			title: t('Navbar.logout'),
+			content: t('Navbar.logoutConfirmation'),
+			okText: t('Common.yes'),
+			cancelText: t('Common.no'),
+			onOk: async () => {
+				const modal = Modal.info({
+					title: t('Navbar.logout'),
+					content: t('Navbar.loading'),
+					okButtonProps: { disabled: true },
+				})
+				try {
+					await logout.mutateAsync()
+				} finally {
+					modal.destroy()
+				}
+			},
+		})
+	}, [t, logout])
+
+	const items: ItemType[] = useMemo(
 		() => [
 			{
 				key: 'settings',
 				icon: <SettingOutlined />,
-				label: t('settings'),
+				label: t('Navbar.settings'),
 			},
 			{
 				key: 'logout',
 				icon: <LogoutOutlined />,
-				label: t('logout'),
+				label: t('Navbar.logout'),
+				onClick: handleLogout,
 			},
 		],
-		[t],
+		[t, handleLogout],
 	)
 
 	return (
@@ -44,8 +65,10 @@ const Navbar: React.FC = () => {
 
 					<div className="flex items-center">
 						<div className="text-right mr-4 hidden sm:block">
-							<p className="text-sm font-medium text-gray-700">{user.name}</p>
-							<p className="text-xs text-gray-500">{user.email}</p>
+							<p className="text-sm font-medium text-gray-700">
+								{user?.firstName}
+							</p>
+							<p className="text-xs text-gray-500">{user?.email}</p>
 						</div>
 
 						<Dropdown
@@ -60,8 +83,8 @@ const Navbar: React.FC = () => {
 									className="size-10 rounded-full"
 									width={40}
 									height={40}
-									src={user.avatar}
-									alt={user.name}
+									src={''}
+									alt={user?.firstName ?? ''}
 								/>
 							</Button>
 						</Dropdown>

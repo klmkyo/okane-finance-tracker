@@ -2,6 +2,7 @@
 
 import { ApiException, api } from '@/common/api/api'
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
+import { useMutation } from '@tanstack/react-query'
 import { Button, Card, Form, Input, message } from 'antd'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -22,19 +23,22 @@ export default function RegisterPage() {
 	const t = useTranslations('Register')
 	const router = useRouter()
 
-	const onFinish = async (values: RegisterFormValues) => {
-		try {
-			await api.post('/auth/register', values)
+	const mutation = useMutation({
+		mutationFn: async (values: RegisterFormValues) => {
+			return api.post('/auth/register', values)
+		},
+		onSuccess: () => {
 			message.success(t('registrationSuccess'))
 			form.resetFields()
 			router.push('/login')
-		} catch (error) {
-			if (error instanceof ApiException) {
-				message.error(t('registrationFailed', { reason: error.message }))
-			} else {
-				message.error(t('registrationFailed', { reason: t('unknownError') }))
-			}
-		}
+		},
+		onError: (error) => {
+			message.error(t('registrationFailed', { reason: error.message }))
+		},
+	})
+
+	const onFinish = (values: RegisterFormValues) => {
+		mutation.mutate(values)
 	}
 
 	return (

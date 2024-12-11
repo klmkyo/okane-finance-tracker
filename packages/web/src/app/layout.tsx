@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
+import { GlobalEventsProvider } from '@/common/providers/globalEventsProvider'
+import { ReactQueryProvider } from '@/common/providers/reactQueryProvider'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
@@ -34,13 +36,17 @@ export default async function RootLayout({
 
 	return (
 		<NextIntlClientProvider messages={messages}>
-			<html lang="en">
-				<body
-					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-				>
-					<AntdRegistry>{children}</AntdRegistry>
-				</body>
-			</html>
+			<ReactQueryProvider>
+				<GlobalEventsProvider />
+
+				<html lang="en">
+					<body
+						className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+					>
+						<AntdRegistry>{children}</AntdRegistry>
+					</body>
+				</html>
+			</ReactQueryProvider>
 		</NextIntlClientProvider>
 	)
 }

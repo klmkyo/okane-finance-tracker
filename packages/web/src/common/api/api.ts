@@ -1,4 +1,5 @@
 import { env } from '@/env'
+import { EStorageItem } from '../constants/storageItem'
 
 export class ApiException extends Error {
 	constructor(
@@ -34,10 +35,14 @@ export class ApiClient {
 	): Promise<ApiResponse<T>> {
 		const fullUrl = `${this.rootEndpoint}${path}`
 
+		let token = localStorage.getItem(EStorageItem.USER_TOKEN)
+		token = token ? JSON.parse(token) : null
+
 		const defaultOptions: RequestInit = {
 			...options,
 			headers: {
 				Accept: 'application/json',
+				...(token ? { Authorization: `Bearer ${token}` } : {}),
 				...(options?.sendRaw ? {} : { 'Content-Type': 'application/json' }),
 				...options?.headers,
 			},

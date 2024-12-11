@@ -1,23 +1,59 @@
 'use client'
 
+import { api } from '@/common/api/api'
+import { useAuthToken } from '@/common/hooks/useAuthToken'
+import { useUser } from '@/common/hooks/useUser'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, Form, Input, message } from 'antd'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
+import { useEffectOnceWhen } from 'rooks'
 
 interface LoginFormValues {
 	username: string
 	password: string
 }
 
+interface LoginResponse {
+	token: string
+}
+
 export default function LoginPage() {
-	const [form] = Form.useForm()
 	const t = useTranslations('Login')
+	const router = useRouter()
+	const queryClient = useQueryClient()
+	const { isAuthenticated } = useUser()
+
+	useEffectOnceWhen(() => {
+		router.push('/dashboard')
+		message.info(t('alreadyLoggedIn'))
+	}, isAuthenticated)
+
+	const [form] = Form.useForm()
+
+	const [, setToken] = useAuthToken()
+
+	const mutation = useMutation({
+		mutationFn: async (values: LoginFormValues) => {
+			return (await api.post<LoginResponse>('/auth/login', values)).data
+		},
+		onSuccess: async ({ token }) => {
+			setToken(token)
+			await queryClient.invalidateQueries()
+			message.success(t('loginSuccess'))
+			form.resetFields()
+			router.push('/dashboard')
+		},
+		onError: (error) => {
+			message.error(t('loginFailed', { reason: error.message }))
+		},
+	})
 
 	const onFinish = (values: LoginFormValues) => {
-		console.log('Success:', values)
-		message.success(t('loginSuccess'))
+		mutation.mutate(values)
 	}
 
 	return (

@@ -9,12 +9,17 @@
 		"add": "Add",
 		"deleteConfirmation": "Are you sure you want to delete this item?",
 		"yes": "Yes",
-		"no": "No"
+		"no": "No",
+		"errorOccurred": "Something went wrong",
+		"retry": "Please try again later"
 	},
 	"Navbar": {
 		"dashboard": "Dashboard",
 		"settings": "Settings",
-		"logout": "Logout"
+		"logout": "Logout",
+		"logoutConfirmation": "Are you sure you want to log out?",
+		"logoutLoading": "Logging out...",
+		"logoutSuccess": "You have been logged out successfully"
 	},
 	"Dashboard": {
 		"title": "Okane Personal Finance Dashboard",
@@ -40,6 +45,10 @@
 		"utilities": "Utilities",
 		"entertainment": "Entertainment",
 		"other": "Other"
+	},
+	"DashboardLayout": {
+		"notAuthenticated": "Please log in to view this page",
+		"login": "Log in"
 	},
 	"SpendingHistoryChart": {
 		"week": "Week",
@@ -67,7 +76,10 @@
 		"passwordRequired": "Please input your Password!",
 		"loginSuccess": "Login successful!",
 		"noAccount": "Don't have an account?",
-		"registerNow": "Register now!"
+		"registerNow": "Register now!",
+		"loginFailed": "Login failed: {reason}",
+		"unknownError": "Unknown error occurred",
+		"alreadyLoggedIn": "You are already logged in"
 	},
 	"Register": {
 		"title": "Register",

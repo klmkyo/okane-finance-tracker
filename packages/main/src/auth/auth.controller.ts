@@ -14,6 +14,13 @@ export class AuthController {
 		return this.authService.login(req.user)
 	}
 
+	// TODO this is broken
+	@UseGuards(LocalAuthGuard)
+	@Post('logout')
+	async logout(@Request() req) {
+		return req.logout()
+	}
+
 	@Post('register')
 	register(@Body() registerDto: RegisterDto) {
 		return this.authService.register(registerDto)
