@@ -15,6 +15,13 @@
       "when": 1733332884828,
       "tag": "0001_make_username_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1733932056146,
+      "tag": "0002_user_email_name",
+      "breakpoints": true
     }
   ]
 }

@@ -6,6 +6,7 @@ import { Database, UserSelect } from 'database/schema'
 import { DB } from 'src/common/constants'
 import { UsersService } from 'src/users/users.service'
 import { LoginDto } from './dto/user-login.dto'
+import { RegisterDto } from './dto/user-register.dto'
 
 @Injectable()
 export class AuthService {
@@ -22,11 +23,8 @@ export class AuthService {
 		}
 	}
 
-	async register(loginDto: LoginDto) {
-		return await this.usersService.register(
-			loginDto.username,
-			loginDto.password,
-		)
+	async register(registerDto: RegisterDto) {
+		return await this.usersService.register(registerDto)
 	}
 
 	async validate(username: string, password: string) {

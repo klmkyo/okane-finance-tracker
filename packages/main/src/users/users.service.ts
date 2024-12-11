@@ -5,8 +5,8 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-import { Database, User } from 'database/schema'
-import { eq } from 'drizzle-orm'
+import { Database, User, UserInsert } from 'database/schema'
+import { eq, InferSelectModel } from 'drizzle-orm'
 import { assert } from 'src/common/assert'
 import { DB } from 'src/common/constants'
 
@@ -35,12 +35,15 @@ export class UsersService {
 		return user
 	}
 
-	async register(username: string, password: string) {
-		const hash = await bcrypt.hash(password, 10)
+	async register(userInsert: UserInsert) {
+		const hash = await bcrypt.hash(userInsert.password, 10)
 		try {
 			const [user] = await this.db
 				.insert(User)
-				.values({ username, password: hash })
+				.values({
+					...userInsert,
+					password: hash,
+				})
 				.returning()
 			const { password, ...publicUser } = user
 			return publicUser

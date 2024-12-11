@@ -16,6 +16,9 @@ import {
 export const User = pgTable('users', {
 	id: serial().primaryKey(),
 	username: varchar().unique().notNull(),
+	email: varchar().unique().notNull(),
+	firstName: varchar().notNull(),
+	lastName: varchar(),
 	password: varchar().notNull(),
 	updatedAt: timestamp(),
 	createdAt: timestamp().defaultNow().notNull(),
