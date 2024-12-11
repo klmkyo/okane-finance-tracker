@@ -30,7 +30,7 @@ export default function RegisterPage() {
 		onSuccess: () => {
 			message.success(t('registrationSuccess'))
 			form.resetFields()
-			router.push('/login')
+			router.push('/')
 		},
 		onError: (error) => {
 			message.error(t('registrationFailed', { reason: error.message }))
@@ -42,8 +42,8 @@ export default function RegisterPage() {
 	}
 
 	return (
-		<div className="flex justify-center items-center min-h-screen bg-gray-100">
-			<Card title={t('title')} className="w-full max-w-md">
+		<div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500">
+			<Card title={t('title')} className="w-full max-w-md drop-shadow">
 				<Form
 					form={form}
 					name="register"
@@ -138,14 +138,19 @@ export default function RegisterPage() {
 						/>
 					</Form.Item>
 					<Form.Item>
-						<Button type="primary" htmlType="submit" className="w-full">
+						<Button
+							type="primary"
+							htmlType="submit"
+							className="w-full"
+							loading={mutation.isPending}
+						>
 							{t('registerButton')}
 						</Button>
 					</Form.Item>
 				</Form>
 				<div className="text-center mt-4">
 					{t('haveAccount')}{' '}
-					<Link href="/login" className="text-blue-500 hover:underline">
+					<Link href="/" className="text-blue-500 hover:underline">
 						{t('loginNow')}
 					</Link>
 				</div>

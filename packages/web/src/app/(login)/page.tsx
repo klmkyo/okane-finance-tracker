@@ -25,16 +25,7 @@ export default function LoginPage() {
 	const t = useTranslations('Login')
 	const router = useRouter()
 	const queryClient = useQueryClient()
-	const { isAuthenticated } = useUser()
-
-	useEffectOnceWhen(() => {
-		router.push('/dashboard')
-		message.info(t('alreadyLoggedIn'))
-	}, isAuthenticated)
-
-	const [form] = Form.useForm()
-
-	const [, setToken] = useAuthToken()
+	const { isAuthenticated, isFetched } = useUser()
 
 	const mutation = useMutation({
 		mutationFn: async (values: LoginFormValues) => {
@@ -52,13 +43,24 @@ export default function LoginPage() {
 		},
 	})
 
+	useEffectOnceWhen(() => {
+		if (isAuthenticated) {
+			router.push('/dashboard')
+			message.info(t('alreadyLoggedIn'))
+		}
+	}, isFetched)
+
+	const [form] = Form.useForm()
+
+	const [, setToken] = useAuthToken()
+
 	const onFinish = (values: LoginFormValues) => {
 		mutation.mutate(values)
 	}
 
 	return (
-		<div className="flex justify-center items-center min-h-screen bg-gray-100">
-			<Card title={t('title')} className="w-full max-w-md">
+		<div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500">
+			<Card title={t('title')} className="w-full max-w-md drop-shadow">
 				<Form
 					form={form}
 					name="login"
@@ -82,7 +84,12 @@ export default function LoginPage() {
 						/>
 					</Form.Item>
 					<Form.Item>
-						<Button type="primary" htmlType="submit" className="w-full">
+						<Button
+							type="primary"
+							htmlType="submit"
+							className="w-full"
+							loading={mutation.isPending}
+						>
 							{t('loginButton')}
 						</Button>
 					</Form.Item>

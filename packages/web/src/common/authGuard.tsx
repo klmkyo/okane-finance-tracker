@@ -23,7 +23,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 				<h1 className="font-semibold tracking-wide text-lg">
 					{t('DashboardLayout.notAuthenticated')}
 				</h1>
-				<Link href="/login">
+				<Link href="/">
 					<Button type="primary" size="large">
 						{t('DashboardLayout.login')}
 					</Button>
