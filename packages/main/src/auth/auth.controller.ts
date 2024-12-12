@@ -6,23 +6,28 @@ import { RegisterDto } from './dto/user-register.dto'
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly authService: AuthService) {}
+	private authService: AuthService
+	constructor(authService: AuthService) {
+		this.authService=authService
+	}
 
 	@Post('login')
 	@UseGuards(LocalAuthGuard)
-	login(@Request() req: any) {
+	private login(@Request() req: any) {
 		return this.authService.login(req.user)
 	}
 
-	// TODO this is broken
+	
+
+	@Post('register')
+	private register(@Body() registerDto: RegisterDto) {
+		return this.authService.register(registerDto)
+	}
+
+// TODO this is broken
 	@UseGuards(LocalAuthGuard)
 	@Post('logout')
 	async logout(@Request() req) {
 		return req.logout()
-	}
-
-	@Post('register')
-	register(@Body() registerDto: RegisterDto) {
-		return this.authService.register(registerDto)
 	}
 }

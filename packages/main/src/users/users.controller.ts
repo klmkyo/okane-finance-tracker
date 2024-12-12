@@ -6,7 +6,10 @@ import { UsersService } from './users.service'
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
-	constructor(private readonly usersService: UsersService) {}
+	private usersService:UsersService
+	constructor(usersService: UsersService) {
+		this.usersService=usersService
+	}
 
 	@Get('me')
 	async getMe(@UserId() userId: number) {

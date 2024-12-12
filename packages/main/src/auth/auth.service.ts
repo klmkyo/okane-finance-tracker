@@ -10,11 +10,18 @@ import { RegisterDto } from './dto/user-register.dto'
 
 @Injectable()
 export class AuthService {
+		private db: Database
+		private jwtService: JwtService
+		private usersService: UsersService
 	constructor(
-		private jwtService: JwtService,
-		private usersService: UsersService,
-		@Inject(DB) private db: Database,
-	) {}
+		jwtService: JwtService,
+		usersService: UsersService,
+		@Inject(DB) db: Database,
+	) {
+		this.jwtService=jwtService;
+		this.usersService=usersService;
+		this.db=db;	
+	}
 
 	async login(user: UserSelect) {
 		const payload = { sub: user.id }

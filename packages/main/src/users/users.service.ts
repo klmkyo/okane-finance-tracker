@@ -12,25 +12,14 @@ import { DB } from 'src/common/constants'
 
 @Injectable()
 export class UsersService {
-	constructor(@Inject(DB) private db: Database) {}
+	private db:Database
+	constructor(@Inject(DB) db: Database) {
+		this.db=db
+	}
 
 	async getById(userId: number) {
 		const [user] = await this.db.select().from(User).where(eq(User.id, userId))
 		assert(user, 'user_not_found')
-
-		return user
-	}
-
-	async validate(username: string, password: string) {
-		const [user] = await this.db
-			.select()
-			.from(User)
-			.where(eq(User.username, username))
-
-		if (!user) throw new UnauthorizedException()
-
-		const isMatch = await bcrypt.compare(password, user.password)
-		if (!isMatch) throw new UnauthorizedException()
 
 		return user
 	}
@@ -50,5 +39,19 @@ export class UsersService {
 		} catch {
 			throw new ConflictException('username_exists')
 		}
+	}
+
+	async validate(username: string, password: string) {
+		const [user] = await this.db
+			.select()
+			.from(User)
+			.where(eq(User.username, username))
+
+		if (!user) throw new UnauthorizedException()
+
+		const isMatch = await bcrypt.compare(password, user.password)
+		if (!isMatch) throw new UnauthorizedException()
+
+		return user
 	}
 }

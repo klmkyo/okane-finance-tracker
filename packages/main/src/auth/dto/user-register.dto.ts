@@ -7,23 +7,19 @@ import {
 } from 'class-validator'
 
 export class RegisterDto {
+	@IsEmail()
+	private email: string
 	@IsString()
-	@MinLength(4)
-	@MaxLength(32)
-	username: string
-
+	private firstName: string
+	@IsString()
+	@IsOptional()
+	private lastName: string
 	@IsString()
 	@MinLength(8)
 	@MaxLength(372)
-	password: string
-
-	@IsEmail()
-	email: string
-
+	private password: string
 	@IsString()
-	firstName: string
-
-	@IsString()
-	@IsOptional()
-	lastName: string
+	@MinLength(4)
+	@MaxLength(32)
+	private username: string
 }
