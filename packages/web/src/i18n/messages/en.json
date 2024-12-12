@@ -11,7 +11,16 @@
 		"yes": "Yes",
 		"no": "No",
 		"errorOccurred": "Something went wrong",
-		"retry": "Please try again later"
+		"retry": "Please try again later",
+		"enterAmount": "Enter amount",
+		"selectInterval": "Select interval",
+		"amount": "Amount",
+		"title": "Title",
+		"interval": "Interval",
+		"nextDate": "Next Date",
+		"startDate": "Start Date",
+		"startDateRequired": "Please input a start date!",
+		"enterTitle": "Enter title"
 	},
 	"Navbar": {
 		"dashboard": "Dashboard",
@@ -19,7 +28,8 @@
 		"logout": "Logout",
 		"logoutConfirmation": "Are you sure you want to log out?",
 		"logoutLoading": "Logging out...",
-		"logoutSuccess": "You have been logged out successfully"
+		"logoutSuccess": "You have been logged out successfully",
+		"appName": "Okane"
 	},
 	"Dashboard": {
 		"title": "Okane Personal Finance Dashboard",
@@ -54,7 +64,8 @@
 		"week": "Week",
 		"month": "Month",
 		"year": "Year",
-		"tenYears": "10 Years"
+		"tenYears": "10 Years",
+		"amount": "Amount"
 	},
 	"SpendingCategoryChart": {
 		"week": "Week",
@@ -104,5 +115,39 @@
 		"lastNameRequired": "Please input your last name!",
 		"registrationFailed": "Registration failed: {reason}",
 		"unknownError": "Unknown error occurred"
+	},
+	"AccountSwitcher": {
+		"selectAccount": "Select Account",
+		"addAccount": "Add Account",
+		"addNewAccount": "Add New Account",
+		"accountName": "Account Name",
+		"accountNameRequired": "Please enter account name",
+		"currency": "Currency",
+		"currencyRequired": "Please select currency",
+		"selectCurrency": "Select Currency"
+	},
+	"FinanceDashboard": {
+		"enterDescription": "Enter description",
+		"enterAmount": "Enter amount",
+		"selectCategory": "Select category"
+	},
+	"RecurringTransactions": {
+		"recurringTransactions": "Recurring Transactions",
+		"addRecurringTransaction": "Add Recurring Transaction",
+		"addNewRecurringTransaction": "Add New Recurring Transaction",
+		"title": "Title",
+		"titleRequired": "Please input a title!",
+		"amountRequired": "Please input an amount!",
+		"intervalRequired": "Please select an interval!",
+		"enterAmount": "Enter amount",
+		"enterTitle": "Enter title",
+		"interval": "Interval",
+		"startDate": "Start Date",
+		"startDateRequired": "Please input a start date!",
+		"daily": "Daily",
+		"weekly": "Weekly",
+		"monthly": "Monthly",
+		"yearly": "Yearly",
+		"nextDate": "Next Date"
 	}
 }

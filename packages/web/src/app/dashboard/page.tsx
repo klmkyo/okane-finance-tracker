@@ -1,10 +1,12 @@
-import React from 'react'
-import { FinanceDashboard } from './components/FinanceDashboard'
+'use client'
 
-export default function DashboardPage() {
+import React from 'react'
+import { AccountSwitcher } from './components/AccountSwitcher'
+
+export default function DashboardIndexPage() {
 	return (
-		<div className="min-h-screen bg-gray-100">
-			<FinanceDashboard />
+		<div className="min-h-screen bg-gray-100 flex items-center justify-center">
+			<AccountSwitcher />
 		</div>
 	)
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { PlusOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
 import {
 	Button,
 	Card,
@@ -30,10 +31,30 @@ interface Transaction {
 	category: string
 }
 
-export const FinanceDashboard: React.FC = () => {
+interface FinanceDashboardProps {
+	accountId: string
+}
+
+export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
+	accountId,
+}) => {
 	const [isModalVisible, setIsModalVisible] = useState(false)
 	const [form] = Form.useForm()
 	const t = useTranslations('Dashboard')
+
+	const { data: accountData } = useQuery({
+		queryKey: ['account', accountId],
+		queryFn: async () => {
+			// Return mock data
+			return {
+				totalBalance: 5000,
+				monthlyIncome: 3000,
+				monthlyExpenses: 2000,
+				savingsRate: 33.33,
+				// ...existing data...
+			}
+		},
+	})
 
 	const showModal = () => {
 		setIsModalVisible(true)
@@ -107,7 +128,7 @@ export const FinanceDashboard: React.FC = () => {
 					<Card>
 						<Statistic
 							title={t('totalBalance')}
-							value={5000}
+							value={accountData?.totalBalance || 0}
 							prefix="$"
 							precision={2}
 						/>
@@ -115,7 +136,7 @@ export const FinanceDashboard: React.FC = () => {
 					<Card>
 						<Statistic
 							title={t('monthlyIncome')}
-							value={3000}
+							value={accountData?.monthlyIncome || 0}
 							prefix="$"
 							precision={2}
 						/>
@@ -123,7 +144,7 @@ export const FinanceDashboard: React.FC = () => {
 					<Card>
 						<Statistic
 							title={t('monthlyExpenses')}
-							value={2000}
+							value={accountData?.monthlyExpenses || 0}
 							prefix="$"
 							precision={2}
 						/>
@@ -131,7 +152,7 @@ export const FinanceDashboard: React.FC = () => {
 					<Card>
 						<Statistic
 							title={t('savingsRate')}
-							value={33.33}
+							value={accountData?.savingsRate || 0}
 							suffix="%"
 							precision={2}
 						/>
@@ -140,16 +161,16 @@ export const FinanceDashboard: React.FC = () => {
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 					<Card title={t('spendingHistory')}>
-						<SpendingHistoryChart />
+						<SpendingHistoryChart accountId={accountId} />
 					</Card>
 					<Card title={t('spendingByCategory')}>
-						<SpendingCategoryChart />
+						<SpendingCategoryChart accountId={accountId} />
 					</Card>
 				</div>
 
 				<div className="mt-6">
 					<Card title={t('savingsGoalsProgress')}>
-						<SavingsGoalsProgress />
+						<SavingsGoalsProgress accountId={accountId} />
 					</Card>
 				</div>
 

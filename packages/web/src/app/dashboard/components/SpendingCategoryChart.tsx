@@ -1,5 +1,6 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import { Radio } from 'antd'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
@@ -23,36 +24,46 @@ const COLORS = [
 
 type TimeRange = 'week' | 'month' | 'year' | 'tenYears'
 
-export const SpendingCategoryChart: React.FC = () => {
+export const SpendingCategoryChart: React.FC<{ accountId: string }> = ({
+	accountId,
+}) => {
 	const [timeRange, setTimeRange] = useState<TimeRange>('week')
 	const t = useTranslations('SpendingCategoryChart')
 
-	const data = {
-		week: [
-			{ category: 'Food', value: 300 },
-			{ category: 'Utilities', value: 200 },
-			{ category: 'Entertainment', value: 150 },
-			{ category: 'Other', value: 100 },
-		],
-		month: [
-			{ category: 'Food', value: 1200 },
-			{ category: 'Utilities', value: 800 },
-			{ category: 'Entertainment', value: 600 },
-			{ category: 'Other', value: 400 },
-		],
-		year: [
-			{ category: 'Food', value: 14400 },
-			{ category: 'Utilities', value: 9600 },
-			{ category: 'Entertainment', value: 7200 },
-			{ category: 'Other', value: 4800 },
-		],
-		tenYears: [
-			{ category: 'Food', value: 144000 },
-			{ category: 'Utilities', value: 96000 },
-			{ category: 'Entertainment', value: 72000 },
-			{ category: 'Other', value: 48000 },
-		],
-	}
+	const { data } = useQuery({
+		queryKey: ['spendingCategories', accountId],
+		queryFn: async () => {
+			// Return mock data
+			return {
+				week: [
+					{ category: 'Food', value: 300 },
+					{ category: 'Utilities', value: 200 },
+					{ category: 'Entertainment', value: 150 },
+					{ category: 'Other', value: 100 },
+				],
+				month: [
+					{ category: 'Food', value: 1200 },
+					{ category: 'Utilities', value: 800 },
+					{ category: 'Entertainment', value: 600 },
+					{ category: 'Other', value: 400 },
+				],
+				year: [
+					{ category: 'Food', value: 14400 },
+					{ category: 'Utilities', value: 9600 },
+					{ category: 'Entertainment', value: 7200 },
+					{ category: 'Other', value: 4800 },
+				],
+				tenYears: [
+					{ category: 'Food', value: 144000 },
+					{ category: 'Utilities', value: 96000 },
+					{ category: 'Entertainment', value: 72000 },
+					{ category: 'Other', value: 48000 },
+				],
+			}
+		},
+	})
+
+	const chartData = data ? data[timeRange] : []
 
 	return (
 		<div className="bg-white p-4 rounded">
@@ -71,7 +82,7 @@ export const SpendingCategoryChart: React.FC = () => {
 			<ResponsiveContainer width="100%" height={400}>
 				<PieChart>
 					<Pie
-						data={data[timeRange]}
+						data={chartData}
 						dataKey="value"
 						nameKey="category"
 						cx="50%"
@@ -82,7 +93,7 @@ export const SpendingCategoryChart: React.FC = () => {
 							`${category} ${(percent * 100).toFixed(0)}%`
 						}
 					>
-						{data[timeRange].map((entry, index) => (
+						{chartData.map((entry, index) => (
 							<Cell
 								key={`cell-${index}`}
 								fill={COLORS[index % COLORS.length]}

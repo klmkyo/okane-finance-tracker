@@ -12,9 +12,10 @@ import { ItemType } from 'antd/es/menu/interface'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import React, { useMemo, useCallback } from 'react'
+import { AccountSwitcher } from './components/AccountSwitcher'
 
 const Navbar: React.FC = () => {
-	const t = useTranslations()
+	const t = useTranslations('Navbar')
 	const { user } = useUser()
 	const logout = useLogout()
 
@@ -61,10 +62,10 @@ const Navbar: React.FC = () => {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex justify-between h-16">
 					<div className="shrink-0 flex items-center text-3xl font-medium text-blue-600 font-pacifico select-none">
-						Okane
+						{t('appName')}
 					</div>
-
-					<div className="flex items-center">
+					<div className="flex items-center space-x-4">
+						<AccountSwitcher />
 						<Dropdown
 							menu={{ items }}
 							placement="bottomRight"
