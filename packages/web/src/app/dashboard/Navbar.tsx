@@ -2,11 +2,14 @@
 
 import { useLogout } from '@/common/hooks/useLogout'
 import { useUser } from '@/common/hooks/useUser'
-import { LogoutOutlined, SettingOutlined } from '@ant-design/icons'
+import {
+	EllipsisOutlined,
+	LogoutOutlined,
+	SettingOutlined,
+} from '@ant-design/icons'
 import { Button, Dropdown, Menu, Modal } from 'antd'
 import { ItemType } from 'antd/es/menu/interface'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import Link from 'next/link'
 import React, { useMemo, useCallback } from 'react'
 
@@ -57,36 +60,30 @@ const Navbar: React.FC = () => {
 		<nav className="sticky top-0 z-50 bg-white shadow">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex justify-between h-16">
-					<div className="flex-shrink-0 flex items-center">
-						<Link href="/" className="text-xl font-bold text-blue-600">
-							Okane
-						</Link>
+					<div className="shrink-0 flex items-center text-3xl font-medium text-blue-600 font-pacifico select-none">
+						Okane
 					</div>
 
 					<div className="flex items-center">
-						<div className="text-right mr-4 hidden sm:block">
-							<p className="text-sm font-medium text-gray-700">
-								{user?.firstName}
-							</p>
-							<p className="text-xs text-gray-500">{user?.email}</p>
-						</div>
-
 						<Dropdown
-							menu={{
-								items,
-							}}
+							menu={{ items }}
 							placement="bottomRight"
 							trigger={['click']}
 						>
-							<Button type="text" className="flex items-center size-10 p-0">
-								<Image
-									className="size-10 rounded-full"
-									width={40}
-									height={40}
-									src={''}
-									alt={user?.firstName ?? ''}
-								/>
-							</Button>
+							<div className="flex items-center cursor-pointer">
+								<div className="text-right mr-4 hidden sm:block">
+									<p className="text-sm font-semibold text-gray-700">
+										{user?.firstName}
+									</p>
+									<p className="text-xs text-gray-500">{user?.email}</p>
+								</div>
+								<Button
+									type="text"
+									className="flex items-center justify-center size-10 p-0"
+								>
+									<EllipsisOutlined className="text-xl" />
+								</Button>
+							</div>
 						</Dropdown>
 					</div>
 				</div>

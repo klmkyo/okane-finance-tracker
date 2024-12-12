@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Pacifico } from 'next/font/google'
 import localFont from 'next/font/local'
 import './globals.css'
 import { GlobalEventsProvider } from '@/common/providers/globalEventsProvider'
@@ -16,6 +17,12 @@ const geistMono = localFont({
 	src: './fonts/GeistMonoVF.woff',
 	variable: '--font-geist-mono',
 	weight: '100 900',
+})
+
+const pacifico = Pacifico({
+	weight: '400',
+	subsets: ['latin'],
+	variable: '--font-pacifico',
 })
 
 export const metadata: Metadata = {
@@ -41,7 +48,7 @@ export default async function RootLayout({
 
 				<html lang="en">
 					<body
-						className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+						className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} antialiased`}
 					>
 						<AntdRegistry>{children}</AntdRegistry>
 					</body>
