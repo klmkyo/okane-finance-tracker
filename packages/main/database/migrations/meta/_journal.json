@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1733329531324,
-      "tag": "0000_user_table",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1733332884828,
-      "tag": "0001_make_username_unique",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1733932056146,
-      "tag": "0002_user_email_name",
+      "when": 1734023289845,
+      "tag": "0000_all_tables",
       "breakpoints": true
     }
   ]

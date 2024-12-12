@@ -39,8 +39,11 @@ const timestamps = {
 		.$onUpdateFn(() => new Date()),
 }
 
-const currencyEnum = pgEnum('currency', ['PLN', 'USD', 'EUR'])
-const transactionTypeEnum = pgEnum('transaction_type', ['withdraw', 'deposit'])
+export const currencyEnum = pgEnum('currency', ['PLN', 'USD', 'EUR'])
+export const transactionTypeEnum = pgEnum('transaction_type', [
+	'withdraw',
+	'deposit',
+])
 
 export const User = pgTable(
 	'users',
