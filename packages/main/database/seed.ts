@@ -1,11 +1,9 @@
-import { pgTable, serial, text, varchar } from 'drizzle-orm/pg-core'
+import { faker } from '@faker-js/faker'
+import * as bcrypt from 'bcrypt'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
-import { faker } from '@faker-js/faker'
-import fs from 'node:fs'
-import bcrypt from 'bcrypt'
 
-import dotenv from 'dotenv'
+import * as dotenv from 'dotenv'
 
 dotenv.config()
 
