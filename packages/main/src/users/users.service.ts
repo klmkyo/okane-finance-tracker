@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { Database, User, UserInsert } from 'database/schema'
-import { eq, InferSelectModel } from 'drizzle-orm'
+import { InferSelectModel, eq } from 'drizzle-orm'
 import { assert } from 'src/common/assert'
 import { DB } from 'src/common/constants'
 
