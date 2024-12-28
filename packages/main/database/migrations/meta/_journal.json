@@ -8,6 +8,13 @@
       "when": 1734023289845,
       "tag": "0000_all_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1735400310079,
+      "tag": "0001_use_numeric_casted_type",
+      "breakpoints": true
     }
   ]
 }

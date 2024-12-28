@@ -5,21 +5,41 @@ import {
 } from 'drizzle-orm'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import {
+	AnyPgColumn,
+	customType,
+	index,
+	integer,
+	interval,
+	jsonb,
+	pgEnum,
+	PgQueryResultHKT,
 	pgTable,
+	PgTableExtraConfigValue,
+	PgTransaction,
 	serial,
 	timestamp,
 	varchar,
-	integer,
-	numeric,
-	jsonb,
-	pgEnum,
-	interval,
-	PgTransaction,
-	PgQueryResultHKT,
-	AnyPgColumn,
-	index,
-	PgTableExtraConfigValue,
 } from 'drizzle-orm/pg-core'
+
+type NumericConfig = {
+	precision?: number
+	scale?: number
+}
+
+export const numericCasted = customType<{
+	data: number
+	driverData: string
+	config: NumericConfig
+}>({
+	dataType: (config) => {
+		if (config?.precision && config?.scale) {
+			return `numeric(${config.precision}, ${config.scale})`
+		}
+		return 'numeric'
+	},
+	fromDriver: (value: string) => Number.parseFloat(value),
+	toDriver: (value: number) => value.toString(),
+})
 
 const timestamps = {
 	createdAt: timestamp('createdAt', {
@@ -71,8 +91,8 @@ export const Account = pgTable(
 			.notNull()
 			.references(() => User.id),
 		accountName: varchar('account_name').notNull(),
-		balance: numeric('balance', { precision: 12, scale: 2 })
-			.default('0')
+		balance: numericCasted('balance', { precision: 12, scale: 2 })
+			.default(0)
 			.notNull(),
 		currency: currencyEnum('currency').notNull(),
 		...timestamps,
@@ -92,8 +112,8 @@ export const Moneybox = pgTable(
 		userId: integer('user_id')
 			.notNull()
 			.references(() => User.id),
-		balance: numeric('balance', { precision: 12, scale: 2 })
-			.default('0')
+		balance: numericCasted('balance', { precision: 12, scale: 2 })
+			.default(0)
 			.notNull(),
 		currency: currencyEnum('currency').notNull(),
 		...timestamps,
@@ -132,7 +152,7 @@ export const Transaction = pgTable(
 		id: serial('id').primaryKey(),
 		title: varchar('title').notNull(),
 		description: varchar('description'),
-		amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
+		amount: numericCasted('amount', { precision: 12, scale: 2 }).notNull(),
 		type: transactionTypeEnum('type').notNull(),
 		accountId: integer('account_id')
 			.notNull()
@@ -165,7 +185,7 @@ export const RecurringTransaction = pgTable(
 		interval: interval('interval').notNull(),
 		title: varchar('title').notNull(),
 		description: varchar('description'),
-		amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
+		amount: numericCasted('amount', { precision: 12, scale: 2 }).notNull(),
 		type: transactionTypeEnum('type').notNull(),
 		accountId: integer('account_id')
 			.notNull()
@@ -206,7 +226,7 @@ export const SavingGoal = pgTable(
 		userId: integer('user_id')
 			.notNull()
 			.references(() => User.id),
-		targetAmount: numeric('target_amount', {
+		targetAmount: numericCasted('target_amount', {
 			precision: 12,
 			scale: 2,
 		}).notNull(),

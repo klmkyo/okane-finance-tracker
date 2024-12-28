@@ -6,8 +6,11 @@ import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { configuration } from './config/configuration'
 import { DrizzleModule } from './drizzle/drizzle.module'
+import { MoneyboxesModule } from './moneyboxes/moneyboxes.module'
 import { TransactionsModule } from './transactions/transactions.module'
 import { UsersModule } from './users/users.module'
+import { SavingGoalsModule } from './saving-goals/saving-goals.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
 	imports: [
@@ -17,6 +20,9 @@ import { UsersModule } from './users/users.module'
 		DrizzleModule,
 		TransactionsModule,
 		AccountsModule,
+		MoneyboxesModule,
+		SavingGoalsModule,
+		CategoriesModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

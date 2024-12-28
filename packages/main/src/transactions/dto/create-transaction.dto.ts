@@ -11,7 +11,7 @@ export class CreateTransactionDto implements TransactionInsert {
 	title: string
 
 	@IsNumber()
-	amount: string
+	amount: number
 
 	@IsIn(TRANSACTION_TYPES)
 	type: TransactionType
