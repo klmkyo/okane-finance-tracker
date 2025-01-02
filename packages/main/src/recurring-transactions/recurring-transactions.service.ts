@@ -1,9 +1,9 @@
 import { InjectQueue } from '@nestjs/bullmq'
 import {
-	ForbiddenException,
-	Inject,
-	Injectable,
-	NotFoundException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common'
 import { Queue } from 'bullmq'
 import { Account, Database, RecurringTransaction } from 'database/schema'
@@ -18,8 +18,8 @@ import { RECURRING_TRANSACTIONS_QUEUE } from './recurring-transactions.constants
 
 const intervalToMilliseconds = (interval) => {
 	const conversions = {
-		years: 365.25 * 24 * 60 * 60 * 1000, // Approximate year
-		months: 30 * 24 * 60 * 60 * 1000, // Approximate month
+		years: 365.25 * 24 * 60 * 60 * 1000,
+		months: 30 * 24 * 60 * 60 * 1000,
 		days: 24 * 60 * 60 * 1000,
 		hours: 60 * 60 * 1000,
 		minutes: 60 * 1000,
@@ -42,6 +42,10 @@ export class RecurringTransactionsService {
 		private recurringTransactionsQuene: Queue,
 	) {}
 
+	private jobName(transactionId: number | string) {
+		return `process-tx:${transactionId}`
+	}
+
 	async create(userId: number, data: CreateRecurringTransactionDto) {
 		const [account] = await this.db
 			.select()
@@ -50,26 +54,35 @@ export class RecurringTransactionsService {
 
 		assert(account?.userId === userId, 'not_your_account', ForbiddenException)
 
-		const [tx] = await this.db
+		const [transaction] = await this.db
 			.insert(RecurringTransaction)
 			.values(data)
 			.returning()
 
+		console.log(transaction.interval)
+
 		const interval = pginterval(data.interval)
 		const milis = intervalToMilliseconds(interval)
-		const a = await this.recurringTransactionsQuene.add('aa', data, {
-			jobId: tx.id.toString(),
-			repeat: {
-				startDate: data.startDate,
-				endDate: data.endDate,
-				every: milis,
+		const jobName = this.jobName(transaction.id)
+		const job = await this.recurringTransactionsQuene.add(
+			jobName,
+			transaction,
+			{
+				repeat: {
+					startDate: data.startDate,
+					endDate: data.endDate,
+					every: milis,
+				},
 			},
-		})
+		)
 
-		console.log(a)
+		return transaction
+	}
 
-		// TODO: set every to correct
-		// check if jobID is good and can be then removed
+	private async getSchedulerByJobName(jobName: string) {
+		const jobs = await this.recurringTransactionsQuene.getJobSchedulers()
+		const [scheduler] = jobs.filter((job) => job.name === jobName)
+		return scheduler
 	}
 
 	async find(userId: number, data: GetRecurringTransactionDto) {
@@ -112,20 +125,51 @@ export class RecurringTransactionsService {
 			)
 
 		// dirty
-		const [[account], [tx]] = await Promise.all([getAccount, getTx])
+		const [[account], [transaction]] = await Promise.all([getAccount, getTx])
 
 		assert(
 			!data.accountId || account?.userId === userId,
 			'not_your_account',
 			ForbiddenException,
 		)
-		assert(tx, 'not_found', NotFoundException)
+		assert(transaction, 'not_found', NotFoundException)
 
-		return await this.db
-			.update(RecurringTransaction)
-			.set(data)
-			.where(eq(RecurringTransaction.id, transactionId))
-			.returning()
+		const shouldUpdateJob = data.startDate || data.interval || data.endDate
+
+		return await this.db.transaction(async (tx) => {
+			const [updatedTransaction] = await tx
+				.update(RecurringTransaction)
+				.set(data)
+				.where(eq(RecurringTransaction.id, transactionId))
+				.returning()
+
+			if (shouldUpdateJob) {
+				const jobName = this.jobName(transactionId)
+				const interval = pginterval(updatedTransaction.interval)
+				const milis = intervalToMilliseconds(interval)
+
+				// doing this way, upsert messes up ids
+				await this.deleteJobByName(jobName)
+				const job = await this.recurringTransactionsQuene.add(
+					jobName,
+					updatedTransaction,
+					{
+						repeat: {
+							startDate: data.startDate,
+							endDate: data.endDate,
+							every: milis,
+						},
+					},
+				)
+			}
+
+			return updatedTransaction
+		})
+	}
+
+	async deleteJobByName(jobName: string) {
+		const jobScheduler = await this.getSchedulerByJobName(jobName)
+		await this.recurringTransactionsQuene.removeJobScheduler(jobScheduler.key)
 	}
 
 	async delete(userId: number, transactionId: number) {
@@ -141,13 +185,13 @@ export class RecurringTransactionsService {
 			)
 
 		assert(tx, 'not_found', NotFoundException)
-		await this.db
-			.delete(RecurringTransaction)
-			.where(eq(RecurringTransaction.id, transactionId))
 
-		await this.recurringTransactionsQuene.removeRepeatableByKey(
-			transactionId.toString(),
-		)
+		await this.db.transaction(async (tx) => {
+			await tx
+				.delete(RecurringTransaction)
+				.where(eq(RecurringTransaction.id, transactionId))
+			await this.deleteJobByName(this.jobName(transactionId))
+		})
 
 		return SUCCESS
 	}

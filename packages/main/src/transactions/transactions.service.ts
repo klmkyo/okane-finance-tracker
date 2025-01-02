@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common'
 import { Account, Database, Transaction } from 'database/schema'
 import { and, eq } from 'drizzle-orm'
+import { AccountsService } from 'src/accounts/accounts.service'
 import { assert } from 'src/common/assert'
 import { DB, SUCCESS } from 'src/common/constants'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
@@ -14,7 +15,10 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto'
 
 @Injectable()
 export class TransactionsService {
-	constructor(@Inject(DB) private db: Database) {}
+	constructor(
+		@Inject(DB) private db: Database,
+		private accountsService: AccountsService,
+	) {}
 
 	async create(userId: number, data: CreateTransactionDto) {
 		const [account] = await this.db
@@ -24,6 +28,11 @@ export class TransactionsService {
 
 		assert(account?.userId === userId, 'not_your_account', ForbiddenException)
 
+		await this.accountsService.updateBalance(
+			data.type,
+			data.accountId,
+			data.amount,
+		)
 		return await this.db.insert(Transaction).values(data).returning()
 	}
 
