@@ -10,4 +10,8 @@ const auth = registerAs('auth', () => ({
 	},
 }))
 
-export const configuration = [app, auth]
+const openai = registerAs('openai', () => ({
+	apiKey: process.env.OPENAI_API_KEY,
+}))
+
+export const configuration = [app, auth, openai]

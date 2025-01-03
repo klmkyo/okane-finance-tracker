@@ -12,7 +12,6 @@ export class RecurringTransactionsProcessor extends WorkerHost {
 
 	async process(job: Job<TransactionInsert>, token?: string): Promise<any> {
 		const { type, accountId, amount } = job.data
-		console.log(job.data)
 		return await this.accountsService.updateBalance(type, accountId, amount)
 	}
 }

@@ -1,9 +1,9 @@
 import { InjectQueue } from '@nestjs/bullmq'
 import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  NotFoundException,
+	ForbiddenException,
+	Inject,
+	Injectable,
+	NotFoundException,
 } from '@nestjs/common'
 import { Queue } from 'bullmq'
 import { Account, Database, RecurringTransaction } from 'database/schema'
@@ -58,8 +58,6 @@ export class RecurringTransactionsService {
 			.insert(RecurringTransaction)
 			.values(data)
 			.returning()
-
-		console.log(transaction.interval)
 
 		const interval = pginterval(data.interval)
 		const milis = intervalToMilliseconds(interval)
