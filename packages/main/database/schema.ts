@@ -42,14 +42,14 @@ export const numericCasted = customType<{
 })
 
 const timestamps = {
-	createdAt: timestamp('createdAt', {
+	createdAt: timestamp('created_at', {
 		mode: 'date',
 		precision: 3,
 		withTimezone: true,
 	})
 		.defaultNow()
 		.notNull(),
-	updatedAt: timestamp('updatedAt', {
+	updatedAt: timestamp('updated_at', {
 		mode: 'date',
 		precision: 3,
 		withTimezone: true,

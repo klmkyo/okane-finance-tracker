@@ -15,6 +15,13 @@
       "when": 1735400310079,
       "tag": "0001_use_numeric_casted_type",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735928463568,
+      "tag": "0002_proper_timestamps_casing",
+      "breakpoints": true
     }
   ]
 }
