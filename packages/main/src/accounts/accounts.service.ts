@@ -67,6 +67,11 @@ export class AccountsService {
 		return account
 	}
 
+	async isUserAccount(userId: number, accountId: number) {
+		const accounts = await this.find(userId)
+		return accounts.some((acc) => acc.id === accountId)
+	}
+
 	async delete(userId: number, accountId: number) {
 		const [account] = await this.db
 			.delete(Account)

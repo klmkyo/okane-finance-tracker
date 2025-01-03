@@ -6,6 +6,7 @@ import {
 	IsNumber,
 	IsOptional,
 	IsString,
+	MinDate,
 } from 'class-validator'
 import { RecurringTransactionInsert } from 'database/schema'
 import { TRANSACTION_TYPES } from 'src/common/constants'
@@ -30,7 +31,7 @@ export class CreateRecurringTransactionDto
 
 	@IsDate()
 	@Type(() => Date)
-	// @MinDate(() => new Date())
+	@MinDate(() => new Date())
 	startDate: Date
 
 	@IsOptional()

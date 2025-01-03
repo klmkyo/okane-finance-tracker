@@ -1,0 +1,1 @@
+ALTER TABLE "ai_raports" RENAME COLUMN "reviewed_data" TO "review_response";

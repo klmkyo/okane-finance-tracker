@@ -21,12 +21,12 @@ export class TransactionsService {
 	) {}
 
 	async create(userId: number, data: CreateTransactionDto) {
-		const [account] = await this.db
-			.select()
-			.from(Account)
-			.where(eq(Account.id, data.accountId))
+		const isUserAccount = await this.accountsService.isUserAccount(
+			userId,
+			data.accountId,
+		)
 
-		assert(account?.userId === userId, 'not_your_account', ForbiddenException)
+		assert(isUserAccount, 'not_your_account', ForbiddenException)
 
 		await this.accountsService.updateBalance(
 			data.type,

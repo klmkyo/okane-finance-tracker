@@ -271,7 +271,7 @@ export const AiRaport = pgTable(
 		id: serial('id').primaryKey(),
 		periodStartDate: timestamp('period_start_date').notNull(),
 		periodEndDate: timestamp('period_end_date').notNull(),
-		reviewedData: varchar('reviewed_data'),
+		reviewResponse: jsonb('review_response'),
 		accountId: integer('account_id')
 			.notNull()
 			.references(() => Account.id),

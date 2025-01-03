@@ -9,6 +9,7 @@ import { Queue } from 'bullmq'
 import { Account, Database, RecurringTransaction } from 'database/schema'
 import { and, eq } from 'drizzle-orm'
 import * as pginterval from 'postgres-interval'
+import { AccountsService } from 'src/accounts/accounts.service'
 import { assert } from 'src/common/assert'
 import { DB, SUCCESS } from 'src/common/constants'
 import { CreateRecurringTransactionDto } from './dto/create-recurring-transaction.dto'
@@ -40,6 +41,7 @@ export class RecurringTransactionsService {
 		@Inject(DB) private db: Database,
 		@InjectQueue(RECURRING_TRANSACTIONS_QUEUE)
 		private recurringTransactionsQuene: Queue,
+		private accountsService: AccountsService,
 	) {}
 
 	private jobName(transactionId: number | string) {
@@ -47,12 +49,12 @@ export class RecurringTransactionsService {
 	}
 
 	async create(userId: number, data: CreateRecurringTransactionDto) {
-		const [account] = await this.db
-			.select()
-			.from(Account)
-			.where(eq(Account.id, data.accountId))
+		const isUserAccount = await this.accountsService.isUserAccount(
+			userId,
+			data.accountId,
+		)
 
-		assert(account?.userId === userId, 'not_your_account', ForbiddenException)
+		assert(isUserAccount, 'not_your_account', ForbiddenException)
 
 		const [transaction] = await this.db
 			.insert(RecurringTransaction)

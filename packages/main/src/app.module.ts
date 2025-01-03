@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { AccountsModule } from './accounts/accounts.module'
 import { AiChatModule } from './ai-chat/ai-chat.module'
+import { AiRaportModule } from './ai-raport/ai-raport.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
@@ -28,6 +29,7 @@ import { UsersModule } from './users/users.module'
 		SavingGoalsModule,
 		CategoriesModule,
 		AiChatModule,
+		AiRaportModule,
 		BullModule.forRoot({
 			connection: {
 				host: 'localhost',
