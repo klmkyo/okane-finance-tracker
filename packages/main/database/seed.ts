@@ -349,5 +349,5 @@ sql += batchInsert(
 	transactions,
 )
 ;(async () => {
-	await db.execute("truncate table users restart identity cascade;")
+	await db.execute(sql)
 })()
