@@ -59,7 +59,7 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		id: i + 1,
 		username: faker.internet.username().toLowerCase(),
 		password: hashedPassword,
-		email: faker.internet.email().toLowerCase(),
+		email: email,
 		first_name: faker.person.firstName(),
 		last_name: faker.person.lastName(),
 		created_at: formatDate(faker.date.past()),
