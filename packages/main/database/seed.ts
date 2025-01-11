@@ -57,13 +57,13 @@ for (let i = 0; i < ROW_COUNT; i++) {
 
 	const user = {
 		id: i + 1,
-		username,
+		username: faker.internet.username().toLowerCase(),
 		password: hashedPassword,
-		email,
-		first_name: faker.name.firstName(),
-		last_name: faker.name.lastName(),
-		createdAt: formatDate(faker.date.past()),
-		updatedAt: formatDate(new Date()),
+		email: faker.internet.email().toLowerCase(),
+		first_name: faker.person.firstName(),
+		last_name: faker.person.lastName(),
+		created_at: formatDate(faker.date.past()),
+		updated_at: formatDate(new Date()),
 	}
 	users.push(user)
 }
@@ -77,8 +77,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		account_name: faker.finance.accountName(),
 		balance: faker.finance.amount({ min: 0, max: 100000, dec: 2 }),
 		currency: randomElement(currencies),
-		createdAt: formatDate(faker.date.past()),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(faker.date.past()),
+		updated_at: formatDate(new Date()),
 	}
 	accounts.push(account)
 }
@@ -95,8 +95,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		id: i + 1,
 		user_id: faker.number.int({ min: 1, max: ROW_COUNT }),
 		conversation_log: JSON.stringify(conversationLog),
-		createdAt: formatDate(faker.date.recent()),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(faker.date.recent()),
+		updated_at: formatDate(new Date()),
 	}
 	ai_chat_conversations.push(convo)
 }
@@ -114,8 +114,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		period_end_date: formatDate(endDate),
 		reviewed_data: faker.lorem.words(5),
 		account_id: faker.number.int({ min: 1, max: ROW_COUNT }),
-		createdAt: formatDate(startDate),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(startDate),
+		updated_at: formatDate(new Date()),
 	}
 	ai_raports.push(raport)
 }
@@ -131,8 +131,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		user_id: faker.number.int({ min: 1, max: ROW_COUNT }),
 		category_name: faker.commerce.department(),
 		parent_category_id,
-		createdAt: formatDate(faker.date.past()),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(faker.date.past()),
+		updated_at: formatDate(new Date()),
 	}
 	categories.push(category)
 }
@@ -144,8 +144,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		user_id: faker.number.int({ min: 1, max: ROW_COUNT }),
 		balance: faker.finance.amount({ min: 0, max: 50000, dec: 2 }),
 		currency: randomElement(currencies),
-		createdAt: formatDate(faker.date.past()),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(faker.date.past()),
+		updated_at: formatDate(new Date()),
 	}
 	moneyboxes.push(box)
 }
@@ -166,8 +166,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		type: randomElement(transaction_types),
 		account_id: faker.number.int({ min: 1, max: ROW_COUNT }),
 		category_id: faker.number.int({ min: 1, max: ROW_COUNT }),
-		createdAt: formatDate(startDate),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(startDate),
+		updated_at: formatDate(new Date()),
 	}
 	recurring_transactions.push(rec_tran)
 }
@@ -181,8 +181,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		target_amount: faker.finance.amount({ min: 100, max: 50000, dec: 2 }),
 		title: faker.lorem.words(3),
 		description: faker.lorem.sentence(),
-		createdAt: formatDate(faker.date.past()),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(faker.date.past()),
+		updated_at: formatDate(new Date()),
 	}
 	saving_goals.push(sg)
 }
@@ -198,8 +198,8 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		type: randomElement(transaction_types),
 		account_id: faker.number.int({ min: 1, max: ROW_COUNT }),
 		category_id: faker.number.int({ min: 1, max: ROW_COUNT }),
-		createdAt: formatDate(trDate),
-		updatedAt: formatDate(new Date()),
+		created_at: formatDate(trDate),
+		updated_at: formatDate(new Date()),
 	}
 	transactions.push(tr)
 }
@@ -240,8 +240,8 @@ sql += batchInsert(
 		'email',
 		'first_name',
 		'last_name',
-		'createdAt',
-		'updatedAt',
+		'created_at',
+		'updated_at',
 	],
 	users,
 )
@@ -254,15 +254,15 @@ sql += batchInsert(
 		'account_name',
 		'balance',
 		'currency',
-		'createdAt',
-		'updatedAt',
+		'created_at',
+		'updated_at',
 	],
 	accounts,
 )
 
 sql += batchInsert(
 	'ai_chat_conversations',
-	['id', 'user_id', 'conversation_log', 'createdAt', 'updatedAt'],
+	['id', 'user_id', 'conversation_log', 'created_at', 'updated_at'],
 	ai_chat_conversations,
 )
 
@@ -274,8 +274,8 @@ sql += batchInsert(
 		'period_end_date',
 		'reviewed_data',
 		'account_id',
-		'createdAt',
-		'updatedAt',
+		'created_at',
+		'updated_at',
 	],
 	ai_raports,
 )
@@ -287,15 +287,15 @@ sql += batchInsert(
 		'user_id',
 		'category_name',
 		'parent_category_id',
-		'createdAt',
-		'updatedAt',
+		'created_at',
+		'updated_at',
 	],
 	categories,
 )
 
 sql += batchInsert(
 	'moneyboxes',
-	['id', 'user_id', 'balance', 'currency', 'createdAt', 'updatedAt'],
+	['id', 'user_id', 'balance', 'currency', 'created_at', 'updated_at'],
 	moneyboxes,
 )
 
@@ -312,8 +312,8 @@ sql += batchInsert(
 		'type',
 		'account_id',
 		'category_id',
-		'createdAt',
-		'updatedAt',
+		'created_at',
+		'updated_at',
 	],
 	recurring_transactions,
 )
@@ -327,8 +327,8 @@ sql += batchInsert(
 		'target_amount',
 		'title',
 		'description',
-		'createdAt',
-		'updatedAt',
+		'created_at',
+		'updated_at',
 	],
 	saving_goals,
 )
@@ -343,11 +343,11 @@ sql += batchInsert(
 		'type',
 		'account_id',
 		'category_id',
-		'createdAt',
-		'updatedAt',
+		'created_at',
+		'updated_at',
 	],
 	transactions,
 )
 ;(async () => {
-	await db.execute(sql)
+	await db.execute("truncate table users restart identity cascade;")
 })()
