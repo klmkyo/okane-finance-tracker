@@ -112,7 +112,9 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		id: i + 1,
 		period_start_date: formatDate(startDate),
 		period_end_date: formatDate(endDate),
-		reviewed_data: faker.lorem.words(5),
+		review_response: {
+			test: faker.lorem.sentence(),
+		},
 		account_id: faker.number.int({ min: 1, max: ROW_COUNT }),
 		created_at: formatDate(startDate),
 		updated_at: formatDate(new Date()),
@@ -219,6 +221,10 @@ function batchInsert(tableName, columns, rows) {
 						return 'NULL'
 					}
 
+					if (typeof val === 'object') {
+						return `'${JSON.stringify(val).replace(/'/g, "''")}'`
+					}
+
 					if (typeof val === 'number' || val.match(/^\d+(\.\d+)?$/)) {
 						return val
 					}
@@ -272,7 +278,7 @@ sql += batchInsert(
 		'id',
 		'period_start_date',
 		'period_end_date',
-		'reviewed_data',
+		'review_response',
 		'account_id',
 		'created_at',
 		'updated_at',
