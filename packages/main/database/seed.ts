@@ -40,7 +40,7 @@ const encryptedPasswordPool = unencryptedPasswordPool.map((password) =>
 for (let i = 0; i < ROW_COUNT; i++) {
 	let username: string
 	do {
-		username = faker.internet.userName().toLowerCase()
+		username = faker.internet.username().toLowerCase()
 	} while (usedUsernames.has(username))
 	usedUsernames.add(username)
 
