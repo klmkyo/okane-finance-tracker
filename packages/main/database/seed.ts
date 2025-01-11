@@ -57,7 +57,7 @@ for (let i = 0; i < ROW_COUNT; i++) {
 
 	const user = {
 		id: i + 1,
-		username: faker.internet.username().toLowerCase(),
+		username,
 		password: hashedPassword,
 		email: email,
 		first_name: faker.person.firstName(),
