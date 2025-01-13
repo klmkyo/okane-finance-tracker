@@ -54,20 +54,22 @@ interface FinanceDashboardProps {
 	accountId: string
 }
 
-export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
-	accountId,
-}) => {
-	const [isModalVisible, setIsModalVisible] = useState(false)
-	const t = useTranslations('Dashboard')
-
-	const { data: accountData } = useQuery({
+export const useAccount = (accountId: string) => {
+	const query = useQuery({
 		queryKey: ['account', accountId],
 		queryFn: async () => {
 			return (await api.get<Account>(`/accounts/${accountId}`)).data
 		},
 	})
 
-	const { data: recentTransactions } = useQuery({
+	return {
+		...query,
+		account: query.data,
+	}
+}
+
+export const useTransactions = (accountId: string) => {
+	const query = useQuery({
 		queryKey: ['transactions', accountId],
 		queryFn: async () => {
 			return (
@@ -75,6 +77,22 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 			).data
 		},
 	})
+
+	return {
+		...query,
+		transactions: query.data,
+	}
+}
+
+export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
+	accountId,
+}) => {
+	const [isModalVisible, setIsModalVisible] = useState(false)
+	const t = useTranslations('Dashboard')
+
+	const { data: accountData } = useAccount(accountId)
+
+	const { data: recentTransactions } = useTransactions(accountId)
 
 	const showModal = () => {
 		setIsModalVisible(true)

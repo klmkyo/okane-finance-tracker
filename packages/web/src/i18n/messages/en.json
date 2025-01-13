@@ -162,5 +162,10 @@
 		"monthly": "Monthly",
 		"yearly": "Yearly",
 		"nextDate": "Next Date"
+	},
+	"DashboardIndexPage": {
+		"noAccountsTitle": "No accounts yet?",
+		"noAccountsDescription": "Create your first account to get started.",
+		"openAccountButton": "Open Account"
 	}
 }

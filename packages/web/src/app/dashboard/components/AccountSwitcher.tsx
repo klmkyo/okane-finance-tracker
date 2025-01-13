@@ -1,12 +1,11 @@
 'use client'
 
 import { api } from '@/common/api/api'
-import { PlusOutlined } from '@ant-design/icons'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, Input, Modal, Select } from 'antd'
+import { useQuery } from '@tanstack/react-query'
+import { Select } from 'antd'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import React from 'react'
 
 interface Account {
 	id: number
@@ -18,106 +17,44 @@ interface Account {
 	currency: string
 }
 
-export const AccountSwitcher: React.FC = () => {
-	const t = useTranslations('AccountSwitcher')
-	const router = useRouter()
-	const queryClient = useQueryClient()
-	const { data: accounts } = useQuery({
+export const useAccounts = () => {
+	const query = useQuery({
 		queryKey: ['accounts'],
 		queryFn: async () => {
 			return (await api.get<Account[]>('/accounts')).data
 		},
 	})
 
-	const { mutateAsync: createAccount, isPending } = useMutation({
-		mutationFn: async (data: { accountName: string; currency: string }) => {
-			await api.post('/accounts', data)
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['accounts'] })
-		},
-	})
+	return {
+		accounts: query.data,
+		...query,
+	}
+}
 
-	const [isModalVisible, setIsModalVisible] = useState(false)
-	const [form] = Form.useForm()
+export const AccountSwitcher: React.FC = () => {
+	const t = useTranslations('AccountSwitcher')
+	const router = useRouter()
 
-	const handleAccountChange = (value: string) => {
+	const { accountId } = useParams()
+
+	const { accounts } = useAccounts()
+
+	const handleAccountChange = (value: number) => {
 		router.push(`/dashboard/${value}`)
 	}
 
-	const showModal = () => {
-		setIsModalVisible(true)
-	}
-
-	const handleOk = () => {
-		form.validateFields().then((values) => {
-			createAccount(values).then(() => {
-				form.resetFields()
-				setIsModalVisible(false)
-			})
-		})
-	}
-
-	const handleCancel = () => {
-		setIsModalVisible(false)
-	}
-
 	return (
-		<>
-			<Select
-				placeholder={t('selectAccount')}
-				onChange={handleAccountChange}
-				style={{ width: 200 }}
-				dropdownRender={(menu) => (
-					<>
-						{menu}
-						<Button
-							type="link"
-							icon={<PlusOutlined />}
-							onClick={showModal}
-							style={{ display: 'flex', alignItems: 'center' }}
-						>
-							{t('addAccount')}
-						</Button>
-					</>
-				)}
-			>
-				{accounts?.map((account) => (
-					<Select.Option key={account.id} value={account.id}>
-						{account.accountName}
-					</Select.Option>
-				))}
-			</Select>
-
-			<Modal
-				title={t('addNewAccount')}
-				open={isModalVisible}
-				onOk={handleOk}
-				onCancel={handleCancel}
-				loading={isPending}
-			>
-				<Form form={form} layout="vertical">
-					<Form.Item
-						name="accountName"
-						label={t('accountName')}
-						rules={[{ required: true, message: t('accountNameRequired') }]}
-					>
-						<Input />
-					</Form.Item>
-					<Form.Item
-						name="currency"
-						label={t('currency')}
-						rules={[{ required: true, message: t('currencyRequired') }]}
-					>
-						<Select placeholder={t('selectCurrency')}>
-							<Select.Option value="USD">USD</Select.Option>
-							<Select.Option value="EUR">EUR</Select.Option>
-							<Select.Option value="PLN">PLN</Select.Option>
-							{/* ...other currencies... */}
-						</Select>
-					</Form.Item>
-				</Form>
-			</Modal>
-		</>
+		<Select
+			placeholder={t('selectAccount')}
+			onChange={handleAccountChange}
+			style={{ width: 200 }}
+			value={typeof accountId === 'string' ? Number(accountId) : undefined}
+		>
+			{accounts?.map((account) => (
+				<Select.Option key={account.id} value={account.id}>
+					{account.accountName}
+				</Select.Option>
+			))}
+		</Select>
 	)
 }

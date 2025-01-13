@@ -43,10 +43,12 @@ export class AccountsService {
 	}
 
 	async create(userId: number, data: CreateAccountDto) {
-		return await this.db
-			.insert(Account)
-			.values({ ...data, userId })
-			.returning()
+		return (
+			await this.db
+				.insert(Account)
+				.values({ ...data, userId })
+				.returning()
+		)[0]
 	}
 
 	async find(userId: number) {
