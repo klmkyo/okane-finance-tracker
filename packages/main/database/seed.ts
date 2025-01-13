@@ -202,6 +202,7 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		category_id: faker.number.int({ min: 1, max: ROW_COUNT }),
 		created_at: formatDate(trDate),
 		updated_at: formatDate(new Date()),
+		date: formatDate(trDate),
 	}
 	transactions.push(tr)
 }
@@ -351,6 +352,7 @@ sql += batchInsert(
 		'category_id',
 		'created_at',
 		'updated_at',
+		'date',
 	],
 	transactions,
 )

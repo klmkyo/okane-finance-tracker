@@ -1,0 +1,1 @@
+ALTER TABLE "transactions" ADD COLUMN "date" timestamp (3) with time zone NOT NULL;

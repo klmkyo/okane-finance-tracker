@@ -29,6 +29,13 @@
       "when": 1735929490228,
       "tag": "0003_ai_raport_review_response",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1736764772721,
+      "tag": "0004_add dates to transactions",
+      "breakpoints": true
     }
   ]
 }

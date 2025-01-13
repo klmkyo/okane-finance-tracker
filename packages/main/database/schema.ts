@@ -158,6 +158,11 @@ export const Transaction = pgTable(
 			.notNull()
 			.references(() => Account.id),
 		categoryId: integer('category_id').references(() => Category.id),
+		date: timestamp('date', {
+			mode: 'date',
+			precision: 3,
+			withTimezone: true,
+		}).notNull(),
 		...timestamps,
 	},
 	(table): PgTableExtraConfigValue[] => [
