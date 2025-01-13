@@ -92,7 +92,7 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 
 	const { data: accountData } = useAccount(accountId)
 
-	const { data: recentTransactions } = useTransactions(accountId)
+	const { data: transactions } = useTransactions(accountId)
 
 	const showModal = () => {
 		setIsModalVisible(true)
@@ -132,25 +132,25 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 
 	const monthlyIncome = useMemo(() => {
 		return (
-			recentTransactions?.reduce((acc, transaction) => {
+			transactions?.reduce((acc, transaction) => {
 				if (transaction.type === TransactionType.DEPOSIT) {
 					return acc + transaction.amount
 				}
 				return acc
 			}, 0) || 0
 		)
-	}, [recentTransactions])
+	}, [transactions])
 
 	const monthlyExpense = useMemo(() => {
 		return (
-			recentTransactions?.reduce((acc, transaction) => {
+			transactions?.reduce((acc, transaction) => {
 				if (transaction.type === TransactionType.WITHDRAWAL) {
 					return acc + transaction.amount
 				}
 				return acc
 			}, 0) || 0
 		)
-	}, [recentTransactions])
+	}, [transactions])
 
 	const savingsRate = useMemo(() => {
 		if (!monthlyIncome) return 0
@@ -197,10 +197,10 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 					<Card title={t('spendingHistory')}>
-						<SpendingHistoryChart accountId={accountId} />
+						<SpendingHistoryChart transactions={transactions ?? []} />
 					</Card>
 					<Card title={t('spendingByCategory')}>
-						<SpendingCategoryChart accountId={accountId} />
+						<SpendingCategoryChart transactions={transactions ?? []} />
 					</Card>
 				</div>
 
@@ -230,7 +230,7 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 					>
 						<Table
 							columns={columns}
-							dataSource={recentTransactions}
+							dataSource={transactions}
 							rowKey="id"
 							pagination={{ pageSize: 30 }}
 						/>

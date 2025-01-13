@@ -1,74 +1,88 @@
 'use client'
-import { Line } from '@ant-design/plots'
-import { useQuery } from '@tanstack/react-query'
+import { TransactionType } from '@/common/types/transaction'
 import { Radio } from 'antd'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import { Line } from 'recharts'
+import {
+	CartesianGrid,
+	LineChart,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis,
+} from 'recharts'
+import { Transaction } from './FinanceDashboard'
 
-export const SpendingHistoryChart: React.FC<{ accountId: number }> = ({
-	accountId,
+interface SpendingHistoryChartProps {
+	transactions: Transaction[]
+}
+
+export const SpendingHistoryChart: React.FC<SpendingHistoryChartProps> = ({
+	transactions,
 }) => {
 	const [timeRange, setTimeRange] = useState<
 		'week' | 'month' | 'year' | 'tenYears'
 	>('week')
 	const t = useTranslations('SpendingHistoryChart')
 
-	const { data } = useQuery({
-		queryKey: ['spendingHistory', accountId],
-		queryFn: async () => {
-			// Return mock data
-			return {
-				week: [
-					{ date: '2023-06-01', amount: 100 },
-					{ date: '2023-06-02', amount: 150 },
-					{ date: '2023-06-03', amount: 80 },
-					{ date: '2023-06-04', amount: 200 },
-					{ date: '2023-06-05', amount: 120 },
-					{ date: '2023-06-06', amount: 90 },
-					{ date: '2023-06-07', amount: 180 },
-				],
-				month: [
-					{ date: '2023-06-01', amount: 400 },
-					{ date: '2023-06-05', amount: 600 },
-					{ date: '2023-06-10', amount: 800 },
-					{ date: '2023-06-15', amount: 700 },
-					{ date: '2023-06-20', amount: 900 },
-					{ date: '2023-06-25', amount: 500 },
-					{ date: '2023-06-30', amount: 1000 },
-				],
-				year: [
-					{ date: '2023-01', amount: 3000 },
-					{ date: '2023-04', amount: 4500 },
-					{ date: '2023-07', amount: 4000 },
-					{ date: '2023-10', amount: 5500 },
-				],
-				tenYears: [
-					{ date: '2014', amount: 20000 },
-					{ date: '2016', amount: 25000 },
-					{ date: '2018', amount: 30000 },
-					{ date: '2020', amount: 35000 },
-					{ date: '2022', amount: 40000 },
-					{ date: '2024', amount: 45000 },
-				],
-			}
-		},
-	})
+	const chartData = useMemo(() => {
+		if (!transactions?.length) return []
 
-	const config = {
-		data: data ? data[timeRange] : [],
-		xField: 'date',
-		yField: 'amount',
-		point: {
-			size: 5,
-			shape: 'diamond',
-		},
-		tooltip: {
-			formatter: (data: any) => ({
-				name: t('amount'),
-				value: `$${data.amount}`,
-			}),
-		},
-	}
+		const now = dayjs()
+		let startDate: dayjs.Dayjs
+		let dateFormat: string
+		let groupingFormat: string
+
+		switch (timeRange) {
+			case 'week':
+				startDate = now.subtract(7, 'day')
+				dateFormat = 'YYYY-MM-DD'
+				groupingFormat = 'YYYY-MM-DD'
+				break
+			case 'month':
+				startDate = now.subtract(1, 'month')
+				dateFormat = 'MMM DD'
+				groupingFormat = 'YYYY-MM-DD'
+				break
+			case 'year':
+				startDate = now.subtract(1, 'year')
+				dateFormat = 'MMM YYYY'
+				groupingFormat = 'YYYY-MM'
+				break
+			case 'tenYears':
+				startDate = now.subtract(10, 'year')
+				dateFormat = 'YYYY'
+				groupingFormat = 'YYYY'
+				break
+		}
+
+		// Filter transactions within the time range
+		const filteredTransactions = transactions.filter(
+			(t) =>
+				dayjs(t.date).isAfter(startDate) &&
+				t.type === TransactionType.WITHDRAWAL,
+		)
+
+		// Group transactions by date
+		const groupedData = filteredTransactions.reduce(
+			(acc, transaction) => {
+				const date = dayjs(transaction.date).format(groupingFormat)
+				acc[date] = (acc[date] || 0) + transaction.amount
+				return acc
+			},
+			{} as Record<string, number>,
+		)
+
+		// Convert to array and sort by date
+		return Object.entries(groupedData)
+			.map(([date, amount]) => ({
+				date: dayjs(date).format(dateFormat),
+				amount,
+			}))
+			.sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
+	}, [transactions, timeRange])
 
 	return (
 		<div className="bg-white p-4 rounded">
@@ -84,7 +98,20 @@ export const SpendingHistoryChart: React.FC<{ accountId: number }> = ({
 					<Radio.Button value="tenYears">{t('tenYears')}</Radio.Button>
 				</Radio.Group>
 			</div>
-			<Line {...config} />
+			<ResponsiveContainer width="100%" height={400}>
+				<LineChart data={chartData}>
+					<CartesianGrid strokeDasharray="3 3" />
+					<XAxis dataKey="date" />
+					<YAxis tickFormatter={(value) => `$${value}`} />
+					<Tooltip formatter={(value: number) => [`$${value}`, t('amount')]} />
+					<Line
+						type="monotone"
+						dataKey="amount"
+						stroke="#8884d8"
+						activeDot={{ r: 8 }}
+					/>
+				</LineChart>
+			</ResponsiveContainer>
 		</div>
 	)
 }

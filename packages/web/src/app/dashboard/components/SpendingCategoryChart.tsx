@@ -1,9 +1,9 @@
 'use client'
-
-import { useQuery } from '@tanstack/react-query'
+import { TransactionType } from '@/common/types/transaction'
 import { Radio } from 'antd'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
 	Cell,
 	Legend,
@@ -12,6 +12,7 @@ import {
 	ResponsiveContainer,
 	Tooltip,
 } from 'recharts'
+import { Transaction } from './FinanceDashboard'
 
 const COLORS = [
 	'#0088FE',
@@ -24,46 +25,62 @@ const COLORS = [
 
 type TimeRange = 'week' | 'month' | 'year' | 'tenYears'
 
-export const SpendingCategoryChart: React.FC<{ accountId: number }> = ({
-	accountId,
+interface SpendingCategoryChartProps {
+	transactions: Transaction[]
+}
+
+export const SpendingCategoryChart: React.FC<SpendingCategoryChartProps> = ({
+	transactions,
 }) => {
 	const [timeRange, setTimeRange] = useState<TimeRange>('week')
 	const t = useTranslations('SpendingCategoryChart')
 
-	const { data } = useQuery({
-		queryKey: ['spendingCategories', accountId],
-		queryFn: async () => {
-			// Return mock data
-			return {
-				week: [
-					{ category: 'Food', value: 300 },
-					{ category: 'Utilities', value: 200 },
-					{ category: 'Entertainment', value: 150 },
-					{ category: 'Other', value: 100 },
-				],
-				month: [
-					{ category: 'Food', value: 1200 },
-					{ category: 'Utilities', value: 800 },
-					{ category: 'Entertainment', value: 600 },
-					{ category: 'Other', value: 400 },
-				],
-				year: [
-					{ category: 'Food', value: 14400 },
-					{ category: 'Utilities', value: 9600 },
-					{ category: 'Entertainment', value: 7200 },
-					{ category: 'Other', value: 4800 },
-				],
-				tenYears: [
-					{ category: 'Food', value: 144000 },
-					{ category: 'Utilities', value: 96000 },
-					{ category: 'Entertainment', value: 72000 },
-					{ category: 'Other', value: 48000 },
-				],
-			}
-		},
-	})
+	const chartData = useMemo(() => {
+		if (!transactions?.length) return []
 
-	const chartData = data ? data[timeRange] : []
+		const now = dayjs()
+		let startDate: dayjs.Dayjs
+
+		switch (timeRange) {
+			case 'week':
+				startDate = now.subtract(7, 'day')
+				break
+			case 'month':
+				startDate = now.subtract(1, 'month')
+				break
+			case 'year':
+				startDate = now.subtract(1, 'year')
+				break
+			case 'tenYears':
+				startDate = now.subtract(10, 'year')
+				break
+		}
+
+		// Filter transactions within time range and only withdrawals
+		const filteredTransactions = transactions.filter(
+			(t) =>
+				dayjs(t.date).isAfter(startDate) &&
+				t.type === TransactionType.WITHDRAWAL,
+		)
+
+		// Group by category
+		const categoryTotals = filteredTransactions.reduce(
+			(acc, transaction) => {
+				const category = transaction.categoryName || 'Uncategorized'
+				acc[category] = (acc[category] || 0) + transaction.amount
+				return acc
+			},
+			{} as Record<string, number>,
+		)
+
+		// Convert to array format needed for chart
+		return Object.entries(categoryTotals)
+			.map(([category, value]) => ({
+				category,
+				value,
+			}))
+			.sort((a, b) => b.value - a.value) // Sort by value descending
+	}, [transactions, timeRange])
 
 	return (
 		<div className="bg-white p-4 rounded">
