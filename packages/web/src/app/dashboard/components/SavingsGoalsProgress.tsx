@@ -4,7 +4,7 @@ import { Progress } from 'antd'
 import { useTranslations } from 'next-intl'
 import React from 'react'
 
-export const SavingsGoalsProgress: React.FC<{ accountId: string }> = ({
+export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
 	accountId,
 }) => {
 	const t = useTranslations('SavingsGoalsProgress')

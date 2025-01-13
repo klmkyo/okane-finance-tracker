@@ -5,7 +5,7 @@ import { Radio } from 'antd'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 
-export const SpendingHistoryChart: React.FC<{ accountId: string }> = ({
+export const SpendingHistoryChart: React.FC<{ accountId: number }> = ({
 	accountId,
 }) => {
 	const [timeRange, setTimeRange] = useState<

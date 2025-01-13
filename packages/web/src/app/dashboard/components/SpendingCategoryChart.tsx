@@ -24,7 +24,7 @@ const COLORS = [
 
 type TimeRange = 'week' | 'month' | 'year' | 'tenYears'
 
-export const SpendingCategoryChart: React.FC<{ accountId: string }> = ({
+export const SpendingCategoryChart: React.FC<{ accountId: number }> = ({
 	accountId,
 }) => {
 	const [timeRange, setTimeRange] = useState<TimeRange>('week')

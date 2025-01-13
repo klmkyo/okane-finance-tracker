@@ -51,10 +51,10 @@ export interface Account {
 }
 
 interface FinanceDashboardProps {
-	accountId: string
+	accountId: number
 }
 
-export const useAccount = (accountId: string) => {
+export const useAccount = (accountId: number) => {
 	const query = useQuery({
 		queryKey: ['account', accountId],
 		queryFn: async () => {
@@ -68,7 +68,7 @@ export const useAccount = (accountId: string) => {
 	}
 }
 
-export const useTransactions = (accountId: string) => {
+export const useTransactions = (accountId: number) => {
 	const query = useQuery({
 		queryKey: ['transactions', accountId],
 		queryFn: async () => {

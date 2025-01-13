@@ -13,3 +13,5 @@
 - nie widziałem że powyższy błąd występuje. spowodowany jest on seedowaniem, więc zmodyfikowałem seed.ts aby wykonywał powyższe zapytania automatycznie.
 
 - w categories.service.ts, powinno być `.where(or(eq(Category.userId, userId), isNull(Category.userId)))` zamiasg `.where(or(eq(Category.userId, userId), eq(Category.userId, null)))`
+
+- inwalidacja transakcji nie działała, ponieważ jeden query key zawierał accountId w postaci stringa, a drugi w postaci numberu
