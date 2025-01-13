@@ -4,11 +4,12 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common'
-import { Account, Database, Transaction } from 'database/schema'
-import { and, eq } from 'drizzle-orm'
+import { Account, Category, Database, Transaction } from 'database/schema'
+import { and, eq, getTableColumns } from 'drizzle-orm'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { assert } from 'src/common/assert'
 import { DB, SUCCESS } from 'src/common/constants'
+import { TransactionType } from 'src/common/types'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { GetTransactionDto } from './dto/get-transaction.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
@@ -36,21 +37,30 @@ export class TransactionsService {
 		return await this.db.insert(Transaction).values(data).returning()
 	}
 
-	async find(userId: number, data: GetTransactionDto) {
+	async find(
+		userId: number,
+		accountId: number,
+		categoryId?: number,
+		type?: TransactionType,
+	) {
 		const transactions = await this.db
-			.select()
+			.select({
+				...getTableColumns(Transaction),
+				categoryName: Category.categoryName,
+			})
 			.from(Transaction)
 			.leftJoin(Account, eq(Account.id, Transaction.accountId))
+			.leftJoin(Category, eq(Category.id, Transaction.categoryId))
 			.where(
 				and(
-					data.categoryId && eq(Transaction.categoryId, data.categoryId),
-					data.type && eq(Transaction.type, data.type),
-					eq(Transaction.accountId, data.accountId),
+					categoryId && eq(Transaction.categoryId, categoryId),
+					type && eq(Transaction.type, type),
+					eq(Transaction.accountId, accountId),
 					eq(Account.userId, userId),
 				),
 			)
 
-		return transactions.map((tx) => tx.transactions)
+		return transactions
 	}
 
 	async patch(

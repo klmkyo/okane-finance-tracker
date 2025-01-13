@@ -1,4 +1,12 @@
-import { IsIn, IsInt, IsNumber, IsOptional, IsString } from 'class-validator'
+import { Transform } from 'class-transformer'
+import {
+	IsDate,
+	IsIn,
+	IsInt,
+	IsNumber,
+	IsOptional,
+	IsString,
+} from 'class-validator'
 import { TransactionInsert } from 'database/schema'
 import { TRANSACTION_TYPES } from 'src/common/constants'
 import { TransactionType } from 'src/common/types'
@@ -23,4 +31,8 @@ export class CreateTransactionDto implements TransactionInsert {
 	@IsOptional()
 	@IsInt()
 	categoryId?: number
+
+	@IsDate()
+	@Transform(({ value }) => new Date(value))
+	date: Date
 }

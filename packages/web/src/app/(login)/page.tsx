@@ -60,7 +60,7 @@ export default function LoginPage() {
 
 	return (
 		<div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500">
-			<Card title={t('title')} className="w-full max-w-md drop-shadow">
+			<Card title={t('pageTitle')} className="w-full max-w-md drop-shadow">
 				<Form
 					form={form}
 					name="login"

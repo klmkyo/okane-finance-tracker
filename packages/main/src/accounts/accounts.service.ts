@@ -56,6 +56,17 @@ export class AccountsService {
 			.where(eq(Account.userId, userId))
 	}
 
+	async findOne(userId: number, accountId: number) {
+		const [account] = await this.db
+			.select()
+			.from(Account)
+			.where(and(eq(Account.id, accountId), eq(Account.userId, userId)))
+
+		assert(account, 'account_not_found', NotFoundException)
+
+		return account
+	}
+
 	async update(userId: number, accountId: number, data: UpdateAccountDto) {
 		const [account] = await this.db
 			.update(Account)

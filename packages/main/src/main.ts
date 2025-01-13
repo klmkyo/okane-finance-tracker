@@ -18,7 +18,7 @@ async function bootstrap() {
 		origin: '*',
 		methods: 'GET,POST,PUT,DELETE,OPTIONS',
 		allowedHeaders: 'X-Requested-With, Content-Type, Authorization',
-	});
+	})
 
 	await app.listen(process.env.PORT ?? 4321)
 }

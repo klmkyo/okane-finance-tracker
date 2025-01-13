@@ -1,4 +1,5 @@
 {
+	"appName": "Okane",
 	"Common": {
 		"loading": "Loading...",
 		"error": "Error!",
@@ -24,15 +25,14 @@
 	},
 	"Navbar": {
 		"dashboard": "Dashboard",
-		"settings": "Settings",
-		"logout": "Logout",
 		"logoutConfirmation": "Are you sure you want to log out?",
 		"logoutLoading": "Logging out...",
 		"logoutSuccess": "You have been logged out successfully",
-		"appName": "Okane"
+		"settings": "Settings",
+		"logout": "Logout"
 	},
 	"Dashboard": {
-		"title": "Okane Personal Finance Dashboard",
+		"pageTitle": "Okane Personal Finance Dashboard",
 		"totalBalance": "Total Balance",
 		"monthlyIncome": "Monthly Income",
 		"monthlyExpenses": "Monthly Expenses",
@@ -54,7 +54,20 @@
 		"food": "Food",
 		"utilities": "Utilities",
 		"entertainment": "Entertainment",
-		"other": "Other"
+		"other": "Other",
+		"add": "Add",
+		"cancel": "Cancel",
+		"placeholder": "Enter value...",
+		"titleRequired": "Title is required",
+		"enterTitle": "Enter title",
+		"type": "Type",
+		"typeRequired": "Type is required",
+		"deposit": "Deposit",
+		"withdrawal": "Withdrawal",
+		"enterDescription": "Enter description",
+		"enterAmount": "Enter amount",
+		"selectCategory": "Select category",
+		"title": "Title"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",

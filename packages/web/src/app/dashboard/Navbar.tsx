@@ -15,7 +15,7 @@ import React, { useMemo, useCallback } from 'react'
 import { AccountSwitcher } from './components/AccountSwitcher'
 
 const Navbar: React.FC = () => {
-	const t = useTranslations('Navbar')
+	const t = useTranslations()
 	const { user } = useUser()
 	const logout = useLogout()
 

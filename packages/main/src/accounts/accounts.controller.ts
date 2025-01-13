@@ -29,6 +29,11 @@ export class AccountsController {
 		return await this.accountsService.find(userId)
 	}
 
+	@Get(':id')
+	async findOne(@UserId() userId: number, @Param('id') accountId: number) {
+		return await this.accountsService.findOne(userId, accountId)
+	}
+
 	@Patch(':id')
 	async update(
 		@UserId() userId: number,

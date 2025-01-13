@@ -2,8 +2,15 @@ import { faker } from '@faker-js/faker'
 import * as bcrypt from 'bcrypt'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
+import { createHash } from 'node:crypto'
 
 import * as dotenv from 'dotenv'
+
+const seededRandomBool = (seed: string, probability: number) => {
+	const digest = createHash('sha256').update(seed).digest('hex')
+	const value = Number.parseInt(digest.slice(0, 12), 16)
+	return value / 2 ** 48 < probability
+}
 
 dotenv.config()
 
@@ -128,9 +135,12 @@ for (let i = 0; i < ROW_COUNT; i++) {
 	if (i >= ROW_COUNT / 2) {
 		parent_category_id = faker.number.int({ min: 1, max: ROW_COUNT / 2 })
 	}
+
+	const isPrivate = seededRandomBool(i.toString(), 0.8)
+
 	const category = {
 		id: i + 1,
-		user_id: faker.number.int({ min: 1, max: ROW_COUNT }),
+		user_id: isPrivate ? faker.number.int({ min: 1, max: ROW_COUNT }) : null,
 		category_name: faker.commerce.department(),
 		parent_category_id,
 		created_at: formatDate(faker.date.past()),
@@ -358,4 +368,16 @@ sql += batchInsert(
 )
 ;(async () => {
 	await db.execute(sql)
+
+	await db.execute(`
+		SELECT setval(pg_get_serial_sequence('"users"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "users"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"accounts"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "accounts"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"ai_chat_conversations"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "ai_chat_conversations"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"ai_raports"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "ai_raports"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"categories"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "categories"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"moneyboxes"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "moneyboxes"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"recurring_transactions"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "recurring_transactions"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"saving_goals"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "saving_goals"), 1), false);
+		SELECT setval(pg_get_serial_sequence('"transactions"', 'id'), COALESCE((SELECT MAX(id)+1 FROM "transactions"), 1), false);
+`)
 })()

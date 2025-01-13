@@ -80,7 +80,7 @@ export const RecurringTransactions: React.FC<{ accountId: string }> = ({
 			<Table columns={columns} dataSource={recurringTransactions} rowKey="id" />
 			<Modal
 				title={t('addNewRecurringTransaction')}
-				visible={isModalVisible}
+				open={isModalVisible}
 				onOk={handleOk}
 				onCancel={handleCancel}
 			>

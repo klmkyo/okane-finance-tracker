@@ -1,26 +1,43 @@
 'use client'
 
+import { api } from '@/common/api/api'
 import { PlusOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, Input, Modal, Select } from 'antd'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
+interface Account {
+	id: number
+	createdAt: string
+	updatedAt: string
+	userId: number
+	accountName: string
+	balance: number
+	currency: string
+}
+
 export const AccountSwitcher: React.FC = () => {
 	const t = useTranslations('AccountSwitcher')
 	const router = useRouter()
+	const queryClient = useQueryClient()
 	const { data: accounts } = useQuery({
 		queryKey: ['accounts'],
 		queryFn: async () => {
-			// Return mock data
-			return [
-				{ id: '1', name: 'Main Account', currency: 'USD' },
-				{ id: '2', name: 'Savings Account', currency: 'EUR' },
-				// ...existing data...
-			]
+			return (await api.get<Account[]>('/accounts')).data
 		},
 	})
+
+	const { mutateAsync: createAccount, isPending } = useMutation({
+		mutationFn: async (data: { accountName: string; currency: string }) => {
+			await api.post('/accounts', data)
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['accounts'] })
+		},
+	})
+
 	const [isModalVisible, setIsModalVisible] = useState(false)
 	const [form] = Form.useForm()
 
@@ -34,9 +51,10 @@ export const AccountSwitcher: React.FC = () => {
 
 	const handleOk = () => {
 		form.validateFields().then((values) => {
-			// Handle adding new account
-			form.resetFields()
-			setIsModalVisible(false)
+			createAccount(values).then(() => {
+				form.resetFields()
+				setIsModalVisible(false)
+			})
 		})
 	}
 
@@ -66,16 +84,17 @@ export const AccountSwitcher: React.FC = () => {
 			>
 				{accounts?.map((account) => (
 					<Select.Option key={account.id} value={account.id}>
-						{account.name}
+						{account.accountName}
 					</Select.Option>
 				))}
 			</Select>
 
 			<Modal
 				title={t('addNewAccount')}
-				visible={isModalVisible}
+				open={isModalVisible}
 				onOk={handleOk}
 				onCancel={handleCancel}
+				loading={isPending}
 			>
 				<Form form={form} layout="vertical">
 					<Form.Item

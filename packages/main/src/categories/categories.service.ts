@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { Category, Database } from 'database/schema'
-import { and, eq, or } from 'drizzle-orm'
+import { and, eq, isNull, or } from 'drizzle-orm'
 import { assert } from 'src/common/assert'
 import { DB, SUCCESS } from 'src/common/constants'
 import { CreateCategoryDto } from './dto/create-category.dto'
@@ -21,7 +21,7 @@ export class CategoriesService {
 		const categories = await this.db
 			.select()
 			.from(Category)
-			.where(or(eq(Category.userId, userId), eq(Category.userId, null)))
+			.where(or(eq(Category.userId, userId), isNull(Category.userId)))
 
 		const nest = (items, id = null, link = 'parentCategoryId') =>
 			items
