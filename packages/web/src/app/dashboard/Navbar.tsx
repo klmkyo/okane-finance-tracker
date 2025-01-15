@@ -15,6 +15,7 @@ import React, { useMemo, useCallback, useState } from "react";
 import { AccountSwitcher } from "./components/AccountSwitcher";
 import { useParams } from "next/navigation";
 import { LanguageSwitcher } from "@/common/components/LanguageSwitcher";
+import { LOCALES } from "@/common/constants/locales";
 
 const Navbar: React.FC = () => {
   const t = useTranslations();
@@ -77,7 +78,6 @@ const Navbar: React.FC = () => {
               </div>
             </Link>
             <div className="flex items-center space-x-4">
-              <LanguageSwitcher />
               <AccountSwitcher />
               <Dropdown
                 menu={{ items }}
@@ -110,29 +110,15 @@ const Navbar: React.FC = () => {
         onCancel={() => setIsSettingsVisible(false)}
         footer={null}
       >
-        <div className="space-y-4">
+        <div>
           <div>
-            <h3 className="text-lg font-medium mb-2">Account Settings</h3>
-            <p className="text-gray-600">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-medium mb-2">Preferences</h3>
-            <p className="text-gray-600">
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-medium mb-2">Notifications</h3>
-            <p className="text-gray-600">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur.
-            </p>
+            <h3 className="text-lg font-medium mb-2">{t("Navbar.language")}</h3>
+            <div className="flex items-center space-x-2">
+              <span className="text-gray-600">
+                {t("Navbar.selectLanguage")}:
+              </span>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </Modal>

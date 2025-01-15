@@ -27,15 +27,10 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useTransactions } from "./FinanceDashboard";
+import { LOCALES } from "@/common/constants/locales";
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
-
-const LANGUAGES = [
-  { value: "en", label: "🇬🇧 English" },
-  { value: "pl", label: "🇵🇱 Polski" },
-  { value: "de", label: "🇩🇪 Deutsch" },
-];
 
 export const components = {
   h1: (props: any) => <Title level={1} {...props} />,
@@ -201,7 +196,12 @@ export const AiReportsPage: React.FC<{ accountId: number }> = ({
                   label={t("language")}
                   initialValue="en"
                 >
-                  <Select options={LANGUAGES} />
+                  <Select
+                    options={LOCALES.map((l) => ({
+                      value: l.code,
+                      label: `${l.flag} ${l.name}`,
+                    }))}
+                  />
                 </Form.Item>
                 <Form.Item name="notes" label={t("notes")} className="mb-4">
                   <Input.TextArea placeholder={t("enterNotesForAI")} rows={4} />

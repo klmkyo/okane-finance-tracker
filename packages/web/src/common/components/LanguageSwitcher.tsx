@@ -4,11 +4,7 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Select } from "antd";
 import Cookies from "js-cookie";
-
-const LOCALES = [
-  { code: "en", name: "English" },
-  { code: "pl", name: "Polski" },
-] as const;
+import { LOCALES } from "../constants/locales";
 
 export const LanguageSwitcher: React.FC = () => {
   const locale = useLocale();
@@ -23,8 +19,15 @@ export const LanguageSwitcher: React.FC = () => {
     <Select
       value={locale}
       onChange={handleLocaleChange}
-      options={LOCALES.map((l) => ({ value: l.code, label: l.name }))}
-      className="w-24"
+      options={LOCALES.map((l) => ({
+        value: l.code,
+        label: (
+          <div>
+            <span>{l.flag}</span> <span>{l.name}</span>
+          </div>
+        ),
+      }))}
+      className="w-36"
     />
   );
 };

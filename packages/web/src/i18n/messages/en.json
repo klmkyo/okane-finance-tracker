@@ -29,7 +29,9 @@
 		"logoutLoading": "Logging out...",
 		"logoutSuccess": "You have been logged out successfully",
 		"settings": "Settings",
-		"logout": "Logout"
+		"logout": "Logout",
+		"language": "Language",
+		"selectLanguage": "Select Language"
 	},
 	"Dashboard": {
 		"pageTitle": "Okane Personal Finance Dashboard",
