@@ -32,7 +32,14 @@ export class AiChatService {
 
 		assert(chat, 'chat_not_found', NotFoundException)
 
-		return chat.history as OpenAI.Chat.Completions.ChatCompletionMessageParam[]
+		const history =
+			chat.history as OpenAI.Chat.Completions.ChatCompletionMessageParam[]
+
+		const historyWithoutSystemPrompt = history.filter(
+			(message) => message.role !== 'system',
+		)
+
+		return historyWithoutSystemPrompt
 	}
 
 	async chat(userId: number, message: string, chatId?: number) {
