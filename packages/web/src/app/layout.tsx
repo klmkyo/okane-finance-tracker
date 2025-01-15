@@ -42,18 +42,15 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      <ReactQueryProvider>
-        <GlobalEventsProvider />
-
-        <html lang="en">
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} antialiased`}
-          >
+    <html lang={locale}>
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          <ReactQueryProvider>
+            <GlobalEventsProvider />
             <AntdRegistry>{children}</AntdRegistry>
-          </body>
-        </html>
-      </ReactQueryProvider>
-    </NextIntlClientProvider>
+          </ReactQueryProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

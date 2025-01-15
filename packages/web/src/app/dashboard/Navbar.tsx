@@ -11,14 +11,16 @@ import { Button, Dropdown, Menu, Modal } from "antd";
 import { ItemType } from "antd/es/menu/interface";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useState } from "react";
 import { AccountSwitcher } from "./components/AccountSwitcher";
 import { useParams } from "next/navigation";
+import { LanguageSwitcher } from "@/common/components/LanguageSwitcher";
 
 const Navbar: React.FC = () => {
   const t = useTranslations();
   const { user } = useUser();
   const logout = useLogout();
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
   const { accountId } = useParams();
 
@@ -49,6 +51,7 @@ const Navbar: React.FC = () => {
         key: "settings",
         icon: <SettingOutlined />,
         label: t("Navbar.settings"),
+        onClick: () => setIsSettingsVisible(true),
       },
       {
         key: "logout",
@@ -61,40 +64,79 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <Link href={`/dashboard/${accountId}`} className="flex items-center">
-            <div className="shrink-0 text-3xl font-medium text-blue-600 font-pacifico select-none">
-              {t("appName")}
-            </div>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <AccountSwitcher />
-            <Dropdown
-              menu={{ items }}
-              placement="bottomRight"
-              trigger={["click"]}
+    <>
+      <nav className="sticky top-0 z-50 bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <Link
+              href={`/dashboard/${accountId}`}
+              className="flex items-center"
             >
-              <div className="flex items-center cursor-pointer">
-                <div className="text-right mr-4 hidden sm:block">
-                  <p className="text-sm font-semibold text-gray-700">
-                    {user?.firstName}
-                  </p>
-                  <p className="text-xs text-gray-500">{user?.email}</p>
-                </div>
-                <Button
-                  type="text"
-                  className="flex items-center justify-center size-10 p-0"
-                >
-                  <EllipsisOutlined className="text-xl" />
-                </Button>
+              <div className="shrink-0 text-3xl font-medium text-blue-600 font-pacifico select-none">
+                {t("appName")}
               </div>
-            </Dropdown>
+            </Link>
+            <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
+              <AccountSwitcher />
+              <Dropdown
+                menu={{ items }}
+                placement="bottomRight"
+                trigger={["click"]}
+              >
+                <div className="flex items-center cursor-pointer">
+                  <div className="text-right mr-4 hidden sm:block">
+                    <p className="text-sm font-semibold text-gray-700">
+                      {user?.firstName}
+                    </p>
+                    <p className="text-xs text-gray-500">{user?.email}</p>
+                  </div>
+                  <Button
+                    type="text"
+                    className="flex items-center justify-center size-10 p-0"
+                  >
+                    <EllipsisOutlined className="text-xl" />
+                  </Button>
+                </div>
+              </Dropdown>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      <Modal
+        title={t("Navbar.settings")}
+        open={isSettingsVisible}
+        onCancel={() => setIsSettingsVisible(false)}
+        footer={null}
+      >
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium mb-2">Account Settings</h3>
+            <p className="text-gray-600">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium mb-2">Preferences</h3>
+            <p className="text-gray-600">
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium mb-2">Notifications</h3>
+            <p className="text-gray-600">
+              Duis aute irure dolor in reprehenderit in voluptate velit esse
+              cillum dolore eu fugiat nulla pariatur.
+            </p>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };
 
