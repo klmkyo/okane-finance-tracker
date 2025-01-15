@@ -38,7 +38,9 @@ export function AIChatPage({ accountId }: { accountId: number }) {
 
   const { mutate: sendMessage, isPending: sending } = useMutation({
     mutationFn: async (content: string) => {
-      const url = chatId ? `/ai-chat/${chatId}` : "/ai-chat";
+      const url = chatId
+        ? `/ai-chat/${chatId}?accountId=${accountId}`
+        : `/ai-chat?accountId=${accountId}`;
       return (
         await api.post<{ chatId: number } & AIMessage>(url, {
           message: content,
@@ -46,6 +48,7 @@ export function AIChatPage({ accountId }: { accountId: number }) {
       ).data;
     },
     onMutate: async (content: string) => {
+      setInputMessage("");
       const previousMessages = queryClient.getQueryData<AIMessage[]>([
         "aiChat",
         chatId,
@@ -70,7 +73,6 @@ export function AIChatPage({ accountId }: { accountId: number }) {
     },
     onSuccess: (res) => {
       if (!chatId) setChatId(res.chatId);
-      setInputMessage("");
       refetch();
     },
   });
@@ -88,7 +90,7 @@ export function AIChatPage({ accountId }: { accountId: number }) {
   return (
     <div className="p-6 max-w-3xl mx-auto flex flex-col">
       <Card title={t("title")} className="overflow-hidden flex flex-col">
-        <div className="flex-grow overflow-y-auto px-4 pb-4 h-[60vh]">
+        <div className="flex-grow overflow-y-auto overflow-x-hidden px-4 pb-4 h-[60vh]">
           <AnimatePresence initial={false}>
             {/* biome-ignore lint/a11y/useValidAriaRole: <explanation> */}
             <Message

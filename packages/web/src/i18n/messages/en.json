@@ -205,7 +205,7 @@
 	"AIChat": {
 		"title": "AI Chat",
 		"inputPlaceholder": "Type your message here...",
-		"welcomeMessage": "Hello! How can I help you today?",
+		"welcomeMessage": "Hello! How can I help you today?\n\nYou can ask me anything about your finances, such as:\n- What are my latest transactions?\n- How much did I spend on groceries last month?\n- What should I cut down on to save more money?\n\nFeel free to ask me anything!",
 		"messageSent": "Message sent",
 		"errorSending": "Error sending message"
 	},

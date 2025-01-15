@@ -1,7 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { AiChatConversation, Database } from 'database/schema'
-import { and, eq } from 'drizzle-orm'
+import {
+	AiChatConversation,
+	Database,
+	Account,
+	Transaction,
+	Category,
+} from 'database/schema'
+import { and, eq, desc, gte, lte } from 'drizzle-orm'
 import OpenAI from 'openai'
 import { assert } from 'src/common/assert'
 import { DB } from 'src/common/constants'
@@ -42,7 +48,12 @@ export class AiChatService {
 		return historyWithoutSystemPrompt
 	}
 
-	async chat(userId: number, message: string, chatId?: number) {
+	async chat(
+		userId: number,
+		message: string,
+		accountId: number,
+		chatId?: number,
+	) {
 		let messages = [] as OpenAI.Chat.Completions.ChatCompletionMessageParam[]
 
 		if (chatId) {
@@ -50,6 +61,29 @@ export class AiChatService {
 		} else {
 			messages.push({ role: 'system', content: SYSTEM_PROMPT })
 		}
+
+		const transactions = await this.db
+			.select({
+				date: Transaction.createdAt,
+				type: Transaction.type,
+				amount: Transaction.amount,
+				category: Category.categoryName,
+				title: Transaction.title,
+				description: Transaction.description,
+			})
+			.from(Transaction)
+			.leftJoin(Category, eq(Category.id, Transaction.categoryId))
+			.where(eq(Transaction.accountId, accountId))
+			.limit(100)
+
+		const transactionsString = transactions
+			.map((tx) => `${tx.date} | ${tx.title} (${tx.amount} - ${tx.category})`)
+			.join('\n')
+
+		messages.unshift({
+			role: 'system',
+			content: `Here are up to your last 100 transactions:\n${transactionsString}`,
+		})
 
 		messages.push({ role: 'user', content: message })
 

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	Post,
+	Query,
+	UseGuards,
+} from '@nestjs/common'
 import { AuthGuard } from 'src/auth/guard/auth.guard'
 import { UserId } from 'src/users/decorators/user-id.decorator'
 import { AiChatService } from './ai-chat.service'
@@ -13,9 +21,15 @@ export class AiChatController {
 	async chat(
 		@UserId() userId: number,
 		@Body() body: ChatDto,
+		@Query('accountId') accountId: string,
 		@Param('id') chatId?: string,
 	) {
-		return await this.aiChatService.chat(userId, body.message, +chatId)
+		return await this.aiChatService.chat(
+			userId,
+			body.message,
+			+accountId,
+			+chatId,
+		)
 	}
 
 	@Get(':id')
