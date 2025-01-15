@@ -17,6 +17,7 @@ import React, { useState, useEffect } from "react";
 import { NoDataMessage } from "./NoDataMessage";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import EmojiPicker from "emoji-picker-react";
+import { Goal } from "lucide-react";
 
 interface CreateSavingGoalPayload {
   moneyboxId: number;
@@ -89,7 +90,12 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
 
   return (
     <Card
-      title={t("savingsGoalsProgress")}
+      title={
+        <div className="flex items-center">
+          <Goal className="w-5 h-5 mr-2" />
+          {t("savingsGoalsProgress")}
+        </div>
+      }
       extra={
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           {t("addSavingsGoal")}

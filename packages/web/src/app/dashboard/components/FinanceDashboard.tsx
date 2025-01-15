@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Card,
+  ConfigProvider,
   DatePicker,
   Form,
   Input,
@@ -26,6 +27,19 @@ import { SavingsGoalsProgress } from "./SavingsGoalsProgress";
 import { SpendingCategoryChart } from "./SpendingCategoryChart";
 import { SpendingHistoryChart } from "./SpendingHistoryChart";
 import Link from "next/link";
+import {
+  BarChart4,
+  BrainCircuit,
+  Wallet,
+  PiggyBank,
+  TrendingUp,
+  TrendingDown,
+  LayoutDashboard,
+  Receipt,
+  MessageSquare,
+  ChartPie,
+} from "lucide-react";
+import { createStyles } from "antd-style";
 
 const { Title } = Typography;
 
@@ -85,6 +99,32 @@ export const useTransactions = (accountId: number) => {
   };
 };
 
+const useStyle = createStyles(({ prefixCls, css }: any) => ({
+  linearGradientButton: css`
+    &.${prefixCls}-btn-primary:not([disabled]):not(
+        .${prefixCls}-btn-dangerous
+      ) {
+      > span {
+        position: relative;
+      }
+
+      &::before {
+        content: "";
+        background: linear-gradient(135deg, #3b82f6, #9333ea);
+        position: absolute;
+        inset: -1px;
+        opacity: 1;
+        transition: all 0.3s;
+        border-radius: inherit;
+      }
+
+      &:hover::before {
+        opacity: 0.5;
+      }
+    }
+  `,
+}));
+
 export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
   accountId,
 }) => {
@@ -98,6 +138,8 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
   const showModal = () => {
     setIsModalVisible(true);
   };
+
+  const { styles } = useStyle();
 
   const columns = [
     {
@@ -163,46 +205,67 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
       <main className="p-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
+            <div className="flex items-center mb-2">
+              <Wallet className="w-6 h-6 mr-2 text-blue-500" />
+              <Title level={5} style={{ marginBottom: 0 }}>
+                {t("totalBalance")}
+              </Title>
+            </div>
             <Statistic
-              title={t("totalBalance")}
               value={accountData?.balance || 0}
               prefix="$"
               precision={2}
             />
           </Card>
           <Card>
-            <Statistic
-              title={t("monthlyIncome")}
-              value={monthlyIncome || 0}
-              prefix="$"
-              precision={2}
-            />
+            <div className="flex items-center mb-2">
+              <TrendingUp className="w-6 h-6 mr-2 text-green-500" />
+              <Title level={5} style={{ marginBottom: 0 }}>
+                {t("monthlyIncome")}
+              </Title>
+            </div>
+            <Statistic value={monthlyIncome || 0} prefix="$" precision={2} />
           </Card>
           <Card>
-            <Statistic
-              title={t("monthlyExpenses")}
-              value={monthlyExpense || 0}
-              prefix="$"
-              precision={2}
-            />
+            <div className="flex items-center mb-2">
+              <TrendingDown className="w-6 h-6 mr-2 text-red-500" />
+              <Title level={5} style={{ marginBottom: 0 }}>
+                {t("monthlyExpenses")}
+              </Title>
+            </div>
+            <Statistic value={monthlyExpense || 0} prefix="$" precision={2} />
           </Card>
           <Card>
-            <Statistic
-              title={t("savingsRate")}
-              value={savingsRate || 0}
-              suffix="%"
-              precision={2}
-            />
+            <div className="flex items-center mb-2">
+              <PiggyBank className="w-6 h-6 mr-2 text-purple-500" />
+              <Title level={5} style={{ marginBottom: 0 }}>
+                {t("savingsRate")}
+              </Title>
+            </div>
+            <Statistic value={savingsRate || 0} suffix="%" precision={2} />
           </Card>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <Card title={t("spendingHistory")}>
+          <Card
+            title={
+              <div className="flex items-center">
+                <BarChart4 className="w-5 h-5 mr-2" />
+                {t("spendingHistory")}
+              </div>
+            }
+          >
             <div className="h-[30rem]">
               <SpendingHistoryChart transactions={transactions ?? []} />
             </div>
           </Card>
-          <Card title={t("spendingByCategory")}>
+          <Card
+            title={
+              <div className="flex items-center">
+                <ChartPie className="w-5 h-5 mr-2" /> {t("spendingByCategory")}
+              </div>
+            }
+          >
             <div className="h-[30rem]">
               <SpendingCategoryChart transactions={transactions ?? []} />
             </div>
@@ -215,7 +278,12 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 
         <div className="mt-6">
           <Card
-            title={t("recentTransactions")}
+            title={
+              <div className="flex items-center">
+                <Receipt className="w-5 h-5 mr-2" />
+                {t("recentTransactions")}
+              </div>
+            }
             extra={
               <Button
                 type="primary"
@@ -241,15 +309,51 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
         </div>
 
         <div className="mt-6">
-          <Card title="AI Stuff">
-            <Link href={`/dashboard/${accountId}/ai-reports`}>
-              <Button type="primary">AI raports</Button>
-            </Link>
-            <Link href={`/dashboard/${accountId}/ai-chat`}>
-              <Button type="primary" className="mt-2">
-                AI chat
-              </Button>
-            </Link>
+          <Card
+            title={
+              <div className="flex items-center">
+                <BrainCircuit className="w-6 h-6 mr-2 text-blue-500" />
+
+                <span className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-purple-600">
+                  {t("aiFeatures")}
+                </span>
+              </div>
+            }
+          >
+            <ConfigProvider
+              button={{
+                className: styles.linearGradientButton,
+              }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Title
+                    level={4}
+                    className="text-white mb-4 flex items-center"
+                  >
+                    <BarChart4 className="w-5 h-5 mr-2" />
+                    {t("aiReports")}
+                  </Title>
+                  <p className="mb-4">{t("aiReportsDescription")}</p>
+                  <Link href={`/dashboard/${accountId}/ai-reports`}>
+                    <Button type="primary">{t("viewAIReports")}</Button>
+                  </Link>
+                </div>
+                <div>
+                  <Title
+                    level={4}
+                    className="text-white mb-4 flex items-center"
+                  >
+                    <MessageSquare className="w-5 h-5 mr-2" />
+                    {t("aiAssistant")}
+                  </Title>
+                  <p className="mb-4">{t("aiAssistantDescription")}</p>
+                  <Link href={`/dashboard/${accountId}/ai-chat`}>
+                    <Button type="primary">{t("chatWithAI")}</Button>
+                  </Link>
+                </div>
+              </div>
+            </ConfigProvider>
           </Card>
         </div>
       </main>
@@ -422,13 +526,6 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
   const t = useTranslations("Dashboard");
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
-
-  // const { data: categories } = useQuery({
-  // 	queryKey: ['categories'],
-  // 	queryFn: async () => {
-  // 		return (await api.get<Category[]>('/categories')).data
-  // 	},
-  // })
 
   const { categories } = useCategories();
 

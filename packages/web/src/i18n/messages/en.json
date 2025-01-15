@@ -101,7 +101,14 @@
 		"reportDeleted": "Report deleted successfully",
 		"errorDeletingReport": "Error deleting report",
 		"yes": "Yes",
-		"no": "No"
+		"no": "No",
+		"aiFeatures": "AI Features",
+		"aiReports": "AI Reports",
+		"aiReportsDescription": "Get in-depth analysis and insights about your financial data.",
+		"viewAIReports": "View AI Reports",
+		"aiAssistant": "AI Assistant",
+		"aiAssistantDescription": "Chat with our AI to get personalized financial advice and answers to your questions.",
+		"chatWithAI": "Chat with AI"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",
