@@ -9,7 +9,6 @@ import { Button, Card, Form, Input, message } from 'antd'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 import { useEffectOnceWhen } from 'rooks'
 
 interface LoginFormValues {
@@ -60,7 +59,7 @@ export default function LoginPage() {
 
 	return (
 		<div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500">
-			<Card title={t('pageTitle')} className="w-full max-w-md drop-shadow">
+			<Card title={t('title')} className="w-full max-w-md drop-shadow">
 				<Form
 					form={form}
 					name="login"
