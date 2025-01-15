@@ -37,7 +37,7 @@ const LANGUAGES = [
   { value: "de", label: "🇩🇪 Deutsch" },
 ];
 
-const components = {
+export const components = {
   h1: (props: any) => <Title level={1} {...props} />,
   h2: (props: any) => <Title level={2} {...props} />,
   h3: (props: any) => <Title level={3} {...props} />,

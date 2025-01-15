@@ -245,6 +245,11 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
             <Link href={`/dashboard/${accountId}/ai-reports`}>
               <Button type="primary">AI raports</Button>
             </Link>
+            <Link href={`/dashboard/${accountId}/ai-chat`}>
+              <Button type="primary" className="mt-2">
+                AI chat
+              </Button>
+            </Link>
           </Card>
         </div>
       </main>

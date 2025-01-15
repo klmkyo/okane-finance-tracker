@@ -202,5 +202,12 @@
 		"noAccountsDescription": "Create your first account to get started.",
 		"openAccountButton": "Open Account"
 	},
+	"AIChat": {
+		"title": "AI Chat",
+		"inputPlaceholder": "Type your message here...",
+		"welcomeMessage": "Hello! How can I help you today?",
+		"messageSent": "Message sent",
+		"errorSending": "Error sending message"
+	},
 	"noData": "No data"
 }
