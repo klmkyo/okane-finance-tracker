@@ -13,6 +13,7 @@ import {
 	Tooltip,
 } from 'recharts'
 import { Transaction } from './FinanceDashboard'
+import { NoDataMessage } from './NoDataMessage'
 
 const COLORS = [
 	'#0088FE',
@@ -34,6 +35,12 @@ export const SpendingCategoryChart: React.FC<SpendingCategoryChartProps> = ({
 }) => {
 	const [timeRange, setTimeRange] = useState<TimeRange>('week')
 	const t = useTranslations('SpendingCategoryChart')
+
+	if (!transactions?.length) {
+		return (
+			<NoDataMessage />
+		)
+	}
 
 	const chartData = useMemo(() => {
 		if (!transactions?.length) return []

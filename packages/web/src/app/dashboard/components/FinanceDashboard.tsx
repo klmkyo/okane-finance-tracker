@@ -197,10 +197,14 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 					<Card title={t('spendingHistory')}>
-						<SpendingHistoryChart transactions={transactions ?? []} />
+						<div className='h-96'>
+							<SpendingHistoryChart transactions={transactions ?? []} />
+						</div>
 					</Card>
 					<Card title={t('spendingByCategory')}>
-						<SpendingCategoryChart transactions={transactions ?? []} />
+						<div className='h-96'>
+							<SpendingCategoryChart transactions={transactions ?? []} />
+						</div>
 					</Card>
 				</div>
 

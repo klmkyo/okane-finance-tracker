@@ -167,5 +167,6 @@
 		"noAccountsTitle": "No accounts yet?",
 		"noAccountsDescription": "Create your first account to get started.",
 		"openAccountButton": "Open Account"
-	}
+	},
+	"noData": "No data"
 }

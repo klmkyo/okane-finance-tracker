@@ -14,6 +14,7 @@ import {
 	YAxis,
 } from 'recharts'
 import { Transaction } from './FinanceDashboard'
+import { NoDataMessage } from './NoDataMessage'
 
 interface SpendingHistoryChartProps {
 	transactions: Transaction[]
@@ -26,6 +27,12 @@ export const SpendingHistoryChart: React.FC<SpendingHistoryChartProps> = ({
 		'week' | 'month' | 'year' | 'tenYears'
 	>('week')
 	const t = useTranslations('SpendingHistoryChart')
+
+	if (!transactions?.length) {
+		return (
+			<NoDataMessage />
+		)
+	}
 
 	const chartData = useMemo(() => {
 		if (!transactions?.length) return []
