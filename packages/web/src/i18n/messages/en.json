@@ -67,7 +67,20 @@
 		"enterDescription": "Enter description",
 		"enterAmount": "Enter amount",
 		"selectCategory": "Select category",
-		"title": "Title"
+		"title": "Title",
+		"savingsGoalDeleted": "Savings goal deleted successfully",
+		"confirmDelete": "Confirm Deletion",
+		"deleteGoalConfirmation": "Are you sure you want to delete this savings goal?",
+		"addSavingsGoal": "Add Savings Goal",
+		"savingsGoalCreated": "Savings goal created successfully",
+		"savingsGoalUpdated": "Savings goal updated successfully",
+		"editSavingsGoal": "Edit Savings Goal",
+		"addNewSavingsGoal": "Add New Savings Goal",
+		"targetAmount": "Target Amount",
+		"targetAmountRequired": "Please input a target amount",
+		"enterTargetAmount": "Enter target amount",
+		"save": "Save",
+		"delete": "Delete"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",

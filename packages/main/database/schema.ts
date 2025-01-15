@@ -237,6 +237,7 @@ export const SavingGoal = pgTable(
 		}).notNull(),
 		title: varchar('title').notNull(),
 		description: varchar('description'),
+		icon: varchar('icon'),
 		...timestamps,
 	},
 	(table): PgTableExtraConfigValue[] => [
