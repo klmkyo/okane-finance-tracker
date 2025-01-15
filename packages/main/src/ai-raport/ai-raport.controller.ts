@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	Post,
+	Query,
+	UseGuards,
+	Delete,
+} from '@nestjs/common'
 import { AuthGuard } from 'src/auth/guard/auth.guard'
 import { UserId } from 'src/users/decorators/user-id.decorator'
 import { AiRaportService } from './ai-raport.service'
@@ -17,8 +26,21 @@ export class AiRaportController {
 		return await this.aiRaportService.generateRaport(userId, body)
 	}
 
+	@Get()
+	async getAllRaports(
+		@UserId() userId: number,
+		@Query('accountId') accountId: string,
+	) {
+		return await this.aiRaportService.getAllRaports(userId, +accountId)
+	}
+
 	@Get(':id')
 	async getRaport(@UserId() userId: number, @Param('id') chatId: string) {
 		return await this.aiRaportService.getRaport(userId, +chatId)
+	}
+
+	@Delete(':id')
+	async deleteRaport(@UserId() userId: number, @Param('id') raportId: string) {
+		return await this.aiRaportService.deleteRaport(userId, +raportId)
 	}
 }

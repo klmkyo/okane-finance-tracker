@@ -25,6 +25,7 @@ import React, { useMemo, useState } from "react";
 import { SavingsGoalsProgress } from "./SavingsGoalsProgress";
 import { SpendingCategoryChart } from "./SpendingCategoryChart";
 import { SpendingHistoryChart } from "./SpendingHistoryChart";
+import Link from "next/link";
 
 const { Title } = Typography;
 
@@ -197,12 +198,12 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <Card title={t("spendingHistory")}>
-            <div className="h-96">
+            <div className="h-[30rem]">
               <SpendingHistoryChart transactions={transactions ?? []} />
             </div>
           </Card>
           <Card title={t("spendingByCategory")}>
-            <div className="h-96">
+            <div className="h-[30rem]">
               <SpendingCategoryChart transactions={transactions ?? []} />
             </div>
           </Card>
@@ -236,6 +237,14 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
               rowKey="id"
               pagination={{ pageSize: 30 }}
             />
+          </Card>
+        </div>
+
+        <div className="mt-6">
+          <Card title="AI Stuff">
+            <Link href={`/dashboard/${accountId}/ai-reports`}>
+              <Button type="primary">AI raports</Button>
+            </Link>
           </Card>
         </div>
       </main>

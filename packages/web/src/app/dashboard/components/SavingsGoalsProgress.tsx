@@ -201,7 +201,10 @@ const SavingsGoalFormModal: React.FC<SavingsGoalFormModalProps> = ({
 
   const { mutateAsync: createMoneybox } = useMutation({
     mutationFn: async () => {
-      return api.post("/moneyboxes", { currency: "USD", balance: 0 });
+      return api.post<{ id: number }[]>("/moneyboxes", {
+        currency: "USD",
+        balance: 0,
+      });
     },
   });
 
