@@ -56,11 +56,12 @@ export class TransactionsController {
 	}
 
 	// name=file, @see https://maximorlov.com/fix-unexpected-field-error-multer/
+	// I WOULD DO A POST BODY, BUT I COULDN'T MAKE IT WORK
 	@Post('/import')
 	@UseInterceptors(FileInterceptor('file'))
 	async import(
 		@UserId() userId: number,
-		@Body() body: ImportTransactionsDto,
+		@Query() query: ImportTransactionsDto,
 		@UploadedFile(
 			new ParseFilePipe({
 				validators: [new FileTypeValidator({ fileType: 'text/csv' })],
@@ -68,8 +69,11 @@ export class TransactionsController {
 		)
 		file: Express.Multer.File,
 	) {
-		console.log(file)
-		return await this.transactionsService.importTransactions(1, 9200, file)
+		return await this.transactionsService.importTransactions(
+			userId,
+			query.accountId,
+			file,
+		)
 	}
 
 	@Get()

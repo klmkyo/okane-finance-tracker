@@ -8,18 +8,21 @@ import { Account, Category, Database, Transaction } from 'database/schema'
 import { and, eq, getTableColumns, gte, lte, sql } from 'drizzle-orm'
 import * as csv from 'fast-csv'
 import { AccountsService } from 'src/accounts/accounts.service'
+import { CategoriesService } from 'src/categories/categories.service'
 import { assert } from 'src/common/assert'
 import { DB, SUCCESS } from 'src/common/constants'
 import { TransactionType } from 'src/common/types'
 import { Readable } from 'stream'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
+import { TransactionCsvRow } from './transactions.types'
 
 @Injectable()
 export class TransactionsService {
 	constructor(
 		@Inject(DB) private db: Database,
 		private accountsService: AccountsService,
+		private categoriesService: CategoriesService,
 	) {}
 
 	async create(userId: number, data: CreateTransactionDto) {
@@ -82,11 +85,46 @@ export class TransactionsService {
 		accountId: number,
 		file: Express.Multer.File,
 	) {
+		const stream = Readable.from(file.buffer)
 		csv
-			.parseStream(file.stream)
-			.on('error', (error) => console.error(error))
-			.on('data', (row) => console.log(row))
-			.on('end', (rowCount: number) => console.log(`Parsed ${rowCount} rows`))
+			.parseStream(stream, { headers: true })
+			.on('data', async (row: TransactionCsvRow) => {
+				const insert = await transformValues(row)
+				await this.create(userId, insert)
+			})
+
+		const transformValues = async (row: TransactionCsvRow) => {
+			return {
+				date: new Date(row.date),
+				type: row.type as TransactionType,
+				amount: Number(row.amount),
+				categoryId: row.category
+					? await this._upsertCategoryByName(userId, row.category)
+					: null,
+				title: row.title,
+				description: row.description,
+				accountId,
+			}
+		}
+	}
+
+	// should not be here :(
+	private async _upsertCategoryByName(userId: number, categoryName: string) {
+		let categoryId: number
+		const [dbCategory] = await this.categoriesService.findByName(
+			userId,
+			categoryName,
+		)
+
+		categoryId = dbCategory?.id
+
+		if (!categoryId) {
+			const [dbCategory] = await this.categoriesService.create(userId, {
+				categoryName,
+			})
+			categoryId = dbCategory.id
+		}
+		return categoryId
 	}
 
 	async find(

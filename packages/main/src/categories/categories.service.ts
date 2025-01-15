@@ -31,6 +31,21 @@ export class CategoriesService {
 		return nest(categories)
 	}
 
+	async findByName(userId: number, categoryName: string) {
+		// there should be unique composite index on categoryName + userId
+		const categories = await this.db
+			.select()
+			.from(Category)
+			.where(
+				and(
+					or(eq(Category.userId, userId), isNull(Category.userId)),
+					eq(Category.categoryName, categoryName),
+				),
+			)
+
+		return categories
+	}
+
 	async update(userId: number, categoryId: number, data: UpdateCategoryDto) {
 		const [category] = await this.db
 			.update(Category)
