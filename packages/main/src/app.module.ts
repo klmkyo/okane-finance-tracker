@@ -1,5 +1,5 @@
 import { BullModule } from '@nestjs/bullmq'
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { AccountsModule } from './accounts/accounts.module'
 import { AiChatModule } from './ai-chat/ai-chat.module'
@@ -8,6 +8,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { CategoriesModule } from './categories/categories.module'
+import { RequestLoggerMiddleware } from './common/request-logger.middleware'
 import { configuration } from './config/configuration'
 import { DrizzleModule } from './drizzle/drizzle.module'
 import { MoneyboxesModule } from './moneyboxes/moneyboxes.module'
@@ -40,4 +41,10 @@ import { UsersModule } from './users/users.module'
 	controllers: [AppController],
 	providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer
+			.apply(RequestLoggerMiddleware)
+			.forRoutes({ path: '*', method: RequestMethod.ALL })
+	}
+}

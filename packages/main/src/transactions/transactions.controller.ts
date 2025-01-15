@@ -3,19 +3,27 @@ import {
 	Controller,
 	DefaultValuePipe,
 	Delete,
+	FileTypeValidator,
 	Get,
 	Param,
+	ParseFilePipe,
 	ParseIntPipe,
 	Patch,
 	Post,
 	Query,
+	Res,
+	UploadedFile,
 	UseGuards,
+	UseInterceptors,
 } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import type { Response } from 'express'
 import { AuthGuard } from 'src/auth/guard/auth.guard'
 import { TransactionType } from 'src/common/types'
 import { UserId } from 'src/users/decorators/user-id.decorator'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
-import { GetTransactionDto } from './dto/get-transaction.dto'
+import { ExportTransactionsDto } from './dto/export-transactions.dto'
+import { ImportTransactionsDto } from './dto/import-transactions.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
 import { TransactionsService } from './transactions.service'
 
@@ -29,12 +37,41 @@ export class TransactionsController {
 		return await this.transactionsService.create(userId, body)
 	}
 
-	// @Get()
-	// async find(@UserId() userId: number, @Body() body: GetTransactionDto) {
-	// 	return await this.transactionsService.find(userId, body)
-	// }
+	@Get('/export')
+	async export(
+		@Res() res: Response,
+		@UserId() userId: number,
+		@Query() query: ExportTransactionsDto,
+	) {
+		const csvBuffer = await this.transactionsService.generateCsv(
+			userId,
+			query.accountId,
+			query.periodStartDate,
+			query.periodEndDate,
+		)
 
-	// same as above, but uses query params instead of body
+		res.header('Content-Type', 'text/csv')
+		res.attachment('data.csv')
+		res.send(csvBuffer)
+	}
+
+	// name=file, @see https://maximorlov.com/fix-unexpected-field-error-multer/
+	@Post('/import')
+	@UseInterceptors(FileInterceptor('file'))
+	async import(
+		@UserId() userId: number,
+		@Body() body: ImportTransactionsDto,
+		@UploadedFile(
+			new ParseFilePipe({
+				validators: [new FileTypeValidator({ fileType: 'text/csv' })],
+			}),
+		)
+		file: Express.Multer.File,
+	) {
+		console.log(file)
+		return await this.transactionsService.importTransactions(1, 9200, file)
+	}
+
 	@Get()
 	async find(
 		@UserId() userId: number,

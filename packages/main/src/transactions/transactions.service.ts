@@ -5,13 +5,14 @@ import {
 	NotFoundException,
 } from '@nestjs/common'
 import { Account, Category, Database, Transaction } from 'database/schema'
-import { and, eq, getTableColumns } from 'drizzle-orm'
+import { and, eq, getTableColumns, gte, lte, sql } from 'drizzle-orm'
+import * as csv from 'fast-csv'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { assert } from 'src/common/assert'
 import { DB, SUCCESS } from 'src/common/constants'
 import { TransactionType } from 'src/common/types'
+import { Readable } from 'stream'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
-import { GetTransactionDto } from './dto/get-transaction.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
 
 @Injectable()
@@ -35,6 +36,57 @@ export class TransactionsService {
 			data.amount,
 		)
 		return await this.db.insert(Transaction).values(data).returning()
+	}
+
+	async generateCsv(userId: number, accountId: number, start: Date, end: Date) {
+		const data = await this.db
+			.select({
+				date: sql<string>`transactions.created_at::timestamptz`,
+				type: Transaction.type,
+				amount: Transaction.amount,
+				category: Category.categoryName,
+				title: Transaction.title,
+				description: Transaction.description,
+			})
+			.from(Transaction)
+			.leftJoin(Category, eq(Category.id, Transaction.categoryId))
+			.where(
+				and(
+					eq(Transaction.accountId, accountId),
+					gte(Transaction.createdAt, start),
+					lte(Transaction.createdAt, end),
+				),
+			)
+		console.log(data)
+
+		const createCsvBuffer = (data) => {
+			const readStream = Readable.from(data)
+			const buffers = []
+
+			return new Promise((resolve, reject) => {
+				const csvStream = csv
+					.format({ headers: true })
+					.on('data', (chunk) => buffers.push(chunk))
+					.on('end', () => resolve(Buffer.concat(buffers)))
+					.on('error', reject)
+
+				readStream.pipe(csvStream)
+			})
+		}
+
+		return await createCsvBuffer(data)
+	}
+
+	async importTransactions(
+		userId: number,
+		accountId: number,
+		file: Express.Multer.File,
+	) {
+		csv
+			.parseStream(file.stream)
+			.on('error', (error) => console.error(error))
+			.on('data', (row) => console.log(row))
+			.on('end', (rowCount: number) => console.log(`Parsed ${rowCount} rows`))
 	}
 
 	async find(
