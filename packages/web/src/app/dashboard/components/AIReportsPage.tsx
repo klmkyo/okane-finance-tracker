@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from "react";
+import { api } from "@/common/api/api";
+import { LOCALES } from "@/common/constants/locales";
 import {
+  CalendarOutlined,
+  DeleteOutlined,
+  FileTextOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Alert,
   Button,
   Card,
   DatePicker,
-  Form,
-  Space,
-  message,
-  Typography,
   Empty,
-  Spin,
-  Alert,
+  Form,
   Input,
-  Select,
   Popconfirm,
+  Select,
+  Space,
+  Spin,
+  Typography,
+  message,
 } from "antd";
-import ReactMarkdown from "react-markdown";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/common/api/api";
-import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
-import {
-  CalendarOutlined,
-  FileTextOutlined,
-  LoadingOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { useTransactions } from "./FinanceDashboard";
-import { LOCALES } from "@/common/constants/locales";
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
