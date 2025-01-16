@@ -37,12 +37,19 @@ export class TransactionsService {
 
 		assert(isUserAccount, 'not_your_account', ForbiddenException)
 
-		await this.accountsService.updateBalance(
-			data.type,
-			data.accountId,
-			data.amount,
-		)
-		return await this.db.insert(Transaction).values(data).returning()
+		return await this.db.transaction(async (tx) => {
+			const [transaction] = await tx
+				.insert(Transaction)
+				.values(data)
+				.returning()
+			await this.accountsService.updateBalance(
+				data.type,
+				data.accountId,
+				data.amount,
+				tx,
+			)
+			return transaction
+		})
 	}
 
 	async generateCsv(userId: number, accountId: number, start: Date, end: Date) {

@@ -11,8 +11,8 @@ import { UpdateAccountDto } from './dto/update-account.dto'
 export class AccountsService {
 	constructor(@Inject(DB) private db: Database) {}
 
-	async credit(accountId: number, amount: number) {
-		const [account] = await this.db
+	async credit(accountId: number, amount: number, tx = this.db) {
+		const [account] = await tx
 			.update(Account)
 			.set({ balance: sql`${Account.balance} + ${amount}` } as any)
 			.where(and(eq(Account.id, accountId)))
@@ -20,8 +20,8 @@ export class AccountsService {
 		return account
 	}
 
-	async charge(accountId: number, amount: number) {
-		const [account] = await this.db
+	async charge(accountId: number, amount: number, tx = this.db) {
+		const [account] = await tx
 			.update(Account)
 			.set({ balance: sql`${Account.balance} - ${amount}` } as any)
 			.where(and(eq(Account.id, accountId)))
@@ -33,12 +33,13 @@ export class AccountsService {
 		type: TransactionType,
 		accountId: number,
 		amount: number,
+		tx = this.db,
 	) {
 		switch (type) {
 			case 'withdraw':
-				return await this.charge(accountId, amount)
+				return await this.charge(accountId, amount, tx)
 			case 'deposit':
-				return await this.credit(accountId, amount)
+				return await this.credit(accountId, amount, tx)
 		}
 	}
 
