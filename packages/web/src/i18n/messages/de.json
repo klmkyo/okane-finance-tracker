@@ -129,7 +129,11 @@
     "actions": "Aktionen",
     "deleteTransaction": "Transaktion löschen",
     "deleteTransactionConfirm": "Sind Sie sicher, dass Sie diese Transaktion löschen möchten?",
-    "transactionDeleted": "Transaktion erfolgreich gelöscht"
+    "transactionDeleted": "Transaktion erfolgreich gelöscht",
+    "depositToSavingGoal": "Einzahlen in {goal}",
+    "deposit": "Einzahlen",
+    "depositSuccessful": "Erfolgreich in Sparziel eingezahlt",
+    "amountMustBePositive": "Betrag muss größer als 0 sein"
   },
   "DashboardLayout": {
     "notAuthenticated": "Bitte melden Sie sich an, um diese Seite zu sehen",

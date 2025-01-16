@@ -129,7 +129,13 @@
 		"actions": "Actions",
 		"deleteTransaction": "Delete Transaction",
 		"deleteTransactionConfirm": "Are you sure you want to delete this transaction?",
-		"transactionDeleted": "Transaction deleted successfully"
+		"transactionDeleted": "Transaction deleted successfully",
+		"depositToSavingGoal": "Deposit to {goal}",
+		"amount": "Amount",
+		"amountRequired": "Please enter an amount",
+		"amountMustBePositive": "Amount must be greater than 0",
+		"enterAmount": "Enter amount to deposit",
+		"depositSuccessful": "Successfully deposited to saving goal"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",

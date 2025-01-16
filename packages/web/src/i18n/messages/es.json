@@ -129,7 +129,11 @@
     "actions": "Acciones",
     "deleteTransaction": "Eliminar Transacción",
     "deleteTransactionConfirm": "¿Está seguro de que desea eliminar esta transacción?",
-    "transactionDeleted": "Transacción eliminada exitosamente"
+    "transactionDeleted": "Transacción eliminada exitosamente",
+    "depositToSavingGoal": "Depositar en {goal}",
+    "deposit": "Depositar",
+    "depositSuccessful": "Depósito realizado con éxito en la meta de ahorro",
+    "amountMustBePositive": "El monto debe ser mayor que 0"
   },
   "DashboardLayout": {
     "notAuthenticated": "Por favor, inicie sesión para ver esta página",
