@@ -11,8 +11,7 @@ export function IsEmoji(validationOptions?: ValidationOptions) {
 				validate(value: any) {
 					if (typeof value !== 'string') return false
 					// Emoji regex pattern
-					const emojiPattern =
-						/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})$/u
+					const emojiPattern = /^(\p{Emoji})$/gu
 					return emojiPattern.test(value)
 				},
 				defaultMessage: () => 'Field must contain a single emoji',
