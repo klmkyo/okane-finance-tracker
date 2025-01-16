@@ -203,7 +203,11 @@
 		"accountNameRequired": "Proszę podać nazwę konta",
 		"currency": "Waluta",
 		"currencyRequired": "Proszę wybrać walutę",
-		"selectCurrency": "Wybierz walutę"
+		"selectCurrency": "Wybierz walutę",
+		"createNewAccount": "Utwórz nowe konto",
+		"create": "Utwórz",
+		"accountCreated": "Konto zostało pomyślnie utworzone",
+		"accountCreationError": "Błąd podczas tworzenia konta"
 	},
 	"FinanceDashboard": {
 		"enterDescription": "Wprowadź opis",

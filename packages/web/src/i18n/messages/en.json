@@ -205,7 +205,11 @@
 		"accountNameRequired": "Please enter account name",
 		"currency": "Currency",
 		"currencyRequired": "Please select currency",
-		"selectCurrency": "Select Currency"
+		"selectCurrency": "Select Currency",
+		"createNewAccount": "Create New Account",
+		"create": "Create",
+		"accountCreated": "Account created successfully",
+		"accountCreationError": "Error creating account"
 	},
 	"FinanceDashboard": {
 		"enterDescription": "Enter description",
