@@ -120,7 +120,12 @@
 		"viewAIReports": "Zobacz raporty AI",
 		"aiAssistant": "Asystent AI",
 		"aiAssistantDescription": "Rozmawiaj z AI, aby uzyskać spersonalizowane porady finansowe i odpowiedzi na swoje pytania.",
-		"chatWithAI": "Rozmawiaj z AI"
+		"chatWithAI": "Rozmawiaj z AI",
+		"messageSent": "Wiadomość wysłana",
+		"errorSending": "Błąd podczas wysyłania wiadomości",
+		"chatHistory": "Historia czatu",
+		"noChatHistory": "Brak poprzednich czatów",
+		"loadingHistory": "Wczytywanie historii czatu..."
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Zaloguj się, aby zobaczyć tę stronę",
@@ -206,8 +211,8 @@
 		"amountRequired": "Proszę podać kwotę!",
 		"enterAmount": "Wprowadź kwotę",
 		"enterTitle": "Wprowadź tytuł",
-		"frequency": "Częstotliwość",
-		"frequencyRequired": "Proszę wybrać jak często transakcja się powtarza",
+		"interval": "Częstotliwość",
+		"intervalRequired": "Proszę wybrać jak często ta transakcja się powtarza",
 		"startDate": "Data rozpoczęcia",
 		"startDateRequired": "Proszę podać datę rozpoczęcia!",
 		"endDate": "Data zakończenia",
@@ -242,7 +247,11 @@
 		"inputPlaceholder": "Wpisz swoją wiadomość tutaj...",
 		"welcomeMessage": "Cześć! W czym mogę Ci pomóc?\n\nMożesz pytać o swoje finanse, na przykład:\n- Jakie są moje ostatnie transakcje?\n- Ile wydałem na jedzenie w zeszłym miesiącu?\n- Na czym mogę zaoszczędzić więcej?\n\nŚmiało pytaj o cokolwiek!",
 		"messageSent": "Wiadomość wysłana",
-		"errorSending": "Błąd podczas wysyłania wiadomości"
+		"errorSending": "Błąd podczas wysyłania wiadomości",
+		"chatHistory": "Historia czatu",
+		"noChatHistory": "Brak poprzednich czatów",
+		"loadingHistory": "Wczytywanie historii czatu...",
+		"newChat": "Nowy czat"
 	},
 	"noData": "Brak danych"
 }
