@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/common/api/api";
+import { ECurrency } from "@/common/types/currency";
 import { PlusOutlined } from "@ant-design/icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Select, Modal, Form, Input, Button, message } from "antd";
@@ -121,9 +122,11 @@ export const AccountSwitcher: React.FC = () => {
             initialValue="USD"
           >
             <Select>
-              <Select.Option value="USD">USD</Select.Option>
-              <Select.Option value="EUR">EUR</Select.Option>
-              <Select.Option value="GBP">GBP</Select.Option>
+              {Object.values(ECurrency).map((currency) => (
+                <Select.Option key={currency} value={currency}>
+                  {currency}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item className="mb-0 flex justify-end">

@@ -24,6 +24,9 @@ import { Goal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useState, useEffect } from "react";
 import { NoDataMessage } from "./NoDataMessage";
+import { formatCurrency } from "@/common/utils/currency";
+import { ECurrency } from "@/common/types/currency";
+import { useAccount } from "./FinanceDashboard";
 
 interface CreateSavingGoalPayload {
   moneyboxId: number;
@@ -60,6 +63,8 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
   const [isTransferModalVisible, setIsTransferModalVisible] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState<SavingGoal | null>(null);
   const queryClient = useQueryClient();
+
+  const { data: account } = useAccount(accountId);
 
   const { data: goals } = useQuery({
     queryKey: ["savingsGoals", accountId],
@@ -177,7 +182,15 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
                 </div>
                 <Progress
                   percent={Math.round((goal.amount / goal.targetAmount) * 100)}
-                  format={() => `$${goal.amount} / $${goal.targetAmount}`}
+                  format={() =>
+                    `${formatCurrency(
+                      goal.amount,
+                      account?.currency ?? "USD"
+                    )} / ${formatCurrency(
+                      goal.targetAmount,
+                      account?.currency ?? "USD"
+                    )}`
+                  }
                   status="active"
                 />
               </div>
@@ -203,6 +216,7 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
         goal={selectedGoal}
         onDeposit={depositToSavingGoal}
         onWithdraw={withdrawFromSavingGoal}
+        accountId={accountId}
       />
     </Card>
   );
@@ -227,6 +241,8 @@ const SavingsGoalFormModal: React.FC<SavingsGoalFormModalProps> = ({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState(goal?.icon || "🎯");
   const isEditing = !!goal;
+
+  const { data: account } = useAccount(accountId);
 
   useEffect(() => {
     if (goal) {
@@ -368,7 +384,7 @@ const SavingsGoalFormModal: React.FC<SavingsGoalFormModalProps> = ({
           rules={[{ required: true, message: t("targetAmountRequired") }]}
         >
           <InputNumber
-            prefix="$"
+            prefix={account?.currency ?? "USD"}
             style={{ width: "100%" }}
             min={0}
             placeholder={t("enterTargetAmount")}
@@ -389,6 +405,7 @@ interface TransferModalProps {
   goal: SavingGoal | null;
   onDeposit: (data: DepositToSavingGoalPayload) => Promise<any>;
   onWithdraw: (data: DepositToSavingGoalPayload) => Promise<any>;
+  accountId: number;
 }
 
 const TransferModal: React.FC<TransferModalProps> = ({
@@ -397,12 +414,15 @@ const TransferModal: React.FC<TransferModalProps> = ({
   goal,
   onDeposit,
   onWithdraw,
+  accountId,
 }) => {
   const [form] = Form.useForm();
   const t = useTranslations("Dashboard");
   const [transferType, setTransferType] = useState<"deposit" | "withdraw">(
     "deposit"
   );
+
+  const { account } = useAccount(accountId);
 
   const handleOk = async () => {
     form.validateFields().then(async (values) => {
@@ -466,7 +486,7 @@ const TransferModal: React.FC<TransferModalProps> = ({
           ]}
         >
           <InputNumber
-            prefix="$"
+            prefix={account?.currency ?? "USD"}
             style={{ width: "100%" }}
             placeholder={t("enterAmount")}
           />

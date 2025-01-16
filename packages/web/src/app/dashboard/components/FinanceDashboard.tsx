@@ -41,6 +41,8 @@ import { RecurringTransactions } from "./RecurringTransactions";
 import { SavingsGoalsProgress } from "./SavingsGoalsProgress";
 import { SpendingCategoryChart } from "./SpendingCategoryChart";
 import { SpendingHistoryChart } from "./SpendingHistoryChart";
+import { ECurrency } from "@/common/types/currency";
+import { formatCurrency } from "@/common/utils/currency";
 
 const { Title } = Typography;
 
@@ -65,6 +67,7 @@ export interface Account {
   userId: number;
   accountName: string;
   balance: number;
+  currency: ECurrency;
 }
 
 interface FinanceDashboardProps {
@@ -248,8 +251,9 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
             </div>
             <Statistic
               value={accountData?.balance || 0}
-              prefix="$"
-              precision={2}
+              formatter={(value) =>
+                formatCurrency(value as number, accountData?.currency || "USD")
+              }
             />
           </Card>
           <Card>
@@ -259,7 +263,12 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
                 {t("monthlyIncome")}
               </Title>
             </div>
-            <Statistic value={monthlyIncome || 0} prefix="$" precision={2} />
+            <Statistic
+              value={monthlyIncome || 0}
+              formatter={(value) =>
+                formatCurrency(value as number, accountData?.currency || "USD")
+              }
+            />
           </Card>
           <Card>
             <div className="flex items-center mb-2">
@@ -268,7 +277,12 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
                 {t("monthlyExpenses")}
               </Title>
             </div>
-            <Statistic value={monthlyExpense || 0} prefix="$" precision={2} />
+            <Statistic
+              value={monthlyExpense || 0}
+              formatter={(value) =>
+                formatCurrency(value as number, accountData?.currency || "USD")
+              }
+            />
           </Card>
           <Card>
             <div className="flex items-center mb-2">
@@ -513,7 +527,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           style={{ width: "100%" }}
         >
           <InputNumber
-            prefix="$"
+            prefix={account.currency}
             style={{ width: "100%" }}
             min={0}
             placeholder={t("enterAmount")}
