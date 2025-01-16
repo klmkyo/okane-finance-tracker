@@ -125,7 +125,11 @@
 		"errorSending": "Error sending message",
 		"chatHistory": "Chat History",
 		"noChatHistory": "No previous chats",
-		"loadingHistory": "Loading chat history..."
+		"loadingHistory": "Loading chat history...",
+		"actions": "Actions",
+		"deleteTransaction": "Delete Transaction",
+		"deleteTransactionConfirm": "Are you sure you want to delete this transaction?",
+		"transactionDeleted": "Transaction deleted successfully"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",

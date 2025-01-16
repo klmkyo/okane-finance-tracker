@@ -125,7 +125,11 @@
 		"errorSending": "Błąd podczas wysyłania wiadomości",
 		"chatHistory": "Historia czatu",
 		"noChatHistory": "Brak poprzednich czatów",
-		"loadingHistory": "Wczytywanie historii czatu..."
+		"loadingHistory": "Wczytywanie historii czatu...",
+		"actions": "Akcje",
+		"deleteTransaction": "Usuń transakcję",
+		"deleteTransactionConfirm": "Czy na pewno chcesz usunąć tę transakcję?",
+		"transactionDeleted": "Transakcja została pomyślnie usunięta"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Zaloguj się, aby zobaczyć tę stronę",

@@ -125,7 +125,11 @@
     "errorSending": "Error al enviar el mensaje",
     "chatHistory": "Historial de chat",
     "noChatHistory": "No hay chats anteriores",
-    "loadingHistory": "Cargando historial de chat..."
+    "loadingHistory": "Cargando historial de chat...",
+    "actions": "Acciones",
+    "deleteTransaction": "Eliminar Transacción",
+    "deleteTransactionConfirm": "¿Está seguro de que desea eliminar esta transacción?",
+    "transactionDeleted": "Transacción eliminada exitosamente"
   },
   "DashboardLayout": {
     "notAuthenticated": "Por favor, inicie sesión para ver esta página",

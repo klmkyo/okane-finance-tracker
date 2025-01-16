@@ -125,7 +125,11 @@
     "errorSending": "Fehler beim Senden der Nachricht",
     "chatHistory": "Chatverlauf",
     "noChatHistory": "Kein vorheriger Chat",
-    "loadingHistory": "Chatverlauf wird geladen..."
+    "loadingHistory": "Chatverlauf wird geladen...",
+    "actions": "Aktionen",
+    "deleteTransaction": "Transaktion löschen",
+    "deleteTransactionConfirm": "Sind Sie sicher, dass Sie diese Transaktion löschen möchten?",
+    "transactionDeleted": "Transaktion erfolgreich gelöscht"
   },
   "DashboardLayout": {
     "notAuthenticated": "Bitte melden Sie sich an, um diese Seite zu sehen",

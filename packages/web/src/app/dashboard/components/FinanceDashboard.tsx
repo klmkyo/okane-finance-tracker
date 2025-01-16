@@ -45,6 +45,7 @@ import { SpendingHistoryChart } from "./SpendingHistoryChart";
 const { Title } = Typography;
 
 export interface Transaction {
+  id: number;
   accountId: number;
   title: string;
   amount: number;
@@ -131,6 +132,7 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const t = useTranslations("Dashboard");
+  const queryClient = useQueryClient();
 
   const { data: accountData } = useAccount(accountId);
 
@@ -172,7 +174,39 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
       render: (categoryName: string) =>
         categoryName || <span className="opacity-50">-</span>,
     },
+    {
+      title: t("actions"),
+      key: "actions",
+      render: (_: unknown, record: Transaction) => (
+        <Button
+          type="text"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            Modal.confirm({
+              title: t("deleteTransaction"),
+              content: t("deleteTransactionConfirm"),
+              okText: t("delete"),
+              okType: "danger",
+              cancelText: t("cancel"),
+              onOk: () => deleteTransaction.mutateAsync(record.id),
+            });
+          }}
+        />
+      ),
+    },
   ];
+
+  const deleteTransaction = useMutation({
+    mutationFn: async (transactionId: number) => {
+      return api.delete(`/transactions/${transactionId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions", accountId] });
+      queryClient.invalidateQueries({ queryKey: ["account", accountId] });
+      message.success(t("transactionDeleted"));
+    },
+  });
 
   const monthlyIncome = useMemo(() => {
     return (
