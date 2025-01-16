@@ -3,6 +3,7 @@ import { AuthService } from './auth.service'
 import { LoginDto } from './dto/user-login.dto'
 import { RegisterDto } from './dto/user-register.dto'
 import { LocalAuthGuard } from './guard/local-auth.guard'
+import { AuthGuard } from './guard/auth.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -14,11 +15,10 @@ export class AuthController {
 		return this.authService.login(req.user)
 	}
 
-	// TODO this is broken
-	@UseGuards(LocalAuthGuard)
 	@Post('logout')
-	async logout(@Request() req) {
-		return req.logout()
+	@UseGuards(AuthGuard)
+	async logout() {
+		return { message: 'Logged out successfully' }
 	}
 
 	@Post('register')
