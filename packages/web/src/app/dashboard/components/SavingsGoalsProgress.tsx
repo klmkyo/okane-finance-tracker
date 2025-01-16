@@ -17,6 +17,7 @@ import {
   Modal,
   Progress,
   message,
+  Radio,
 } from "antd";
 import EmojiPicker from "emoji-picker-react";
 import { Goal } from "lucide-react";
@@ -56,7 +57,7 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
 }) => {
   const t = useTranslations("Dashboard");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDepositModalVisible, setIsDepositModalVisible] = useState(false);
+  const [isTransferModalVisible, setIsTransferModalVisible] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState<SavingGoal | null>(null);
   const queryClient = useQueryClient();
 
@@ -87,8 +88,20 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries();
-      queryClient.invalidateQueries();
       message.success(t("depositSuccessful"));
+    },
+  });
+
+  const { mutateAsync: withdrawFromSavingGoal } = useMutation({
+    mutationFn: async ({ amount }: DepositToSavingGoalPayload) => {
+      return api.post(`/saving-goals/${selectedGoal?.id}/withdraw`, {
+        accountId,
+        amount,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+      message.success(t("withdrawalSuccessful"));
     },
   });
 
@@ -113,9 +126,9 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
     });
   };
 
-  const handleDeposit = (goal: SavingGoal) => {
+  const handleTransfer = (goal: SavingGoal) => {
     setSelectedGoal(goal);
-    setIsDepositModalVisible(true);
+    setIsTransferModalVisible(true);
   };
 
   return (
@@ -146,7 +159,8 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
                       icon={<WalletOutlined />}
                       size="small"
                       type="primary"
-                      onClick={() => handleDeposit(goal)}
+                      onClick={() => handleTransfer(goal)}
+                      title={t("transfer")}
                     />
                     <Button
                       icon={<EditOutlined />}
@@ -183,11 +197,12 @@ export const SavingsGoalsProgress: React.FC<{ accountId: number }> = ({
         accountId={accountId}
       />
 
-      <DepositModal
-        visible={isDepositModalVisible}
-        setVisible={setIsDepositModalVisible}
+      <TransferModal
+        visible={isTransferModalVisible}
+        setVisible={setIsTransferModalVisible}
         goal={selectedGoal}
         onDeposit={depositToSavingGoal}
+        onWithdraw={withdrawFromSavingGoal}
       />
     </Card>
   );
@@ -368,25 +383,34 @@ const SavingsGoalFormModal: React.FC<SavingsGoalFormModalProps> = ({
   );
 };
 
-interface DepositModalProps {
+interface TransferModalProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   goal: SavingGoal | null;
   onDeposit: (data: DepositToSavingGoalPayload) => Promise<any>;
+  onWithdraw: (data: DepositToSavingGoalPayload) => Promise<any>;
 }
 
-const DepositModal: React.FC<DepositModalProps> = ({
+const TransferModal: React.FC<TransferModalProps> = ({
   visible,
   setVisible,
   goal,
   onDeposit,
+  onWithdraw,
 }) => {
   const [form] = Form.useForm();
   const t = useTranslations("Dashboard");
+  const [transferType, setTransferType] = useState<"deposit" | "withdraw">(
+    "deposit"
+  );
 
   const handleOk = async () => {
     form.validateFields().then(async (values) => {
-      await onDeposit(values);
+      if (transferType === "deposit") {
+        await onDeposit(values);
+      } else {
+        await onWithdraw(values);
+      }
       setVisible(false);
       form.resetFields();
     });
@@ -394,14 +418,29 @@ const DepositModal: React.FC<DepositModalProps> = ({
 
   return (
     <Modal
-      title={t("depositToSavingGoal", { goal: goal?.title })}
+      title={t("transferSavingGoal", { goal: goal?.title })}
       open={visible}
       onOk={handleOk}
       onCancel={() => setVisible(false)}
-      okText={t("deposit")}
+      okText={t(transferType === "deposit" ? "deposit" : "withdraw")}
       cancelText={t("cancel")}
     >
       <Form form={form} layout="vertical">
+        <Form.Item
+          name="transferType"
+          label={t("transferType")}
+          initialValue={transferType}
+        >
+          <Radio.Group
+            onChange={(e) => setTransferType(e.target.value)}
+            value={transferType}
+            className="flex gap-4 mb-4"
+          >
+            <Radio.Button value="deposit">{t("deposit")}</Radio.Button>
+            <Radio.Button value="withdraw">{t("withdraw")}</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+
         <Form.Item
           name="amount"
           label={t("amount")}
@@ -412,6 +451,18 @@ const DepositModal: React.FC<DepositModalProps> = ({
               min: 0.01,
               message: t("amountMustBePositive"),
             },
+            ...(transferType === "withdraw"
+              ? [
+                  {
+                    validator: (_: unknown, value: number) => {
+                      if (value > (goal?.amount || 0)) {
+                        return Promise.reject(t("insufficientFunds"));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]
+              : []),
           ]}
         >
           <InputNumber

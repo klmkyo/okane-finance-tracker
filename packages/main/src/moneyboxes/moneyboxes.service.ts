@@ -63,14 +63,15 @@ export class MoneyboxesService {
 
 		assert(moneybox, 'moneybox_not_found', NotFoundException)
 
-		// Verify account ownership
-		await this.accountsService.findOne(userId, accountId)
+		// Verify account ownership and get account
+		const account = await this.accountsService.findOne(userId, accountId)
+		assert(account.balance >= amount, 'insufficient_funds', NotFoundException)
 
 		return await this.db.transaction(async (tx) => {
-			// Charge the source account
+			// Subtract from account
 			await this.accountsService.charge(accountId, amount, tx)
 
-			// Update moneybox balance
+			// Add to moneybox
 			const [updatedMoneybox] = await tx
 				.update(Moneybox)
 				.set({ balance: sql`${Moneybox.balance} + ${amount}` } as any)

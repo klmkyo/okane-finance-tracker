@@ -3,6 +3,7 @@ import {
 	Controller,
 	Delete,
 	Get,
+	NotFoundException,
 	Param,
 	Patch,
 	Post,
@@ -10,6 +11,7 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from 'src/auth/guard/auth.guard'
 import { UserId } from 'src/users/decorators/user-id.decorator'
+import { assert } from 'src/common/assert'
 import { CreateSavingGoalDto } from './dto/create-saving-goal.dto'
 import { UpdateSavingGoalDto } from './dto/update-saving-goal.dto'
 import { SavingGoalsService } from './saving-goals.service'
@@ -45,5 +47,23 @@ export class SavingGoalsController {
 	@Delete(':id')
 	async delete(@UserId() userId: number, @Param('id') savingGoalId: string) {
 		return this.savingGoalsService.delete(userId, +savingGoalId)
+	}
+
+	@Post(':id/withdraw')
+	async withdraw(
+		@UserId() userId: number,
+		@Param('id') savingGoalId: string,
+		@Body() body: { accountId: number; amount: number },
+	) {
+		const goals = await this.savingGoalsService.find(userId)
+		const goal = goals.find((g) => g.id === +savingGoalId)
+		assert(goal, 'saving_goal_not_found', NotFoundException)
+
+		return await this.savingGoalsService.withdraw(
+			userId,
+			goal.moneyboxId,
+			body.accountId,
+			body.amount,
+		)
 	}
 }

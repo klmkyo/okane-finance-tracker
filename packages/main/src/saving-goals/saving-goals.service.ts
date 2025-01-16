@@ -1,14 +1,18 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { Database, Moneybox, SavingGoal } from 'database/schema'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { assert } from 'src/common/assert'
 import { DB, SUCCESS } from 'src/common/constants'
 import { CreateSavingGoalDto } from './dto/create-saving-goal.dto'
 import { UpdateSavingGoalDto } from './dto/update-saving-goal.dto'
+import { AccountsService } from 'src/accounts/accounts.service'
 
 @Injectable()
 export class SavingGoalsService {
-	constructor(@Inject(DB) private db: Database) {}
+	constructor(
+		@Inject(DB) private db: Database,
+		private accountsService: AccountsService,
+	) {}
 
 	async create(userId: number, data: CreateSavingGoalDto) {
 		const [moneybox] = await this.db
@@ -64,5 +68,37 @@ export class SavingGoalsService {
 
 		assert(savingGoal, 'saving_goal_not_found', NotFoundException)
 		return SUCCESS
+	}
+
+	async withdraw(
+		userId: number,
+		moneyboxId: number,
+		accountId: number,
+		amount: number,
+	) {
+		const [moneybox] = await this.db
+			.select()
+			.from(Moneybox)
+			.where(and(eq(Moneybox.id, moneyboxId), eq(Moneybox.userId, userId)))
+
+		assert(moneybox, 'moneybox_not_found', NotFoundException)
+		assert(moneybox.balance >= amount, 'insufficient_funds', NotFoundException)
+
+		// Verify account ownership
+		await this.accountsService.findOne(userId, accountId)
+
+		return await this.db.transaction(async (tx) => {
+			// Subtract from moneybox
+			const [updatedMoneybox] = await tx
+				.update(Moneybox)
+				.set({ balance: sql`${Moneybox.balance} - ${amount}` } as any)
+				.where(eq(Moneybox.id, moneyboxId))
+				.returning()
+
+			// Add to account
+			await this.accountsService.credit(accountId, amount, tx)
+
+			return updatedMoneybox
+		})
 	}
 }
