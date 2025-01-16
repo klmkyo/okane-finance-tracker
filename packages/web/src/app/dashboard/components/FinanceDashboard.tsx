@@ -37,6 +37,7 @@ import {
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
+import { RecurringTransactions } from './RecurringTransactions'
 import { SavingsGoalsProgress } from './SavingsGoalsProgress'
 import { SpendingCategoryChart } from './SpendingCategoryChart'
 import { SpendingHistoryChart } from './SpendingHistoryChart'
@@ -355,6 +356,10 @@ export const FinanceDashboard: React.FC<FinanceDashboardProps> = ({
 							</div>
 						</ConfigProvider>
 					</Card>
+				</div>
+
+				<div className="mt-6">
+					<RecurringTransactions accountId={accountId} />
 				</div>
 			</main>
 

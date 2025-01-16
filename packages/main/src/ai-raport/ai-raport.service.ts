@@ -18,8 +18,8 @@ import { ChatCompletionMessageParam } from 'openai/resources'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { assert } from 'src/common/assert'
 import { DB } from 'src/common/constants'
-import { GenerateRaportDto } from './dto/generate-raport.dto'
 import { RAPORT_SYSTEM_PROMPT } from './ai-raport.constants'
+import { GenerateRaportDto } from './dto/generate-raport.dto'
 
 @Injectable()
 export class AiRaportService {

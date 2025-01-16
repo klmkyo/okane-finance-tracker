@@ -1,12 +1,12 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Post,
 	Query,
 	UseGuards,
-	Delete,
 } from '@nestjs/common'
 import { AuthGuard } from 'src/auth/guard/auth.guard'
 import { UserId } from 'src/users/decorators/user-id.decorator'

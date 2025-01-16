@@ -1,13 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import {
-	AiChatConversation,
-	Database,
 	Account,
-	Transaction,
+	AiChatConversation,
 	Category,
+	Database,
+	Transaction,
 } from 'database/schema'
-import { and, eq, desc, gte, lte } from 'drizzle-orm'
+import { and, desc, eq, gte, lte } from 'drizzle-orm'
 import OpenAI from 'openai'
 import { assert } from 'src/common/assert'
 import { DB } from 'src/common/constants'
