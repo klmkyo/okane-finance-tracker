@@ -231,7 +231,7 @@
 		"everyMonth": "Every month",
 		"everyYear": "Every year",
 		"deposit": "Income",
-		"withdraw": "Expense",
+		"withdrawal": "Expense",
 		"type": "Type",
 		"typeRequired": "Please select a type",
 		"interval": "Frequency",
