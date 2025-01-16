@@ -46,4 +46,18 @@ export class MoneyboxesController {
 	async delete(@UserId() userId: number, @Param('id') moneyboxId: string) {
 		return this.moneyboxesService.delete(userId, +moneyboxId)
 	}
+
+	@Post(':id/deposit')
+	async deposit(
+		@UserId() userId: number,
+		@Param('id') moneyboxId: string,
+		@Body() body: { accountId: number; amount: number },
+	) {
+		return await this.moneyboxesService.deposit(
+			userId,
+			+moneyboxId,
+			body.accountId,
+			body.amount,
+		)
+	}
 }

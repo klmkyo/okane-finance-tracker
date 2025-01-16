@@ -244,9 +244,6 @@ export class TransactionsService {
 		assert(tx, 'not_found', NotFoundException)
 
 		return await this.db.transaction(async (dbTx) => {
-			// Reverse the transaction's effect on balance
-			// For a withdrawal, we need to add the amount back
-			// For a deposit, we need to subtract the amount
 			const reverseType =
 				tx.transactions.type === 'withdraw' ? 'deposit' : 'withdraw'
 			await this.accountsService.updateBalance(
