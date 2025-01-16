@@ -1,0 +1,1 @@
+ALTER TABLE "ai_chat_conversations" ADD COLUMN "title" text;

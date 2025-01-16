@@ -17,6 +17,11 @@ import { ChatDto } from './dto/chat.dto'
 export class AiChatController {
 	constructor(private aiChatService: AiChatService) {}
 
+	@Get()
+	async getAllChats(@UserId() userId: number) {
+		return await this.aiChatService.getAllChats(userId)
+	}
+
 	@Post(':id?')
 	async chat(
 		@UserId() userId: number,

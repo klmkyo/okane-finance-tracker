@@ -43,6 +43,13 @@
       "when": 1736939939745,
       "tag": "0005_emoji_saving_icon",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1736991218331,
+      "tag": "0006_add_chat_title",
+      "breakpoints": true
     }
   ]
 }

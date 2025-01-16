@@ -3,7 +3,7 @@ import { api } from '@/common/api/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, Input, Typography, message } from 'antd'
 import { AnimatePresence, motion } from 'framer-motion'
-import { SendHorizontal } from 'lucide-react'
+import { History, Plus, SendHorizontal } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import React, { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -16,11 +16,19 @@ interface AIMessage {
 	content: string
 }
 
+interface ChatHistory {
+	id: number
+	conversationLog: AIMessage[]
+	createdAt: string
+	title?: string
+}
+
 export function AIChatPage({ accountId }: { accountId: number }) {
 	const t = useTranslations('AIChat')
 	const [chatId, setChatId] = useState<number | null>(null)
 	const [inputMessage, setInputMessage] = useState('')
 	const messagesEndRef = useRef<HTMLDivElement>(null)
+	const messagesStartRef = useRef<HTMLDivElement>(null)
 	const queryClient = useQueryClient()
 
 	const {
@@ -35,6 +43,17 @@ export function AIChatPage({ accountId }: { accountId: number }) {
 		},
 		enabled: !!chatId,
 	})
+
+	const { data: chatHistory, isLoading: loadingHistory } = useQuery({
+		queryKey: ['aiChatHistory'],
+		queryFn: async () => {
+			return (await api.get<ChatHistory[]>('/ai-chat')).data
+		},
+	})
+
+	const handleNewChat = () => {
+		setChatId(null)
+	}
 
 	const { mutate: sendMessage, isPending: sending } = useMutation({
 		mutationFn: async (content: string) => {
@@ -72,7 +91,11 @@ export function AIChatPage({ accountId }: { accountId: number }) {
 			queryClient.invalidateQueries({ queryKey: ['aiChat', chatId] })
 		},
 		onSuccess: (res) => {
-			if (!chatId) setChatId(res.chatId)
+			if (!chatId) {
+				setChatId(res.chatId)
+				// Refresh chat history when a new chat is created
+				queryClient.invalidateQueries({ queryKey: ['aiChatHistory'] })
+			}
 			refetch()
 		},
 	})
@@ -87,8 +110,17 @@ export function AIChatPage({ accountId }: { accountId: number }) {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
 	}, [messages])
 
+	const handleChatSelect = (selectedChatId: number) => {
+		setChatId(selectedChatId)
+		refetch()
+
+		setTimeout(() => {
+			window.scrollTo({ top: 0, behavior: 'smooth' })
+		}, 100)
+	}
+
 	return (
-		<div className="p-6 max-w-3xl mx-auto flex flex-col">
+		<div className="p-6 max-w-3xl mx-auto flex flex-col space-y-6">
 			<Card title={t('title')} className="overflow-hidden flex flex-col">
 				<div className="flex-grow overflow-y-auto overflow-x-hidden px-4 pb-4 h-[60vh]">
 					<AnimatePresence initial={false}>
@@ -130,6 +162,68 @@ export function AIChatPage({ accountId }: { accountId: number }) {
 							className="flex items-center justify-center"
 						/>
 					</div>
+				</div>
+			</Card>
+
+			<Card
+				title={
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<History className="h-5 w-5" />
+							<span>{t('chatHistory')}</span>
+						</div>
+						<Button
+							type="primary"
+							icon={<Plus className="h-4 w-4" />}
+							onClick={handleNewChat}
+							className="flex items-center gap-1"
+						>
+							{t('newChat')}
+						</Button>
+					</div>
+				}
+				className="overflow-hidden"
+			>
+				<div className="space-y-2">
+					{loadingHistory ? (
+						<Text className="text-gray-500">{t('loadingHistory')}</Text>
+					) : chatHistory?.length ? (
+						chatHistory.map((chat) => {
+							let title = chat.title
+
+							if (!title) {
+								title = chat.conversationLog[1]?.content.slice(0, 50)
+							}
+
+							let isTruncated = false
+
+							if (title.length > 50) {
+								isTruncated = true
+								title = title.slice(0, 50)
+							}
+
+							return (
+								<button
+									type="button"
+									key={chat.id}
+									className="w-full p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors text-left"
+									onClick={() => handleChatSelect(chat.id)}
+								>
+									<div className="flex justify-between items-center">
+										<Text className="font-medium">
+											{title}
+											{isTruncated && '...'}
+										</Text>
+										<Text className="text-gray-500 text-sm">
+											{new Date(chat.createdAt).toLocaleDateString()}
+										</Text>
+									</div>
+								</button>
+							)
+						})
+					) : (
+						<Text className="text-gray-500">{t('noChatHistory')}</Text>
+					)}
 				</div>
 			</Card>
 		</div>

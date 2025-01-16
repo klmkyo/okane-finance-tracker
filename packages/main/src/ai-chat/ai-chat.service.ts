@@ -48,6 +48,26 @@ export class AiChatService {
 		return historyWithoutSystemPrompt
 	}
 
+	async getAllChats(userId: number) {
+		const chats = await this.db
+			.select({
+				id: AiChatConversation.id,
+				conversationLog: AiChatConversation.conversationLog,
+				createdAt: AiChatConversation.createdAt,
+				title: AiChatConversation.title,
+			})
+			.from(AiChatConversation)
+			.where(eq(AiChatConversation.userId, userId))
+			.orderBy(desc(AiChatConversation.createdAt))
+
+		return chats.map((chat) => ({
+			...chat,
+			conversationLog: (
+				chat.conversationLog as OpenAI.Chat.Completions.ChatCompletionMessageParam[]
+			).filter((message) => message.role !== 'system'),
+		}))
+	}
+
 	async chat(
 		userId: number,
 		message: string,
@@ -101,12 +121,32 @@ export class AiChatService {
 
 		messages.push(response as any)
 
+		let title: string | undefined
+		if (!chatId) {
+			const titleResponse = await this.client.chat.completions.create({
+				model: 'gpt-4o-mini',
+				messages: [
+					{
+						role: 'system',
+						content:
+							"Generate a short, concise title (max 50 characters) for this chat based on the user's message. The title should be in the same language as the message. Just return the title, nothing else.",
+					},
+					{ role: 'user', content: message },
+				],
+				temperature: 0.7,
+				max_tokens: 20,
+			})
+
+			title = titleResponse.choices[0]?.message?.content?.trim()
+		}
+
 		const [chat] = await this.db
 			.insert(AiChatConversation)
 			.values({
 				...(chatId && { id: chatId }),
 				userId,
 				conversationLog: messages,
+				...(title && { title }),
 			} as any)
 			.onConflictDoUpdate({
 				target: AiChatConversation.id,

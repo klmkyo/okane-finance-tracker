@@ -19,6 +19,7 @@ import {
 	serial,
 	timestamp,
 	varchar,
+	text,
 } from 'drizzle-orm/pg-core'
 
 type NumericConfig = {
@@ -257,6 +258,7 @@ export const AiChatConversation = pgTable(
 			.notNull()
 			.references(() => User.id),
 		conversationLog: jsonb('conversation_log').notNull(),
+		title: text('title'),
 		...timestamps,
 	},
 	(table): PgTableExtraConfigValue[] => [

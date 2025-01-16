@@ -120,7 +120,12 @@
 		"viewAIReports": "View AI Reports",
 		"aiAssistant": "AI Assistant",
 		"aiAssistantDescription": "Chat with our AI to get personalized financial advice and answers to your questions.",
-		"chatWithAI": "Chat with AI"
+		"chatWithAI": "Chat with AI",
+		"messageSent": "Message sent",
+		"errorSending": "Error sending message",
+		"chatHistory": "Chat History",
+		"noChatHistory": "No previous chats",
+		"loadingHistory": "Loading chat history..."
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",
@@ -242,7 +247,11 @@
 		"inputPlaceholder": "Type your message here...",
 		"welcomeMessage": "Hello! How can I help you today?\n\nYou can ask me anything about your finances, such as:\n- What are my latest transactions?\n- How much did I spend on groceries last month?\n- What should I cut down on to save more money?\n\nFeel free to ask me anything!",
 		"messageSent": "Message sent",
-		"errorSending": "Error sending message"
+		"errorSending": "Error sending message",
+		"chatHistory": "Chat History",
+		"noChatHistory": "No previous chats",
+		"loadingHistory": "Loading chat history...",
+		"newChat": "New Chat"
 	},
 	"noData": "No data"
 }
