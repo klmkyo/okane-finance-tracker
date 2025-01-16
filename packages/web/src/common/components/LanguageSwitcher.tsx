@@ -1,33 +1,33 @@
-'use client'
+"use client";
 
-import { Select } from 'antd'
-import Cookies from 'js-cookie'
-import { useLocale } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { LOCALES } from '../constants/locales'
+import { Select } from "antd";
+import Cookies from "js-cookie";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+import { LOCALES } from "../../i18n/locales";
 
 export const LanguageSwitcher: React.FC = () => {
-	const locale = useLocale()
-	const router = useRouter()
+  const locale = useLocale();
+  const router = useRouter();
 
-	const handleLocaleChange = (newLocale: string) => {
-		Cookies.set('NEXT_LOCALE', newLocale)
-		router.refresh()
-	}
+  const handleLocaleChange = (newLocale: string) => {
+    Cookies.set("NEXT_LOCALE", newLocale);
+    router.refresh();
+  };
 
-	return (
-		<Select
-			value={locale}
-			onChange={handleLocaleChange}
-			options={LOCALES.map((l) => ({
-				value: l.code,
-				label: (
-					<div>
-						<span>{l.flag}</span> <span>{l.name}</span>
-					</div>
-				),
-			}))}
-			className="w-36"
-		/>
-	)
-}
+  return (
+    <Select
+      value={locale}
+      onChange={handleLocaleChange}
+      options={LOCALES.map((l) => ({
+        value: l.code,
+        label: (
+          <div>
+            <span>{l.flag}</span> <span>{l.name}</span>
+          </div>
+        ),
+      }))}
+      className="w-36"
+    />
+  );
+};
