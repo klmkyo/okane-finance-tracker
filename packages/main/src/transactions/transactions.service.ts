@@ -17,6 +17,10 @@ import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
 import { TransactionCsvRow } from './transactions.types'
 
+export interface ImportResult {
+	insertedCount: number
+}
+
 @Injectable()
 export class TransactionsService {
 	constructor(
@@ -60,8 +64,6 @@ export class TransactionsService {
 					lte(Transaction.createdAt, end),
 				),
 			)
-		console.log(data)
-
 		const createCsvBuffer = (data) => {
 			const readStream = Readable.from(data)
 			const buffers = []
@@ -84,14 +86,10 @@ export class TransactionsService {
 		userId: number,
 		accountId: number,
 		file: Express.Multer.File,
-	) {
+	): Promise<ImportResult> {
 		const stream = Readable.from(file.buffer)
-		csv
-			.parseStream(stream, { headers: true })
-			.on('data', async (row: TransactionCsvRow) => {
-				const insert = await transformValues(row)
-				await this.create(userId, insert)
-			})
+		const processedRows: CreateTransactionDto[] = []
+		let insertedCount = 0
 
 		const transformValues = async (row: TransactionCsvRow) => {
 			return {
@@ -106,6 +104,49 @@ export class TransactionsService {
 				accountId,
 			}
 		}
+
+		await new Promise((resolve, reject) => {
+			csv
+				.parseStream(stream, { headers: true })
+				.on('data', async (row: TransactionCsvRow) => {
+					const insert = await transformValues(row)
+					processedRows.push(insert)
+				})
+				.on('end', resolve)
+				.on('error', reject)
+		})
+
+		// Process rows sequentially to avoid race conditions
+		for (const insert of processedRows) {
+			const isDuplicate = await this.isTransactionDuplicate(insert)
+			if (!isDuplicate) {
+				await this.create(userId, insert)
+				insertedCount++
+			}
+		}
+
+		return { insertedCount }
+	}
+
+	private async isTransactionDuplicate(
+		transaction: CreateTransactionDto,
+	): Promise<boolean> {
+		const existingTransaction = await this.db
+			.select()
+			.from(Transaction)
+			.where(
+				and(
+					eq(Transaction.accountId, transaction.accountId),
+					eq(Transaction.amount, transaction.amount),
+					eq(Transaction.type, transaction.type),
+					eq(Transaction.title, transaction.title),
+					// Compare dates ignoring time for more flexible matching
+					sql`DATE(${Transaction.date}) = DATE(${transaction.date})`,
+				),
+			)
+			.limit(1)
+
+		return existingTransaction.length > 0
 	}
 
 	// should not be here :(

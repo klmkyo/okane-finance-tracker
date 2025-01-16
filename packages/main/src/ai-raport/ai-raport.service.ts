@@ -129,7 +129,6 @@ export class AiRaportService {
 			response.content += chunk.choices[0]?.delta?.content || ''
 		}
 
-		console.log(messages)
 		const [raport] = await this.db
 			.insert(AiRaport)
 			.values({

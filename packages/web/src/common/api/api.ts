@@ -69,14 +69,20 @@ export class ApiClient {
 			throw new ApiException(rawResponse.status, errorMessage, errorData)
 		}
 
-		const text = await rawResponse.text()
-		const isEmpty = !text.trim()
-		const data = isEmpty ? null : JSON.parse(text)
+		const contentType = rawResponse.headers.get('content-type')
+		let data: any
+
+		if (contentType?.includes('application/json')) {
+			const text = await rawResponse.text()
+			data = text ? JSON.parse(text) : null
+		} else {
+			data = await rawResponse.text()
+		}
 
 		return {
 			statusCode: rawResponse.status,
 			headers: rawResponse.headers,
-			data: data,
+			data,
 		}
 	}
 

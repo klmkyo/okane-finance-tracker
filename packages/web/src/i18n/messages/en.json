@@ -31,7 +31,17 @@
 		"settings": "Settings",
 		"logout": "Logout",
 		"language": "Language",
-		"selectLanguage": "Select Language"
+		"selectLanguage": "Select Language",
+		"csvOperations": "Import / Export Transactionos",
+		"exportTransactions": "Export Transactions",
+		"importTransactions": "Import Transactions",
+		"selectDateRangeForExport": "Select date range for export",
+		"importSuccess": "Transactions imported successfully",
+		"importError": "Error importing transactions",
+		"exportSuccess": "Transactions exported successfully",
+		"exportError": "Error exporting transactions",
+		"selectFile": "Select File",
+		"importSuccessWithCount": "{count} transactions imported successfully"
 	},
 	"Dashboard": {
 		"pageTitle": "Okane Personal Finance Dashboard",
