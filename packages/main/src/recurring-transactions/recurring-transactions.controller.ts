@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	UseGuards,
 } from '@nestjs/common'
 import { AuthGuard } from 'src/auth/guard/auth.guard'
@@ -33,9 +34,9 @@ export class RecurringTransactionsController {
 	@Get()
 	async find(
 		@UserId() userId: number,
-		@Body() body: GetRecurringTransactionDto,
+		@Query() query: GetRecurringTransactionDto,
 	) {
-		return await this.recurringTransactionsService.find(userId, body)
+		return await this.recurringTransactionsService.find(userId, query)
 	}
 
 	@Patch(':id')
