@@ -32,7 +32,7 @@
 		"logout": "Logout",
 		"language": "Language",
 		"selectLanguage": "Select Language",
-		"csvOperations": "Import / Export Transactionos",
+		"csvOperations": "Import / Export Transactions",
 		"exportTransactions": "Export Transactions",
 		"importTransactions": "Import Transactions",
 		"selectDateRangeForExport": "Select date range for export",
