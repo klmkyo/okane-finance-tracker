@@ -14,6 +14,7 @@ okane/
 ├── packages/
 │   ├── main/    # Aplikacja backendowa NestJS
 │   └── web/     # Aplikacja frontendowa Next.js
+├── docs/        # Zawiera diagramy klas, erd i dokumentacja użytkowa
 ```
 
 ## Instrukcja Instalacji
