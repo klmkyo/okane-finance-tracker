@@ -156,4 +156,33 @@ export class AiChatService {
 
 		return { chatId: chat.id, response }
 	}
+
+	async deleteChat(userId: number, chatId: number) {
+		// First check if the chat exists and belongs to the user
+		const [chat] = await this.db
+			.select({ id: AiChatConversation.id })
+			.from(AiChatConversation)
+			.where(
+				and(
+					eq(AiChatConversation.userId, userId),
+					eq(AiChatConversation.id, chatId),
+				),
+			)
+
+		// If chat doesn't exist or doesn't belong to user, throw 404
+		assert(chat, 'chat_not_found', NotFoundException)
+
+		// Now we can safely delete it
+		const [deletedChat] = await this.db
+			.delete(AiChatConversation)
+			.where(
+				and(
+					eq(AiChatConversation.userId, userId),
+					eq(AiChatConversation.id, chatId),
+				),
+			)
+			.returning()
+
+		return deletedChat
+	}
 }

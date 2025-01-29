@@ -74,7 +74,6 @@
 		"enterTitle": "Wprowadź tytuł",
 		"type": "Typ",
 		"typeRequired": "Typ jest wymagany",
-		"deposit": "Wpłata",
 		"withdrawal": "Wypłata",
 		"enterDescription": "Wprowadź opis",
 		"enterAmount": "Wprowadź kwotę",
@@ -263,7 +262,12 @@
 		"chatHistory": "Historia czatu",
 		"noChatHistory": "Brak poprzednich czatów",
 		"loadingHistory": "Wczytywanie historii czatu...",
-		"newChat": "Nowy czat"
+		"newChat": "Nowy czat",
+		"chatDeleted": "Czat został pomyślnie usunięty",
+		"errorDeleting": "Błąd podczas usuwania czatu",
+		"deleteChatConfirm": "Czy na pewno chcesz usunąć ten czat?",
+		"yes": "Tak",
+		"no": "Nie"
 	},
 	"noData": "Brak danych"
 }

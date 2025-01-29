@@ -141,7 +141,8 @@
 		"savingsGoalCreated": "Savings goal created successfully",
 		"savingsGoalUpdated": "Savings goal updated successfully",
 		"chatDeleted": "Chat deleted successfully",
-		"errorDeleting": "Error deleting chat"
+		"errorDeleting": "Error deleting chat",
+		"deleteChatConfirm": "Are you sure you want to delete this chat?"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",
@@ -271,7 +272,9 @@
 		"chatHistory": "Chat History",
 		"noChatHistory": "No previous chats",
 		"loadingHistory": "Loading chat history...",
-		"newChat": "New Chat"
+		"newChat": "New Chat",
+		"yes": "Yes",
+		"no": "No"
 	},
 	"noData": "No data"
 }

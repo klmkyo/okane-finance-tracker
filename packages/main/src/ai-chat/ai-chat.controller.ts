@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Post,
@@ -40,5 +41,10 @@ export class AiChatController {
 	@Get(':id')
 	async getChatHistory(@UserId() userId: number, @Param('id') chatId: string) {
 		return await this.aiChatService.getChatHistory(userId, +chatId)
+	}
+
+	@Delete(':id')
+	async deleteChat(@UserId() userId: number, @Param('id') chatId: string) {
+		return await this.aiChatService.deleteChat(userId, +chatId)
 	}
 }
