@@ -74,7 +74,6 @@
 		"enterTitle": "Enter title",
 		"type": "Type",
 		"typeRequired": "Type is required",
-		"deposit": "Deposit",
 		"withdrawal": "Withdrawal",
 		"enterDescription": "Enter description",
 		"enterAmount": "Enter amount",
@@ -133,17 +132,16 @@
 		"transfer": "Transfer money",
 		"transferSavingGoal": "Transfer money - {goal}",
 		"transferType": "Transfer type",
-		"amount": "Amount",
-		"amountRequired": "Please enter the amount",
 		"amountMustBePositive": "Amount must be greater than 0",
-		"enterAmount": "Enter amount",
 		"deposit": "Deposit",
 		"withdraw": "Withdraw",
 		"insufficientFunds": "Insufficient funds",
 		"depositSuccessful": "Money deposited successfully",
 		"withdrawalSuccessful": "Money withdrawn successfully",
 		"savingsGoalCreated": "Savings goal created successfully",
-		"savingsGoalUpdated": "Savings goal updated successfully"
+		"savingsGoalUpdated": "Savings goal updated successfully",
+		"chatDeleted": "Chat deleted successfully",
+		"errorDeleting": "Error deleting chat"
 	},
 	"DashboardLayout": {
 		"notAuthenticated": "Please log in to view this page",
