@@ -2,6 +2,7 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
+  - '@biomejs/biome'
   - '@nestjs/core'
   - bcrypt
   - esbuild

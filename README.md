@@ -150,3 +150,8 @@ Zmienna `JWT_SECRET` i inne wartości środowiskowe mogą być nadpisane poprzez
 - **Frontend**: Next.js, React Query, Ant Design, TailwindCSS
 - **Backend**: NestJS, DrizzleORM, PostgreSQL
 - **Narzędzia**: TypeScript, BullMQ, integracja z OpenAI
+
+
+minikube start --driver=podman
+minikube addons enable ingress
+minikube addons enable metrics-server

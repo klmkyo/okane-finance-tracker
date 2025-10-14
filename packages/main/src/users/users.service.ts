@@ -4,7 +4,7 @@ import {
 	Injectable,
 	UnauthorizedException,
 } from '@nestjs/common'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { Database, User, UserInsert } from 'database/schema'
 import { InferSelectModel, eq } from 'drizzle-orm'
 import { assert } from 'src/common/assert'

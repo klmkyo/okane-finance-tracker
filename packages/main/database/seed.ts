@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
 import { createHash } from 'node:crypto'
