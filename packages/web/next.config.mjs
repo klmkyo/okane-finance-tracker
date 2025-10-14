@@ -11,6 +11,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig = {
   /* config options here */
+  output: 'standalone',
   async headers() {
     return [
       {
@@ -36,4 +37,3 @@ const nextConfig = {
 
 
 export default withNextIntl(nextConfig);
-

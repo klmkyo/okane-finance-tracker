@@ -1,0 +1,13 @@
+node_modules
+packages/*/node_modules
+**/node_modules
+.pnpm-store
+.turbo
+.next
+dist
+coverage
+pnpm-debug.log
+npm-debug.log
+*.local
+logs
+.DS_Store

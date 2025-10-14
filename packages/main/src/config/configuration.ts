@@ -14,4 +14,8 @@ const openai = registerAs('openai', () => ({
 	apiKey: process.env.OPENAI_API_KEY,
 }))
 
-export const configuration = [app, auth, openai]
+const queue = registerAs('queue', () => ({
+	url: process.env.REDIS_URL ?? 'redis://localhost:6379',
+}))
+
+export const configuration = [app, auth, openai, queue]

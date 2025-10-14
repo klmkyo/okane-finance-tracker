@@ -11,7 +11,7 @@
 		"start": "nest start",
 		"dev": "nest start --watch",
 		"start:debug": "nest start --debug --watch",
-		"start:prod": "node dist/main",
+		"start:prod": "node dist/src/main",
 		"lint": "biome check --write ./src",
 		"lint:unsafe": "biome check --write --unsafe ./src",
 		"test": "jest",
@@ -78,6 +78,16 @@
 		"tsconfig-paths": "^4.2.0",
 		"tsx": "^4.19.2",
 		"typescript": "^5.1.3"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@nestjs/core",
+			"bcrypt",
+			"esbuild",
+			"msgpackr-extract",
+			"bufferutil",
+			"utf-8-validate"
+		]
 	},
 	"jest": {
 		"moduleFileExtensions": [

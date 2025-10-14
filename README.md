@@ -96,6 +96,24 @@ pnpm dev
 
 Frontend będzie dostępny pod adresem http://localhost:3001
 
+### 6. Uruchamianie z Docker Compose
+
+Możesz uruchomić cały stack (frontend, backend, baza danych PostgreSQL, panel pgAdmin oraz Redis) przy użyciu `docker compose`:
+
+```bash
+docker compose up --build
+```
+
+Domyślne adresy:
+
+- Backend API: http://localhost:3000
+- Frontend: http://localhost:3001
+- PostgreSQL: localhost:5432 (użytkownik `postgres`, hasło `postgres`, baza `okane`)
+- pgAdmin: http://localhost:5050 (login `admin@okane.local`, hasło `admin`)
+- Redis: localhost:6379
+
+Zmienna `JWT_SECRET` i inne wartości środowiskowe mogą być nadpisane poprzez `.env` w katalogu głównym lub bezpośrednio w komendzie `docker compose`.
+
 ## Dostępne Skrypty
 
 ### Root

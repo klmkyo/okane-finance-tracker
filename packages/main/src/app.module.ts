@@ -1,6 +1,6 @@
 import { BullModule } from '@nestjs/bullmq'
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { AccountsModule } from './accounts/accounts.module'
 import { AiChatModule } from './ai-chat/ai-chat.module'
 import { AiRaportModule } from './ai-raport/ai-raport.module'
@@ -11,6 +11,7 @@ import { CategoriesModule } from './categories/categories.module'
 import { RequestLoggerMiddleware } from './common/request-logger.middleware'
 import { configuration } from './config/configuration'
 import { DrizzleModule } from './drizzle/drizzle.module'
+import { HealthModule } from './health/health.module'
 import { MoneyboxesModule } from './moneyboxes/moneyboxes.module'
 import { RecurringTransactionsModule } from './recurring-transactions/recurring-transactions.module'
 import { SavingGoalsModule } from './saving-goals/saving-goals.module'
@@ -31,11 +32,14 @@ import { UsersModule } from './users/users.module'
 		CategoriesModule,
 		AiChatModule,
 		AiRaportModule,
-		BullModule.forRoot({
-			connection: {
-				host: 'localhost',
-				port: 6379,
-			},
+		HealthModule,
+		BullModule.forRootAsync({
+			inject: [ConfigService],
+			useFactory: (configService: ConfigService) => ({
+				connection: {
+					url: configService.get<string>('queue.url', 'redis://localhost:6379'),
+				},
+			}),
 		}),
 	],
 	controllers: [AppController],
