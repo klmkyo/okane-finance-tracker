@@ -13,13 +13,10 @@ spec:
     spec:
       containers:
         - name: web
-          image: web:dev
+          image: web:prod
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           env:
-            # TODO: ustawić envy
-            - name: NODE_ENV
-              value: development
             - name: NEXT_PUBLIC_API_URL
-              value: https://example.com
+              value: http://main:4321/api

@@ -158,6 +158,17 @@ minikube start --driver=podman
 minikube addons enable ingress
 minikube addons enable metrics-server
 
-minikube image build -t main:dev -f 'packages/main/Dockerfile' --build-opt build-arg=PORT=3000 .
-minikube image build -t web:dev -f 'packages/web/Dockerfile' --build-opt build-arg=NEXT_PUBLIC_API_URL=https://example.com .
+eval $(minikube podman-env)
+
+podman build \
+  -t main:prod \
+  -f packages/main/Dockerfile \
+  --build-arg PORT=3000 \
+  .
+
+podman build \
+  -t web:prod \
+  -f packages/web/Dockerfile \
+  --build-arg NEXT_PUBLIC_API_URL=http://main:4321/api \
+  .
 ```
