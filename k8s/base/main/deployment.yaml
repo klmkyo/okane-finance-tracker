@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: main
+  namespace: okane
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: main }
+  template:
+    metadata:
+      labels: { app: main }
+    spec:
+      containers:
+        - name: main
+          image: main:dev
+          # don't try to pull from remote
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4321
+          env:
+            # TODO: ustawić envy
+            - name: NODE_ENV
+              value: development

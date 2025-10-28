@@ -151,7 +151,13 @@ Zmienna `JWT_SECRET` i inne wartości środowiskowe mogą być nadpisane poprzez
 - **Backend**: NestJS, DrizzleORM, PostgreSQL
 - **Narzędzia**: TypeScript, BullMQ, integracja z OpenAI
 
+## K8s
 
+```
 minikube start --driver=podman
 minikube addons enable ingress
 minikube addons enable metrics-server
+
+minikube image build -t main:dev -f 'packages/main/Dockerfile' --build-opt build-arg=PORT=3000 .
+minikube image build -t web:dev -f 'packages/web/Dockerfile' --build-opt build-arg=NEXT_PUBLIC_API_URL=https://example.com .
+```

@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: okane
+
+resources:
+  - ../../base/namespace.yaml
+  - ../../base/main/deployment.yaml
+  - ../../base/main/service.yaml
+  - ../../base/web/deployment.yaml
+  - ../../base/web/service.yaml
+  - ../../base/ingress.yaml
+
+images:
+  - name: main
+    newTag: prod
+  - name: web
+    newTag: prod
