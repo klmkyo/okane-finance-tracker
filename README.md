@@ -154,21 +154,24 @@ Zmienna `JWT_SECRET` i inne wartości środowiskowe mogą być nadpisane poprzez
 ## K8s
 
 ```
-minikube start --driver=podman
+podman machine init --cpus 4 --memory 4096 --disk-size 25
+podman machine start
+minikube config set rootless true
+minikube config set driver podman
+
+minikube start --driver=podman --container-runtime=cri-o
 minikube addons enable ingress
 minikube addons enable metrics-server
 
-eval $(minikube podman-env)
-
-podman build \
+minikube image build \
   -t main:prod \
   -f packages/main/Dockerfile \
-  --build-arg PORT=3000 \
+  --build-env PORT=3000 \
   .
 
-podman build \
+minikube image build \
   -t web:prod \
   -f packages/web/Dockerfile \
-  --build-arg NEXT_PUBLIC_API_URL=http://main:4321/api \
+  --build-env NEXT_PUBLIC_API_URL=http://main:4321/api \
   .
 ```
