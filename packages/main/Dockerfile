@@ -21,7 +21,8 @@ RUN pnpm build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+ENV PORT=4321
 RUN apk add --no-cache curl
 COPY --from=build /app/deploy ./
-EXPOSE 3000
+EXPOSE 4321
 CMD ["node", "dist/src/main"]

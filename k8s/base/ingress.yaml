@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: okane
   namespace: okane
-  annotations:
-    kubernetes.io/ingress.class: nginx
 spec:
+  ingressClassName: nginx
   rules:
     - host: web.okane.local
       http:
@@ -14,6 +13,7 @@ spec:
             pathType: Prefix
             backend:
               service:
+                # Route web host traffic to the web Service on port 80
                 name: web
                 port:
                   number: 80
@@ -24,6 +24,7 @@ spec:
             pathType: Prefix
             backend:
               service:
+                # Route API host traffic to the main Service on port 80
                 name: main
                 port:
                   number: 80

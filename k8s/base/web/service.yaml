@@ -4,7 +4,11 @@ metadata:
   name: web
   namespace: okane
 spec:
+  # Select the web pods managed by the web Deployment
   selector: { app: web }
   ports:
-    - port: 8000
-      targetPort: 8000
+    - name: http
+      # External consumers (Ingress) connect to this port
+      port: 80
+      # Traffic is forwarded to the pods' "http" container port (3000)
+      targetPort: http

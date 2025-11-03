@@ -6,19 +6,26 @@ metadata:
 spec:
   replicas: 1
   selector:
+    # Pods with these labels are managed by this Deployment
     matchLabels: { app: main }
   template:
     metadata:
+      # Labels applied to pods; must stay in sync with the Service selector
       labels: { app: main }
     spec:
       containers:
         - name: main
-          image: main:prod
+          image: docker.io/library/main:prod
           # don't try to pull from remote
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 4321
+            - name: http
+              # Container listens on 4321; Service targets this via the named port
+              containerPort: 4321
           env:
+            - name: PORT
+              # Keep app.listen aligned with containerPort/targetPort
+              value: "4321"
             # TODO: ustawić envy
             - name: JWT_SECRET
               value: sekretny-sekret

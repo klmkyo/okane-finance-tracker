@@ -6,17 +6,22 @@ metadata:
 spec:
   replicas: 1
   selector:
+    # Identify pods that belong to this Deployment
     matchLabels: { app: web }
   template:
     metadata:
+      # Labels consumed by the web Service selector
       labels: { app: web }
     spec:
       containers:
         - name: web
-          image: web:prod
+          image: docker.io/library/web:prod
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8000
+            - name: http
+              # Next.js server exposes port 3000 inside the container
+              containerPort: 3000
           env:
             - name: NEXT_PUBLIC_API_URL
-              value: http://main:4321/api
+              # Frontend calls the API through the ingress host
+              value: http://api.okane.local/api

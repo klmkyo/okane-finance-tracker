@@ -4,7 +4,11 @@ metadata:
   name: main
   namespace: okane
 spec:
+  # Match pods created by the main Deployment (labels declared there)
   selector: { app: main }
   ports:
-    - port: 4321
-      targetPort: 4321
+    - name: http
+      # Cluster-internal port the Ingress/Nginx hits
+      port: 80
+      # Forward traffic to the container port named "http" in the pods
+      targetPort: http
