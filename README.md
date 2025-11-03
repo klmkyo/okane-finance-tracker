@@ -166,12 +166,12 @@ minikube addons enable metrics-server
 minikube image build \
   -t main:prod \
   -f packages/main/Dockerfile \
-  --build-env PORT=3000 \
+  --build-opt build-arg=PORT=3000 \
   .
 
 minikube image build \
   -t web:prod \
   -f packages/web/Dockerfile \
-  --build-env NEXT_PUBLIC_API_URL=http://main:4321/api \
+  --build-opt build-arg=NEXT_PUBLIC_API_URL=http://main:4321/api \
   .
 ```
