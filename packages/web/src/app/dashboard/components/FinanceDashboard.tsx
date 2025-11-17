@@ -75,11 +75,16 @@ interface FinanceDashboardProps {
 }
 
 export const useAccount = (accountId: number) => {
+  const isValidId = Boolean(
+    accountId && Number.isFinite(accountId) && accountId > 0
+  );
+
   const query = useQuery({
     queryKey: ["account", accountId],
     queryFn: async () => {
       return (await api.get<Account>(`/accounts/${accountId}`)).data;
     },
+    enabled: isValidId,
   });
 
   return {
@@ -89,6 +94,10 @@ export const useAccount = (accountId: number) => {
 };
 
 export const useTransactions = (accountId: number) => {
+  const isValidId = Boolean(
+    accountId && Number.isFinite(accountId) && accountId > 0
+  );
+
   const query = useQuery({
     queryKey: ["transactions", accountId],
     queryFn: async () => {
@@ -96,6 +105,7 @@ export const useTransactions = (accountId: number) => {
         await api.get<Transaction[]>(`/transactions?accountId=${accountId}`)
       ).data;
     },
+    enabled: isValidId,
   });
 
   return {

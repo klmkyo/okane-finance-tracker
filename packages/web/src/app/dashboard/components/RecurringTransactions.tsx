@@ -45,6 +45,8 @@ export const RecurringTransactions: React.FC<RecurringTransactionsProps> = ({
   const queryClient = useQueryClient();
   const { account } = useAccount(accountId);
 
+  const isValidId = Boolean(accountId && Number.isFinite(accountId) && accountId > 0);
+
   const { data: recurringTransactions } = useQuery({
     queryKey: ["recurring-transactions", accountId],
     queryFn: async () => {
@@ -54,6 +56,7 @@ export const RecurringTransactions: React.FC<RecurringTransactionsProps> = ({
         )
       ).data;
     },
+    enabled: isValidId,
   });
 
   const { mutateAsync: createRecurringTransaction } = useMutation({

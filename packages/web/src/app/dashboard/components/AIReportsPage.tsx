@@ -83,12 +83,17 @@ export const AiReportsPage: React.FC<{ accountId: number }> = ({
     }
   }, [transactions, form]);
 
+  const isValidId = Boolean(
+    accountId && Number.isFinite(accountId) && accountId > 0
+  );
+
   const { data: reports, isLoading } = useQuery({
     queryKey: ["raports", accountId],
     queryFn: async () => {
       return (await api.get<Report[]>(`/ai-raport?accountId=${accountId}`))
         .data;
     },
+    enabled: isValidId,
   });
 
   const { mutateAsync: generateReport } = useMutation({
