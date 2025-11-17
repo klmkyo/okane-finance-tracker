@@ -1,7 +1,6 @@
 import {
 	Body,
 	Controller,
-	DefaultValuePipe,
 	Delete,
 	FileTypeValidator,
 	Get,
@@ -19,10 +18,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import type { Response } from 'express'
 import { AuthGuard } from 'src/auth/guard/auth.guard'
-import { TransactionType } from 'src/common/types'
 import { UserId } from 'src/users/decorators/user-id.decorator'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { ExportTransactionsDto } from './dto/export-transactions.dto'
+import { GetTransactionDto } from './dto/get-transaction.dto'
 import { ImportTransactionsDto } from './dto/import-transactions.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
 import { TransactionsService } from './transactions.service'
@@ -77,17 +76,12 @@ export class TransactionsController {
 	}
 
 	@Get()
-	async find(
-		@UserId() userId: number,
-		@Query('accountId') accountId: number,
-		@Query('categoryId', new DefaultValuePipe(undefined)) categoryId?: number,
-		@Query('type', new DefaultValuePipe(undefined)) type?: TransactionType,
-	) {
+	async find(@UserId() userId: number, @Query() query: GetTransactionDto) {
 		return await this.transactionsService.find(
 			userId,
-			accountId,
-			categoryId,
-			type,
+			query.accountId,
+			query.categoryId,
+			query.type,
 		)
 	}
 
