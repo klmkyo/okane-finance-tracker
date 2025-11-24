@@ -156,29 +156,27 @@ Zmienna `JWT_SECRET` i inne wartości środowiskowe mogą być nadpisane poprzez
 ```
 podman machine init --cpus 4 --memory 4096 --disk-size 25
 podman machine start
-minikube config set rootless true
+
+minikube config set rootless false
 minikube config set driver podman
 
-minikube start --driver=podman --container-runtime=cri-o
-minikube addons enable ingress
-minikube addons enable metrics-server
+sudo minikube start --driver=podman --container-runtime=cri-o --force
+sudo minikube addons enable ingress
+sudo minikube addons enable metrics-server
 
-minikube image build \
+sudo minikube image build \
   -t main:prod \
   -f packages/main/Dockerfile \
   --build-opt build-arg=PORT=4321 \
   .
 
-minikube image build \
+sudo minikube image build \
   -t web:prod \
   -f packages/web/Dockerfile \
   --build-opt build-arg=NEXT_PUBLIC_API_URL=http://api.okane.local \
   .
 
-minikube kubectl -- apply -k k8s/overlays/prod
+sudo minikube kubectl -- apply -k k8s/overlays/prod
 
-minikube kubectl -- get pods -n okane
-
-minikube service main -n okane --url
-minikube service web -n okane --url
+sudo minikube tunnel
 ```
