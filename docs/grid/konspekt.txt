@@ -1,0 +1,11 @@
+W projekcie skonteneryzowana zostanie aplikacja finansowa Okane przy użyciu Minikube jako lokalnego klastra Kubernetes oraz Podman jako runtime kontenerów.
+
+W skład aplikacji wchodzą cztery główne komponenty:
+•  backend na NestJS obsługujący API i logikę biznesową
+•  frontend w Next.js jako interfejs użytkownika
+•  baza PostgreSQL do przechowywania danych
+•  Redis jako cache i do kolejek zadań (BullMQ)
+
+Komunikacja między serwisami odbywa się przez Kubernetes Ingress z kontrolerem nginx, frontend będzie dostępny pod web.okane.local oraz będzie komunikował się z backendem na api.okane.local. Cały ruch odbywa się w dedykowanym namespace'ie okane.
+
+Do zarządzania konfiguracją wykorzystane zostaną Helm Charts orazz Kustomize. Helm odpowiada za bazowe szablony i wersjonowanie komponentów, natomiast Kustomize pozwala na dostosowanie konfiguracji do różnych środowisk (dev, staging, prod) bez duplikowania manifestów. Ułatwia to zarządzanie wersjami oraz pozwala na elastyczne konfigurowanie aplikacji.
