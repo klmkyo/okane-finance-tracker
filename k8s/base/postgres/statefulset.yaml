@@ -1,0 +1,45 @@
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+    role: service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+      role: service
+  serviceName: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        role: service
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:9.6
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: postgres
+          ports:
+            - containerPort: 5432
+              name: postgres
+              protocol: TCP
+          volumeMounts:
+            - name: postgres
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres
+          persistentVolumeClaim:
+            claimName: postgres

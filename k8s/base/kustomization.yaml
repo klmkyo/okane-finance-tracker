@@ -7,4 +7,5 @@ resources:
   - main/service.yaml
   - web/deployment.yaml
   - web/service.yaml
-  - ingress.yaml
+  - ingress/ingress-nginx-lb.yaml
+  - ingress/ingress.yaml

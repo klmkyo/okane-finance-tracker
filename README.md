@@ -172,10 +172,10 @@ minikube image build \
 minikube image build \
   -t web:prod \
   -f packages/web/Dockerfile \
-  --build-opt build-arg=NEXT_PUBLIC_API_URL=http://api.okane.local/api \
+  --build-opt build-arg=NEXT_PUBLIC_API_URL=http://api.okane.local \
   .
 
-minikube kubectl -- apply -k /Users/klmkyo/work/okane-finance-tracker/k8s/overlays/prod
+minikube kubectl -- apply -k k8s/overlays/prod
 
 minikube kubectl -- get pods -n okane
 

@@ -24,4 +24,4 @@ spec:
           env:
             - name: NEXT_PUBLIC_API_URL
               # Frontend calls the API through the ingress host
-              value: http://api.okane.local/api
+              value: http://api.okane.local/
