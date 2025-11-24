@@ -34,7 +34,7 @@
 #v(2em)
 
 #align(center)[
-  #text(size: 1.8em)[Konteneryzacja aplikacji finansowej Okane z wykorzystaniem Minikube oraz Podman] 
+  #text(size: 1.8em)[Konteneryzacja aplikacji finansowej Okane z wykorzystaniem Minikube, Kubernets oraz Podman] 
   
   #text(size: 1.2em)[Systemy Gridowe i Obliczenia w Chmurze]
 ]
