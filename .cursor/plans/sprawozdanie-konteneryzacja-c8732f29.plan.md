@@ -117,9 +117,9 @@ k8s/
 **Ingress**:
 
 - Nginx Ingress Controller (addon minikube)
-- LoadBalancer service dla ingress-nginx
+- LoadBalancer service dla ingress-nginx (aby minikube tunnel był w stanie wystawić porty)
 - Dwie reguły hostów (web.okane.local, api.okane.local)
-- Konfiguracja /etc/hosts dla lokalnego dostępu
+- Konfiguracja /etc/hosts dla lokalnego dostępu (minikube ip -> dla api.okane.local, web.okane.local)
 
 [DIAGRAM 3: Deployment flow - Kustomize → kubectl apply → Kubernetes resources]
 
@@ -129,9 +129,14 @@ k8s/
 **Wdrożenie**:
 
 ```bash
-minikube kubectl -- apply -k k8s/overlays/prod
-minikube kubectl -- get pods -n okane
+sudo minikube kubectl -- apply -k k8s/overlays/prod
 ```
+
+Wystawienie do hosta za pomocą:
+```
+sudo minikube tunnel
+```
+
 
 ### 6. Napotkane problemy i rozwiązania (~1 strona)
 
@@ -142,9 +147,9 @@ minikube kubectl -- get pods -n okane
 
 **Problem 2: Tryb rootless i uprawnienia w Linuxie**
 
-- Opis: Minikube w trybie rootless nie pozwala na `sudo`, ale Ingress wymaga bindowania do portów <1024 (80, 443)
-- Problem z `minikube tunnel`: Uruchomienie jako sudo nie działa, prawdopodobnie z powodu różnych użytkowników (host vs tunnel)
-- Rozwiązanie: Przejście na tryb rootfull
+- Opis: W trybie rootless Podmana minikube tunnel nie jest w stanie działać poprawnie. Tunel wymaga operacji sieciowych wykonywanych jako root (dodawanie tras, konfiguracja interfejsów, bindowanie portów 80/443). Po uruchomieniu z użyciem sudo minikube działa jednak w kontekście użytkownika root, który ma własne $HOME, własny XDG_RUNTIME_DIR i nie widzi rootless środowiska Podmana. W efekcie tunel uruchamia się w odizolowanym profilu, nie wykrywa działającego klastra i zgłasza błędy typu „host is not running”. Próby z sudo -E również nie pomagają, bo root dalej nie ma dostępu do rootless podman socketa. Alternatywy, takie jak minikube service --url lub kubectl port-forward, technicznie działają, ale wystawiają porty na wartości inne niż 80/443, co powoduje rozbieżność między rzeczywistym adresem usług a wartością konfiguracji (NEXT_PUBLIC_API_URL). W efekcie frontend wysyła żądania na port 80/443, podczas gdy usługi działają na portach pomocniczych, co prowadzi do błędów komunikacji.
+
+- Rozwiązanie: Przejście na rootful Podmana jako driver eliminuje konflikt między rootless runtime a wymaganiami minikube tunnel. W trybie rootful cały stos — podman, minikube oraz tunel — działa w spójnym kontekście użytkownika i tej samej przestrzeni sieciowej. Dzięki temu minikube tunnel poprawnie wykrywa istniejący klaster, może wykonywać operacje sieciowe wymagające roota i wystawia porty LoadBalancera bezpośrednio na 80/443. Konfiguracja frontendu pozostaje zgodna z faktycznym adresem usług, a środowisko zachowuje się tak, jak w typowym klastrze Kubernetes korzystającym z Ingressa i standardowych portów.
 
 **Problem 3: Konfiguracja zmiennych środowiskowych**
 
