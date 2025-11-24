@@ -160,22 +160,39 @@ podman machine start
 minikube config set rootless false
 minikube config set driver podman
 
-sudo minikube start --driver=podman --container-runtime=cri-o --force
+sudo minikube start --driver=podman --container-runtime=cri-o --force --dns=8.8.8.8 --dns=1.1.1.1
 sudo minikube addons enable ingress
 sudo minikube addons enable metrics-server
 
 sudo minikube image build \
-  -t main:prod \
-  -f packages/main/Dockerfile \
-  --build-opt build-arg=PORT=4321 \
-  .
-
+  -t main:dev \
+  -f packages/main/Containerfile \
+  --build-opt build-arg=NODE_ENV=development \
+  . 
+  
 sudo minikube image build \
-  -t web:prod \
-  -f packages/web/Dockerfile \
+  -t web:dev \
+  -f packages/web/Containerfile \
   --build-opt build-arg=NEXT_PUBLIC_API_URL=http://api.okane.local \
   .
 
+sudo minikube kubectl -- apply -k k8s/overlays/dev
+  
+ lub 
+ 
+sudo minikube image build \
+  -t main:prod \
+  -f packages/main/Containerfile \
+  --build-opt build-arg=NODE_ENV=production \
+  . 
+  
+sudo minikube image build \
+  -t web:prod \
+  -f packages/web/Containerfile \
+  --build-opt build-arg=NODE_ENV=production \
+  --build-opt build-arg=NEXT_PUBLIC_API_URL=http://api.okane.local \
+  .
+  
 sudo minikube kubectl -- apply -k k8s/overlays/prod
 
 sudo minikube tunnel

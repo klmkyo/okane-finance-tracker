@@ -21,7 +21,6 @@ spec:
             - name: http
               # Next.js server exposes port 3000 inside the container
               containerPort: 3000
-          env:
-            - name: NEXT_PUBLIC_API_URL
-              # Frontend calls the API through the ingress host
-              value: http://api.okane.local/
+          # env:
+          #   - name: NEXT_PUBLIC_API_URL
+          #     value: http://api.okane.local/

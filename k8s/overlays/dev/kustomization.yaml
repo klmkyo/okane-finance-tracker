@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: okane
+
+resources:
+  - ../../base
+
+images:
+  - name: docker.io/library/main
+    newTag: dev
+  - name: docker.io/library/web
+    newTag: dev

@@ -1,12 +1,12 @@
 import {
-	ConflictException,
-	Inject,
-	Injectable,
-	UnauthorizedException,
+    ConflictException,
+    Inject,
+    Injectable,
+    UnauthorizedException,
 } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs'
 import { Database, User, UserInsert } from 'database/schema'
-import { InferSelectModel, eq } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { assert } from 'src/common/assert'
 import { DB } from 'src/common/constants'
 
@@ -47,7 +47,8 @@ export class UsersService {
 				.returning()
 			const { password, ...publicUser } = user
 			return publicUser
-		} catch {
+		} catch(e) {
+		  console.log(e)
 			throw new ConflictException('username_exists')
 		}
 	}
