@@ -1,3 +1,5 @@
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
+
 #set document(title: "Konteneryzacja aplikacji Okane")
 #set page(
   paper: "a4",
@@ -100,11 +102,26 @@ W projekcie Okane katalog `k8s/base` zawiera podstawowe definicje wszystkich zas
 = Architektura aplikacji
 
 #figure(
-  rect(width: 100%, height: 12cm, stroke: 1pt + black, fill: rgb("#f0f0f0"))[
-    #align(center + horizon)[
-      #text(size: 14pt)[DIAGRAM 1: Architektura systemu - komponenty i ich relacje]
-    ]
-  ],
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: 2em,
+    // TODO trzeba się zdecydować czy Fe ma rewritować na BE
+    node((1,0), [Ingress\ (Nginx)], corner-radius: 5pt),
+    edge((1,0), (0,1), "-|>", [web.okane.local]),
+    edge((1,0), (2,1), "-|>", [api.okane.local]),
+    
+    node((0,1), [Frontend\ (Next.js)], corner-radius: 5pt),
+    node((2,1), [Backend\ (NestJS)], corner-radius: 5pt),
+    
+    edge((0,1), (2,1), "-|>", [API], label-pos: 0.5, label-side: center),
+
+    edge((2,1), (1.5,3), "-|>", [TCP 5432]),
+    node((1.5,3), [PostgreSQL], corner-radius: 5pt),
+    
+    edge((2,1), (2.5,3), "-|>", [TCP 6379]),
+    node((2.5,3), [Redis], corner-radius: 5pt),
+  ),
   caption: [Architektura systemu - komponenty i ich relacje]
 )
 
@@ -251,11 +268,21 @@ Frontend wykorzystuje podobny proces budowania z następującymi specyfikami:
 *Wynik*: Finalny obraz frontendu ma rozmiar [PLACEHOLDER: ~XXX MB], w porównaniu do [PLACEHOLDER: ~XXX MB] bez multi-stage builds - redukcja o około [PLACEHOLDER: XX%]. _Uwaga: wartości są placeholderowe i wymagają uzupełnienia po rzeczywistym buildzie._
 
 #figure(
-  rect(width: 100%, height: 10cm, stroke: 1pt + black, fill: rgb("#f0f0f0"))[
-    #align(center + horizon)[
-      #text(size: 14pt)[DIAGRAM 2: Proces budowania obrazów - wizualizacja multi-stage builds]
-    ]
-  ],
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: (1.5em, 2em),
+    node((0,0), [Stage 1: Base\ (Node.js 20)], corner-radius: 3pt),
+    edge("-|>"),
+    node((1,0), [Stage 2: Deps\ (Instalacja)], corner-radius: 3pt),
+    edge("-|>"),
+    node((2,0), [Stage 3: Build\ (Kompilacja)], corner-radius: 3pt),
+    edge("-|>"),
+    node((3,0), [Stage 4: Runner\ (Alpine + Dist)], corner-radius: 3pt, extrude: (0, 2)),
+    
+    edge((1,0), (3,0), "-->", [Copy node_modules], bend: 45deg, label-pos: 0.5, label-side: center),
+    edge((2,0), (3,0), "-->", [Copy dist/], bend: -45deg, label-pos: 0.5, label-side: center),
+  ),
   caption: [Proces budowania obrazów - wizualizacja multi-stage builds]
 )
 
@@ -476,20 +503,60 @@ spec:
 ```
 
 #figure(
-  rect(width: 100%, height: 8cm, stroke: 1pt + black, fill: rgb("#f0f0f0"))[
-    #align(center + horizon)[
-      #text(size: 14pt)[DIAGRAM 3: Deployment flow - Kustomize #sym.arrow kubectl apply #sym.arrow Kubernetes resources]
-    ]
-  ],
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: (2em, 3em), // Zwiększony spacing pionowy
+    
+    node((0,0), [k8s/base], corner-radius: 2pt),
+    node((0,1), [k8s/overlays], corner-radius: 2pt),
+    
+    edge((0,0), (1,0.5), "-|>"),
+    edge((0,1), (1,0.5), "-|>"),
+    
+    node((1,0.5), [Kustomize], corner-radius: 2pt),
+    edge((1,0.5), (2,0.5), "-|>", [Generuje YAML], label-pos: 0.5, label-side: left, label-sep: 1.1em), // Etykieta nad strzałką
+    
+    node((2,0.5), [kubectl apply], corner-radius: 2pt),
+    edge((2,0.5), (3,0.5), "-|>"),
+    
+    node((3,0.5), [Minikube\ API Server], corner-radius: 2pt),
+    edge((3,0.5), (4,0.5), "-|>", [Tworzy], label-pos: 0.6, label-side: right, label-sep: 0.2em, label-angle: 45deg),
+    
+    node((4,0), [Deployments], stroke: (dash: "dashed")),
+    node((4,0.5), [Services], stroke: (dash: "dashed")),
+    node((4,1), [Ingress], stroke: (dash: "dashed")),
+  ),
   caption: [Deployment flow - Kustomize do Kubernetes resources]
 )
 
 #figure(
-  rect(width: 100%, height: 10cm, stroke: 1pt + black, fill: rgb("#f0f0f0"))[
-    #align(center + horizon)[
-      #text(size: 14pt)[DIAGRAM 4: Komunikacja sieciowa - przepływ requestów przez Ingress/Services/Pods]
-    ]
-  ],
+  diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    spacing: (1.5em, 4em), // Zwiększony spacing pionowy dla lepszej separacji gałęzi
+    
+    node((0,1), [Użytkownik], corner-radius: 5pt),
+    edge("-|>", [Żądanie HTTP], label-pos: 0.5, label-side: left, label-sep: 1.6em),
+    
+    node((1,1), [Minikube Tunnel\ (LoadBalancer)], corner-radius: 2pt),
+    edge("-|>"),
+
+    node((2,1), [Kontroler Ingress], corner-radius: 2pt),
+    
+    // Wyraźniejsze rozgałęzienie
+    edge((2,1), (3,0), "-|>", [web.okane.local], label-pos: 0.4, label-side: left),
+    edge((2,1), (3,2), "-|>", [api.okane.local], label-pos: 0.4, label-side: left),
+    
+    node((3,0), [Service: web], corner-radius: 2pt),
+    node((3,2), [Service: main], corner-radius: 2pt),
+    
+    edge((3,0), (4,0), "-|>", [Port 3000], label-pos: 0.5, label-side: left, label-sep: 1.2em),
+    edge((3,2), (4,2), "-|>", [Port 4321], label-pos: 0.5, label-side: left, label-sep: 1.2em),
+    
+    node((4,0), [Pod: web], corner-radius: 2pt),
+    node((4,2), [Pod: main], corner-radius: 2pt),
+  ),
   caption: [Komunikacja sieciowa - przepływ requestów]
 )
 
