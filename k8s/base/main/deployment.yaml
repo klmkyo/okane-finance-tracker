@@ -32,7 +32,7 @@ spec:
               value: postgresql://postgres:postgres@postgres:5432/okane
       containers:
         - name: main
-          image: docker.io/library/main:prod
+          image: docker.io/library/main
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
