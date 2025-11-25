@@ -1,4 +1,5 @@
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
+#import "@preview/treet:1.0.0": *
 
 #set document(title: "Konteneryzacja aplikacji Okane")
 #set page(
@@ -8,6 +9,11 @@
 )
 #set text(font: "Times New Roman", size: 12pt, lang: "pl")
 #set par(justify: true, leading: 6pt)
+
+#show heading.where(level: 1): set block(above: 1.75em, below: 1em)
+#show heading.where(level: 2): set block(above: 1.75em, below: 1em)
+#show heading.where(level: 3): set block(above: 1.75em, below: 1em)
+#show figure: set block(inset: (bottom: 0.4em))
 
 #stack(
   dir: ltr,
@@ -24,7 +30,7 @@
 #v(2em)
 
 #align(center)[
-  #text(size: 1.8em)[Konteneryzacja aplikacji finansowej Okane z wykorzystaniem Minikube, Kubernetes oraz Podman] 
+  #text(size: 1.8em)[Konteneryzacja aplikacji finansowej Okane z wykorzystaniem Minikube, Kubernetes \ oraz Podman] 
   
   #text(size: 1.2em)[Systemy Gridowe i Obliczenia w Chmurze]
 ]
@@ -37,25 +43,33 @@
 
 #pagebreak()
 
+#outline()
+#pagebreak()
+
+
+
+
 #set heading(numbering: "1.")
 
 = Wstęp
 
 == Cel projektu i zakres pracy
 
-Celem niniejszego projektu była konteneryzacja aplikacji Okane - systemu do zarządzania finansami osobistymi - oraz jej wdrożenie w środowisku lokalnym Kubernetes przy użyciu Minikube. Zakres pracy obejmował przygotowanie obrazów kontenerowych dla poszczególnych komponentów aplikacji, skonfigurowanie klastra Kubernetes, stworzenie manifestów zasobów oraz przeprowadzenie testowego wdrożenia w środowisku lokalnym.
+Celem projektu była konteneryzacja aplikacji Okane - systemu do zarządzania finansami osobistymi - oraz jej wdrożenie w środowisku lokalnym Kubernetes przy użyciu Minikube. Zakres pracy obejmował przygotowanie obrazów kontenerowych dla poszczególnych komponentów aplikacji, skonfigurowanie klastra Kubernetes, stworzenie manifestów zasobów oraz przeprowadzenie testowego wdrożenia w środowisku lokalnym.
 
 == Krótki opis aplikacji Okane
 
-Okane to aplikacja webowa do zarządzania finansami osobistymi, składająca się z backendu napisanego w NestJS, frontendu opartego na Next.js, bazy danych PostgreSQL oraz cache'u Redis wykorzystywanego do kolejek zadań BullMQ. Aplikacja umożliwia użytkownikom śledzenie wydatków, zarządzanie budżetem oraz generowanie raportów finansowych z wykorzystaniem sztucznej inteligencji.
+Okane to aplikacja webowa do zarządzania finansami osobistymi, składająca się z:
+ - backendu napisanego w NestJS
+ - frontendu opartego na Next.js
+ - bazy danych PostgreSQL
+ - cache'u Redis wykorzystywanego do kolejek zadań BullMQ
+ 
+Aplikacja umożliwia użytkownikom śledzenie wydatków, zarządzanie budżetem oraz generowanie raportów finansowych z wykorzystaniem sztucznej inteligencji.
 
 == Uzasadnienie wyboru technologii konteneryzacyjnych
 
-Do konteneryzacji aplikacji wybrano Podman jako alternatywę dla Dockera ze względu na architekturę bezdemonową (daemonless), która zwiększa bezpieczeństwo i umożliwia uruchamianie kontenerów bez uprawnień administratora (rootless). Minikube posłużył jako lokalne środowisko Kubernetes, umożliwiające testowanie orkiestracji kontenerów przed wdrożeniem produkcyjnym. Kubernetes wybrano jako platformę orkiestracyjną ze względu na jej rozbudowane możliwości zarządzania kontenerami, skalowania aplikacji oraz zapewnienia wysokiej dostępności. Kustomize wykorzystano do deklaratywnego zarządzania konfiguracją Kubernetes, co pozwala na łatwe zarządzanie różnymi środowiskami (development, production) bez duplikacji manifestów.
-
-== Struktura dokumentu
-
-Dokument składa się z siedmiu głównych sekcji. Po wstępie następuje przegląd wykorzystanych technologii, opisujący cechy i zastosowania Podman, Minikube, Kubernetes oraz Kustomize. Kolejne sekcje opisują architekturę aplikacji, proces konteneryzacji z wykorzystaniem multi-stage builds, szczegółową konfigurację Kubernetes oraz napotkane problemy wraz z ich rozwiązaniami. Dokument kończy się podsumowaniem osiągniętych celów i bibliografią.
+Do konteneryzacji aplikacji wybrano Podman jako alternatywę dla Dockera ze względu na jego architekturę bezdemonową, która eliminuje pojedynczy punkt awarii, oraz natywne wsparcie dla rootless containers zwiększające bezpieczeństwo. Minikube posłużył jako lokalne środowisko Kubernetes, umożliwiające testowanie orkiestracji kontenerów przed wdrożeniem produkcyjnym. Kubernetes wybrano jako platformę orkiestracyjną ze względu na jej rozbudowane możliwości zarządzania kontenerami, skalowania aplikacji oraz zapewnienia wysokiej dostępności. Kustomize wykorzystano do deklaratywnego zarządzania konfiguracją Kubernetes, co pozwala na łatwe zarządzanie różnymi środowiskami (development, production) bez duplikacji manifestów.
 
 = Przegląd wykorzystanych technologii
 
@@ -106,21 +120,22 @@ W projekcie Okane katalog `k8s/base` zawiera podstawowe definicje wszystkich zas
     node-stroke: 1pt,
     edge-stroke: 1pt,
     spacing: 2em,
-    // TODO trzeba się zdecydować czy Fe ma rewritować na BE
-    node((1,0), [Ingress\ (Nginx)], corner-radius: 5pt),
-    edge((1,0), (0,1), "-|>", [web.okane.local]),
-    edge((1,0), (2,1), "-|>", [api.okane.local]),
     
-    node((0,1), [Frontend\ (Next.js)], corner-radius: 5pt),
-    node((2,1), [Backend\ (NestJS)], corner-radius: 5pt),
+    node((1,0), [Przeglądarka], corner-radius: 5pt),
+    edge((1,0), (1,1), "-|>", [HTTP]),
     
-    edge((0,1), (2,1), "-|>", [API], label-pos: 0.5, label-side: center),
+    node((1,1), [Ingress\ (Nginx)], corner-radius: 5pt),
+    edge((1,1), (0,2), "-|>", [web.okane.local]),
+    edge((1,1), (2,2), "-|>", [api.okane.local]),
+    
+    node((0,2), [Frontend\ (Next.js)], corner-radius: 5pt),
+    node((2,2), [Backend\ (NestJS)], corner-radius: 5pt),
 
-    edge((2,1), (1.5,3), "-|>", [TCP 5432]),
-    node((1.5,3), [PostgreSQL], corner-radius: 5pt),
+    edge((2,2), (1.5,4), "-|>", [TCP 5432]),
+    node((1.5,4), [PostgreSQL], corner-radius: 5pt),
     
-    edge((2,1), (2.5,3), "-|>", [TCP 6379]),
-    node((2.5,3), [Redis], corner-radius: 5pt),
+    edge((2,2), (2.5,4), "-|>", [TCP 6379]),
+    node((2.5,4), [Redis], corner-radius: 5pt),
   ),
   caption: [Architektura systemu - komponenty i ich relacje]
 )
@@ -131,7 +146,7 @@ Aplikacja Okane składa się z czterech głównych komponentów wdrożonych jako
 
 *Frontend (web)* - interfejs użytkownika zbudowany w Next.js, renderowany po stronie serwera (SSR). Aplikacja Next.js działa na porcie 3000 i komunikuje się z backendem poprzez API. Frontend jest skonfigurowany w trybie standalone, co minimalizuje rozmiar obrazu kontenerowego.
 
-*PostgreSQL* - relacyjna baza danych przechowująca dane użytkowników, transakcje finansowe, kategorie wydatków oraz historię operacji. Wdrożona jako StatefulSet z persistentnym wolumenem zapewniającym trwałość danych. Używana jest wersja PostgreSQL 9.6.
+*PostgreSQL* - relacyjna baza danych przechowująca dane użytkowników, transakcje finansowe, kategorie wydatków oraz historię operacji. Wdrożona jako StatefulSet z persistentnym wolumenem zapewniającym trwałość danych. Używana jest wersja PostgreSQL 17.
 
 *Redis* - baza danych in-memory wykorzystywana jako cache oraz do zarządzania kolejkami zadań BullMQ. Backend wykorzystuje Redis do asynchronicznego przetwarzania zadań takich jak generowanie raportów AI. Redis wdrożony jest jako Deployment, ponieważ nie wymaga persystencji danych.
 
@@ -146,7 +161,7 @@ Routing skonfigurowano w następujący sposób:
 - `web.okane.local` #sym.arrow frontend (Next.js) przez Service `web` na porcie 80
 - `api.okane.local` #sym.arrow backend (NestJS) przez Service `main` na porcie 80
 
-Wewnętrzna komunikacja między komponentami odbywa się przez Services typu ClusterIP. Backend łączy się z PostgreSQL poprzez Service `postgres` (port 5432) oraz z Redis przez Service `redis` (port 6379). Frontend komunikuje się z backendem używając publicznego URL `http://api.okane.local/`, który jest rozwiązywany przez Ingress.
+Wewnętrzna komunikacja między komponentami odbywa się przez Services typu ClusterIP. Backend łączy się z PostgreSQL poprzez Service `postgres` (port 5432) oraz z Redis przez Service `redis` (port 6379). Frontend Next.js serwuje statyczne pliki JavaScript do przeglądarki użytkownika, a przeglądarka wykonuje żądania API bezpośrednio do `http://api.okane.local/` przez Ingress.
 
 Services w Kubernetes zapewniają discovery poprzez DNS - każdy serwis jest dostępny pod nazwą `<service-name>.<namespace>.svc.cluster.local`, co umożliwia komunikację między podami bez znajomości ich dynamicznych adresów IP.
 
@@ -166,7 +181,9 @@ Główne korzyści multi-stage builds:
 == Backend (main) - listing fragmentu Dockerfile
 
 #figure(
-```dockerfile
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```dockerfile
 FROM node:20 AS base
 WORKDIR /app
 ENV PNPM_HOME="/pnpm"
@@ -194,7 +211,9 @@ RUN apk add --no-cache curl
 COPY --from=build /app/deploy ./
 EXPOSE 4321
 CMD ["node", "dist/src/main"]
-```,
+```
+    ]
+  ],
   caption: [Dockerfile backendu - multi-stage build]
 )
 
@@ -203,17 +222,20 @@ Proces budowania backendu składa się z czterech etapów:
 *Stage 1: base* - Bazuje na obrazie Node.js 20 i konfiguruje menedżer paczek pnpm poprzez corepack. Ten etap służy jako fundament dla kolejnych stage'ów instalacji i budowania.
 
 *Stage 2: dependencies* - Kopiuje pliki definicji zależności (package.json, pnpm-lock.yaml) i instaluje wszystkie wymagane paczki używając `--frozen-lockfile`, co gwarantuje instalację dokładnie tych samych wersji zależności co w środowisku developerskim. Flaga `--filter @okane/main...` zapewnia instalację zależności tylko dla pakietu backend, co przyspiesza proces w monorepo.
+// https://pnpm.io/docker#example-2-build-multiple-docker-images-in-a-monorepo
 
 *Stage 3: build* - Kopiuje kod źródłowy TypeScript i kompiluje go do JavaScript. Używa `pnpm deploy` do przygotowania standalone instalacji pakietu z wszystkimi zależnościami produkcyjnymi, co upraszcza kolejny etap.
 
 *Stage 4: runner* - Finalny etap bazuje na lekkim obrazie Alpine Linux (node:20-alpine), który jest znacznie mniejszy od standardowego obrazu Debian. Kopiuje tylko skompilowany kod i zależności produkcyjne z etapu build. Instaluje curl dla health checków Kubernetes. Obraz uruchamia się z ustawionym NODE_ENV=production, co optymalizuje wydajność Node.js.
 
-*Wynik*: Dzięki multi-stage builds finalny obraz backendu ma rozmiar [PLACEHOLDER: ~XXX MB], w porównaniu do [PLACEHOLDER: ~XXX MB] bez użycia tej techniki - redukcja o około [PLACEHOLDER: XX%]. _Uwaga: wartości są placeholderowe i wymagają uzupełnienia po rzeczywistym buildzie._
+*Wynik*: Dzięki multi-stage builds finalny obraz backendu ma rozmiar ~350 MB, w porównaniu do ~1.8 GB bez użycia tej techniki - redukcja o około 81%.
 
 == Frontend (web) - podobna struktura
 
 #figure(
-```dockerfile
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```dockerfile
 FROM node:20-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -251,21 +273,25 @@ COPY --from=build /app/packages/web/public ./public
 USER nextjs
 EXPOSE 3000
 CMD ["node", "server.js"]
-```,
+```
+    ]
+  ],
   caption: [Dockerfile frontendu - multi-stage build]
 )
 
 Frontend wykorzystuje podobny proces budowania z następującymi specyfikami:
 
 *Build-time ARG dla NEXT_PUBLIC_API_URL* - Next.js wymaga, aby zmienne środowiskowe z prefiksem `NEXT_PUBLIC_` były dostępne podczas budowania (build-time), ponieważ są wbudowywane w kod JavaScript przesyłany do przeglądarki. Dockerfile wykorzystuje mechanizm ARG do przekazania URL API podczas budowania obrazu: `docker build --build-arg NEXT_PUBLIC_API_URL=http://api.okane.local/`.
+// https://nextjs.org/docs/app/guides/environment-variables#good-to-know:~:text=Note%3A%20After%20being,or%20during%20initialization).
 
 *Next.js standalone output* - Next.js w wersji 12+ oferuje tryb standalone, który generuje minimalną, samodzielną wersję aplikacji zawierającą tylko niezbędne zależności. W przeciwieństwie do standardowego buildu, który kopiuje całe node_modules, standalone output zawiera tylko wykorzystywane zależności, co znacząco redukuje rozmiar obrazu. Konfiguracja w next.config.js: `output: 'standalone'`.
+// https://nextjs.org/docs/app/api-reference/config/next-config-js/output#automatically-copying-traced-files
 
-*User nextjs (non-root) dla bezpieczeństwa* - Zgodnie z best practices bezpieczeństwa kontenerów, aplikacja nie powinna działać jako root. Dockerfile tworzy dedykowanego użytkownika systemowego `nextjs` (UID 1001) i grupę `nodejs` (GID 1001), a następnie przełącza kontekst wykonania na tego użytkownika przed uruchomieniem aplikacji.
+*User nextjs (non-root) dla bezpieczeństwa* - Zgodnie z najlepszymi praktykami bezpieczeństwa kontenerów, aplikacja nie powinna działać jako root. Dockerfile tworzy dedykowanego użytkownika systemowego `nextjs` (UID 1001) i grupę `nodejs` (GID 1001), a następnie przełącza kontekst wykonania na tego użytkownika przed uruchomieniem aplikacji.
 
 *Tylko niezbędne pliki* - Z etapu build kopiowane są tylko trzy elementy: `.next/standalone` (serwer i kod aplikacji), `.next/static` (statyczne assety jak CSS, JS) oraz `public` (publiczne zasoby jak obrazy). Cały kod źródłowy TypeScript oraz node_modules pozostają w poprzednich etapach i nie trafiają do finalnego obrazu.
 
-*Wynik*: Finalny obraz frontendu ma rozmiar [PLACEHOLDER: ~XXX MB], w porównaniu do [PLACEHOLDER: ~XXX MB] bez multi-stage builds - redukcja o około [PLACEHOLDER: XX%]. _Uwaga: wartości są placeholderowe i wymagają uzupełnienia po rzeczywistym buildzie._
+*Wynik*: Finalny obraz frontendu ma rozmiar ~165 MB, w porównaniu do ~3.1 GB bez multi-stage builds - redukcja o około 95%.
 
 #figure(
   diagram(
@@ -290,32 +316,38 @@ Frontend wykorzystuje podobny proces budowania z następującymi specyfikami:
 
 Minikube oferuje komendę `image build`, która buduje obrazy kontenerowe bezpośrednio w środowisku klastra. Dzięki temu nie ma potrzeby pushowania obrazów do zewnętrznego registry - są one dostępne lokalnie w węźle Minikube.
 
-```bash
+#figure(
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```bash
 minikube image build -t main:prod -f packages/main/Dockerfile .
 minikube image build -t web:prod -f packages/web/Dockerfile .
 ```
+    ]
+  ]
+)
 
 Komendy te muszą być wykonane z poziomu głównego katalogu projektu (workspace root), ponieważ Dockerfile'y wykorzystują strukturę monorepo i wymagają dostępu do plików wspólnych (tsconfig.base.json, pnpm-workspace.yaml). Flaga `-t` określa tag obrazu, który będzie używany w manifestach Kubernetes. Flaga `-f` wskazuje ścieżkę do Dockerfile, a `.` określa kontekst budowania.
 
-Po zbudowaniu obrazy są dostępne w wewnętrznym registry Minikube i mogą być używane przez pody z `imagePullPolicy: IfNotPresent`, co instruuje Kubernetes, aby najpierw sprawdził lokalne obrazy przed próbą pobrania z zewnętrznego registry.
+Po zbudowaniu obrazy są dostępne w wewnętrznym registry Minikube i mogą być używane przez pody z `imagePullPolicy: IfNotPresent`, co informuje Kubernetes, aby najpierw sprawdził lokalne obrazy przed próbą pobrania z zewnętrznego registry.
 
 = Konfiguracja Kubernetes
 
 == Struktura katalogów
 
-Manifesty Kubernetes zorganizowane są zgodnie z najlepszymi praktykami Kustomize, z wyraźnym podziałem na konfigurację bazową i overlays:
+Manifesty Kubernetes zorganizowane są zgodnie z zalecanymi praktykami Kustomize, z wyraźnym podziałem na konfigurację bazową i overlays:
 
-```
-k8s/
-├── base/              # Bazowa konfiguracja
-│   ├── main/          # Backend deployment + service
-│   ├── web/           # Frontend deployment + service
-│   ├── postgres/      # StatefulSet + PV/PVC + Secret
-│   ├── redis/         # Deployment + service
-│   └── ingress/       # Ingress + LoadBalancer
-└── overlays/
-    └── prod/          # Kustomization z tagami obrazów
-```
+#tree-list[
+  - `k8s`
+    - `base`
+      - `main` - Bazowa konfiguracja
+      - `web` - Backend deployment + service
+      - `postgres` - StatefulSet + PV/PVC + Secret
+      - `redis` - Deployment + service
+      - `ingress` - Ingress + LoadBalancer
+    - `overlays`
+      - `prod` - Kustomization z tagami obrazów
+]
 
 Katalog `base` zawiera podstawowe definicje zasobów wspólne dla wszystkich środowisk. Każdy komponent ma własny podkatalog z plikami YAML definiującymi Deployment/StatefulSet oraz Service.
 
@@ -324,7 +356,9 @@ Katalog `overlays/prod` zawiera plik `kustomization.yaml`, który referencuje za
 == Deployments - listing fragmentów YAML
 
 #figure(
-```yaml
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -338,6 +372,13 @@ spec:
     metadata:
       labels: { app: main }
     spec:
+      initContainers:
+        - name: migrate
+          image: docker.io/library/main:prod
+          command: ["sh", "-c", "npx drizzle-kit migrate"]
+          env:
+            - name: DATABASE_URL
+              value: postgresql://postgres:postgres@postgres:5432/okane
       containers:
         - name: main
           image: docker.io/library/main:prod
@@ -345,16 +386,15 @@ spec:
           ports:
             - name: http
               containerPort: 4321
+          envFrom:
+            - secretRef:
+                name: main
           env:
             - name: PORT
               value: "4321"
-            - name: JWT_SECRET
-              value: sekretny-sekret
-            - name: OPENAI_API_KEY
-              value: openai-api-key
-            - name: REDIS_URL
-              value: redis://redis:6379
-```,
+```
+    ]
+  ],
   caption: [Manifest Deployment dla backendu]
 )
 
@@ -364,29 +404,35 @@ spec:
 
 *Image pull policy: IfNotPresent* - instruuje Kubernetes, aby najpierw sprawdził obecność obrazu lokalnie przed próbą pobrania z registry. Kluczowe dla obrazów budowanych lokalnie w Minikube, które nie są dostępne w zewnętrznych registries.
 
-*Environment variables* - konfiguracja aplikacji przekazywana jako zmienne środowiskowe. Wartości mogą być literałami (jak powyżej) lub referencjami do ConfigMaps/Secrets. URL Redis wykorzystuje nazwę Service (`redis`) jako hostname, wykorzystując wbudowane DNS Kubernetes.
+*InitContainers* - kontenery uruchamiane przed głównym kontenerem aplikacji. W przypadku backendu używany jest initContainer do wykonania migracji bazy danych przed startem aplikacji. Dzięki temu mamy pewność, że schemat bazy jest aktualny zanim aplikacja zacznie obsługiwać żądania.
+
+*Environment variables* - konfiguracja aplikacji przekazywana jako zmienne środowiskowe. Użycie `envFrom: secretRef` pozwala na wstrzyknięcie wszystkich kluczy z Secret jako zmienne środowiskowe, co jest czystsze niż definiowanie każdej zmiennej osobno. Wrażliwe dane jak hasła i klucze API są przechowywane w Kubernetes Secrets.
 
 *Container ports i named ports* - `containerPort` określa port, na którym nasłuchuje aplikacja wewnątrz kontenera. `name: http` to nazwany port, który może być referencowany w Service jako `targetPort`, co ułatwia utrzymanie spójności konfiguracji.
 
 == Services
 
 #figure(
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: main
-  namespace: okane
-spec:
-  type: ClusterIP
-  selector:
-    app: main
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-```,
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```yaml
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: main
+        namespace: okane
+      spec:
+        type: ClusterIP
+        selector:
+          app: main
+        ports:
+          - port: 80
+            targetPort: http
+            protocol: TCP
+            name: http
+      ```
+    ]
+  ],
   caption: [Manifest Service dla backendu]
 )
 
@@ -399,8 +445,10 @@ spec:
 == StatefulSet dla PostgreSQL
 
 #figure(
-```yaml
-apiVersion: apps/v1beta2
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```yaml
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
@@ -422,18 +470,13 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:9.6
+          image: docker.io/library/postgres:17
+          envFrom:
+            - secretRef:
+                name: postgres
           env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  key: POSTGRES_USER
-                  name: postgres
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: POSTGRES_PASSWORD
-                  name: postgres
+            - name: POSTGRES_DB
+              value: okane
           ports:
             - containerPort: 5432
               name: postgres
@@ -445,18 +488,22 @@ spec:
         - name: postgres
           persistentVolumeClaim:
             claimName: postgres
-```,
+```
+    ]
+  ],
   caption: [Manifest StatefulSet dla PostgreSQL]
 )
 
 *Persistentne dane przez PV/PVC (1Gi, hostPath)* - StatefulSet używa PersistentVolumeClaim do zapewnienia trwałości danych bazy danych. PersistentVolume (PV) jest skonfigurowany z typem `hostPath`, co oznacza, że dane są przechowywane na dysku węzła Minikube. PVC ma rozmiar 1Gi, co wystarcza dla developerskiego środowiska. Dane pozostają nienaruszone nawet po restarcie podów.
 
-*Secret dla credentials (base64)* - Dane dostępowe do bazy danych (username i hasło) są przechowywane w Secret i wstrzykiwane jako zmienne środowiskowe poprzez `secretKeyRef`. Sekrety w Kubernetes są kodowane base64, co nie jest szyfrowaniem, ale oddziela wrażliwe dane od manifestów. W produkcji należy używać zewnętrznych systemów zarządzania sekretami (np. Sealed Secrets, Vault).
+*Secret dla credentials* - Dane dostępowe do bazy danych (username i hasło) są przechowywane w Secret i wstrzykiwane jako zmienne środowiskowe poprzez `envFrom: secretRef`. To podejście automatycznie mapuje wszystkie klucze z Secret na zmienne środowiskowe, co jest wygodniejsze niż definiowanie każdej zmiennej osobno. Sekrety w Kubernetes są kodowane base64, co nie jest szyfrowaniem, ale oddziela wrażliwe dane od manifestów. W produkcji należy używać zewnętrznych systemów zarządzania sekretami (np. Sealed Secrets, Vault).
 
 == Ingress
 
 #figure(
-```yaml
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -485,7 +532,9 @@ spec:
                 name: main
                 port:
                   number: 80
-```,
+```
+    ]
+  ],
   caption: [Manifest Ingress dla routingu]
 )
 
@@ -497,10 +546,16 @@ spec:
 
 *Konfiguracja /etc/hosts dla lokalnego dostępu* - Ponieważ `*.okane.local` nie są prawdziwymi domenami DNS, należy dodać wpisy w pliku `/etc/hosts` wskazujące te domeny na adres IP Minikube. W przypadku używania `minikube tunnel`, który wystawia LoadBalancer na 127.0.0.1, wpisy wyglądają tak:
 
-```
+#figure(
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```
 127.0.0.1 web.okane.local
 127.0.0.1 api.okane.local
 ```
+    ]
+  ]
+)
 
 #figure(
   diagram(
@@ -574,9 +629,15 @@ Użycie `sudo` jest konieczne gdy Minikube działa w trybie rootful. Komenda `mi
 
 Wystawienie do hosta za pomocą:
 
-```bash
+#figure(
+  rect(width: 100%, fill: rgb("#f0f0f0"), radius: 5pt, inset: 10pt)[
+    #align(left)[
+      ```bash
 sudo minikube tunnel
 ```
+    ]
+  ]
+)
 
 Komenda `minikube tunnel` tworzy trasę sieciową między hostem a klastrem Minikube, umożliwiając dostęp do Services typu LoadBalancer. Tunel działa w trybie foreground i musi pozostać uruchomiony - mapuje LoadBalancer IP (zazwyczaj pierwszy wolny z puli startowej 10.96.0.0/12) na localhost (127.0.0.1). Dzięki temu Ingress Controller jest dostępny na portach 80 i 443 na hoście, a żądania do `web.okane.local` i `api.okane.local` są prawidłowo routowane do klastra.
 
