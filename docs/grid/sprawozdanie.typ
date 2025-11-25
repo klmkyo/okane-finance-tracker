@@ -14,6 +14,8 @@
 #show heading.where(level: 2): set block(above: 1.75em, below: 1em)
 #show heading.where(level: 3): set block(above: 1.75em, below: 1em)
 #show figure: set block(inset: (bottom: 0.4em))
+#set bibliography(style: "ieee")
+
 
 #stack(
   dir: ltr,
@@ -689,16 +691,4 @@ W kontekście produkcyjnego wdrożenia warto rozważyć migrację do zarządzane
 
 = Bibliografia
 
-#set par(hanging-indent: 1em)
-
-Dokumentacja Kubernetes. (2024). _Kubernetes Documentation_. https://kubernetes.io/docs/
-
-Dokumentacja Podman. (2024). _Podman Documentation_. https://docs.podman.io/
-
-Dokumentacja Minikube. (2024). _Minikube Documentation_. https://minikube.sigs.k8s.io/docs/
-
-Dokumentacja Kustomize. (2024). _Kustomize Documentation_. https://kustomize.io/
-
-Dokumentacja Next.js. (2024). _Next.js Documentation - Output File Tracing (Standalone Mode)_. https://nextjs.org/docs/advanced-features/output-file-tracing
-
-Dokumentacja NestJS. (2024). _NestJS Documentation_. https://docs.nestjs.com/
+#bibliography("references.bib")
