@@ -44,6 +44,58 @@ const encryptedPasswordPool = unencryptedPasswordPool.map((password) =>
 	bcrypt.hashSync(password, 10),
 )
 
+// Add test users first
+const testUsers = [
+	{
+		username: 'admin',
+		password: bcrypt.hashSync('admin123', 10),
+		email: 'admin@example.com',
+		firstName: 'Admin',
+		lastName: 'User',
+		role: 'ADMIN',
+		isBlocked: 0,
+	},
+	{
+		username: 'user',
+		password: bcrypt.hashSync('user123', 10),
+		email: 'user@example.com',
+		firstName: 'John',
+		lastName: 'Doe',
+		role: 'USER',
+		isBlocked: 0,
+	},
+	{
+		username: 'blocked_user',
+		password: bcrypt.hashSync('blocked123', 10),
+		email: 'blocked@example.com',
+		firstName: 'Jane',
+		lastName: 'Blocked',
+		role: 'USER',
+		isBlocked: 1,
+	},
+]
+
+const now = formatDate(new Date())
+const pastDate = formatDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+
+for (const testUser of testUsers) {
+	const user = {
+		id: users.length + 1,
+		username: testUser.username,
+		password: testUser.password,
+		email: testUser.email,
+		first_name: testUser.firstName,
+		last_name: testUser.lastName,
+		role: testUser.role,
+		is_blocked: testUser.isBlocked,
+		created_at: pastDate,
+		updated_at: now,
+	}
+	users.push(user)
+	usedUsernames.add(testUser.username)
+	usedEmails.add(testUser.email)
+}
+
 for (let i = 0; i < ROW_COUNT; i++) {
 	let username: string
 	do {
@@ -63,12 +115,14 @@ for (let i = 0; i < ROW_COUNT; i++) {
 		]
 
 	const user = {
-		id: i + 1,
+		id: users.length + 1,
 		username,
 		password: hashedPassword,
 		email: email,
 		first_name: faker.person.firstName(),
 		last_name: faker.person.lastName(),
+		role: 'USER',
+		is_blocked: 0,
 		created_at: formatDate(faker.date.past()),
 		updated_at: formatDate(new Date()),
 	}
@@ -257,6 +311,8 @@ sql += batchInsert(
 		'email',
 		'first_name',
 		'last_name',
+		'role',
+		'is_blocked',
 		'created_at',
 		'updated_at',
 	],

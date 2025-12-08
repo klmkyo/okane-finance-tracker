@@ -2,6 +2,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { AccountsModule } from './accounts/accounts.module'
+import { AdminModule } from './admin/admin.module'
 import { AiChatModule } from './ai-chat/ai-chat.module'
 import { AiRaportModule } from './ai-raport/ai-raport.module'
 import { AppController } from './app.controller'
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module'
 		ConfigModule.forRoot({ isGlobal: true, load: configuration }),
 		AuthModule,
 		UsersModule,
+		AdminModule,
 		DrizzleModule,
 		TransactionsModule,
 		RecurringTransactionsModule,

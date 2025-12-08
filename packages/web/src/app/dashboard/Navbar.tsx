@@ -114,21 +114,33 @@ const Navbar: React.FC = () => {
   };
 
   const items: ItemType[] = useMemo(
-    () => [
-      {
-        key: "settings",
-        icon: <SettingOutlined />,
-        label: t("Navbar.settings"),
-        onClick: () => setIsSettingsVisible(true),
-      },
-      {
+    () => {
+      const menuItems: ItemType[] = [
+        {
+          key: "settings",
+          icon: <SettingOutlined />,
+          label: t("Navbar.settings"),
+          onClick: () => setIsSettingsVisible(true),
+        },
+      ];
+
+      if (user?.role === "ADMIN") {
+        menuItems.push({
+          key: "admin",
+          label: <Link href={`/dashboard/${accountId}/admin`}>Admin Panel</Link>,
+        });
+      }
+
+      menuItems.push({
         key: "logout",
         icon: <LogoutOutlined />,
         label: t("Navbar.logout"),
         onClick: handleLogout,
-      },
-    ],
-    [t, handleLogout]
+      });
+
+      return menuItems;
+    },
+    [t, handleLogout, user?.role]
   );
 
   return (

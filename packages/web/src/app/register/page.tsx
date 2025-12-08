@@ -26,7 +26,8 @@ export default function RegisterPage() {
 
   const mutation = useMutation({
     mutationFn: async (values: RegisterFormValues) => {
-      return api.post("/auth/register", values);
+      const { confirmPassword, ...payload } = values;
+      return api.post("/auth/register", payload);
     },
     onSuccess: () => {
       message.success(t("registrationSuccess"));

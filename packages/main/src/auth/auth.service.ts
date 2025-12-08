@@ -17,7 +17,10 @@ export class AuthService {
 	) {}
 
 	async login(user: UserSelect) {
-		const payload = { sub: user.id }
+		if (user.isBlocked) {
+			throw new BadRequestException('user_blocked')
+		}
+		const payload = { sub: user.id, role: user.role }
 		return {
 			token: this.jwtService.sign(payload),
 		}
