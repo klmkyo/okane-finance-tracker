@@ -1,17 +1,12 @@
-#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
-#import "@preview/treet:1.0.0": *
-
-
 #set document(title: "Konteneryzacja aplikacji Okane")
 #set page(
   paper: "a4",
   margin: (left: 3.5cm, top: 2.5cm, right: 2.5cm, bottom: 2.5cm),
-  footer: context align(center)[#counter(page).display("1")]
+  footer: none, // brak numeracji na początku
 )
 #set text(font: "Times New Roman", size: 12pt, lang: "pl")
 #set par(justify: true, leading: 6pt)
 #set bibliography(style: "ieee")
-
 
 #show heading.where(level: 1): set block(above: 1.75em, below: 1em)
 #show heading.where(level: 2): set block(above: 1.75em, below: 1em)
@@ -31,9 +26,7 @@
   ]
 )
 
-
 #v(2em)
-
 
 #align(center)[
   #text(size: 1.8em)[Konteneryzacja aplikacji finansowej Okane z wykorzystaniem Minikube, Kubernetes \ oraz Podman] 
@@ -41,30 +34,26 @@
   #text(size: 1.2em)[Systemy Gridowe i Obliczenia w Chmurze]
 ]
 
-
 #v(1fr) 
-
 
 #align(center)[
   #text(size: 1.2em)[Kacper Kosmal, Marcin Klimek]
 ]
 
-
 #pagebreak()
-
 
 #outline()
 #pagebreak()
 
-
-
-
-
+// od tego miejsca w górę brak numerów
+// teraz włączamy numerację od 1
+#set page(
+  footer: context align(center)[#counter(page).display("1")]
+)
+#counter(page).update(1)
 #set heading(numbering: "1.")
 
-
 = Wstęp
-
 
 == Cel projektu i zakres pracy
 
@@ -767,7 +756,7 @@ Komenda `minikube tunnel` tworzy trasę sieciową między hostem a klastrem Mini
 = Podsumowanie
 
 
-== Rekapitulacja osiągniętych celów
+== Podsumowanie osiągniętych celów
 
 
 Projekt konteneryzacji aplikacji Okane został zrealizowany zgodnie z założonymi celami. Wszystkie komponenty aplikacji - backend NestJS, frontend Next.js, baza danych PostgreSQL oraz Redis - zostały pomyślnie skonteneryzowane przy użyciu Podman. Utworzono optymalne obrazy kontenerowe wykorzystujące technikę multi-stage builds, co pozwoliło znacząco zredukować ich rozmiar. Skonfigurowano kompletne środowisko Kubernetes w Minikube, obejmujące Deployments, Services, StatefulSets, Ingress oraz zarządzanie konfiguracją poprzez Kustomize. Aplikacja została wdrożona i przetestowana w lokalnym klastrze, działając poprawnie z pełną komunikacją między komponentami.
