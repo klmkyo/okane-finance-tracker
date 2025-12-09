@@ -156,6 +156,7 @@ Zmienna `JWT_SECRET` i inne wartości środowiskowe mogą być nadpisane poprzez
 ```
 podman machine init --cpus 4 --memory 4096 --disk-size 10
 podman machine start
+podman machine set --rootful
 
 sudo minikube config set rootless false && sudo minikube config set driver podman
 
