@@ -276,5 +276,83 @@
 		"yes": "Yes",
 		"no": "No"
 	},
+	"Admin": {
+		"messages": {
+			"blocked": "User blocked successfully",
+			"unblocked": "User unblocked successfully",
+			"promoted": "User promoted to admin",
+			"demoted": "User demoted from admin",
+			"deleted": "User deleted successfully"
+		},
+		"table": {
+			"title": "User Management ({count} users)",
+			"columns": {
+				"id": "ID",
+				"username": "Username",
+				"email": "Email",
+				"name": "Name",
+				"role": "Role",
+				"status": "Status",
+				"actions": "Actions"
+			},
+			"empty": "No users found"
+		},
+		"role": {
+			"admin": "Admin",
+			"user": "User"
+		},
+		"status": {
+			"active": "Active",
+			"blocked": "Blocked"
+		},
+		"actions": {
+			"block": "Block",
+			"unblock": "Unblock",
+			"promote": "Promote",
+			"demote": "Demote",
+			"delete": "Delete",
+			"clearFilters": "Clear Filters"
+		},
+		"confirm": {
+			"block": {
+				"title": "Block user?",
+				"description": "This will prevent the user from logging in"
+			},
+			"delete": {
+				"title": "Delete user?",
+				"description": "This action cannot be undone"
+			},
+			"yes": "Yes",
+			"no": "No"
+		},
+		"filters": {
+			"title": "Filters & Search",
+			"searchPlaceholder": "Search by name, email...",
+			"rolePlaceholder": "Filter by role",
+			"statusPlaceholder": "Filter by status",
+			"sortPlaceholder": "Sort by ID",
+			"role": {
+				"admin": "Admin",
+				"user": "User"
+			},
+			"status": {
+				"active": "Active",
+				"blocked": "Blocked"
+			},
+			"sort": {
+				"asc": "Ascending",
+				"desc": "Descending"
+			}
+		},
+		"stats": {
+			"total": "Total Users",
+			"admins": "Admins",
+			"blocked": "Blocked Users"
+		},
+		"forbidden": {
+			"title": "Forbidden",
+			"subtitle": "You do not have permission to access the admin panel"
+		}
+	},
 	"noData": "No data"
 }

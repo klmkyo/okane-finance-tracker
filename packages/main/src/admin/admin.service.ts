@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, NotFoundException, Inject } from '@nestjs/common'
+import {
+	Injectable,
+	BadRequestException,
+	NotFoundException,
+	Inject,
+} from '@nestjs/common'
 import { Database, User } from 'database/schema'
 import { DB } from 'src/common/constants'
 import { eq, sql } from 'drizzle-orm'
@@ -23,7 +28,7 @@ export class AdminService {
 		}
 
 		await this.db.execute(
-			sql`UPDATE "users" SET "is_blocked" = 1 WHERE "id" = ${userId}`
+			sql`UPDATE "users" SET "is_blocked" = 1 WHERE "id" = ${userId}`,
 		)
 
 		const [updatedUser] = await this.db
@@ -44,7 +49,7 @@ export class AdminService {
 		}
 
 		await this.db.execute(
-			sql`UPDATE "users" SET "is_blocked" = 0 WHERE "id" = ${userId}`
+			sql`UPDATE "users" SET "is_blocked" = 0 WHERE "id" = ${userId}`,
 		)
 
 		const [updatedUser] = await this.db
@@ -65,7 +70,7 @@ export class AdminService {
 		}
 
 		await this.db.execute(
-			sql`UPDATE "users" SET "role" = 'ADMIN' WHERE "id" = ${userId}`
+			sql`UPDATE "users" SET "role" = 'ADMIN' WHERE "id" = ${userId}`,
 		)
 
 		const [updatedUser] = await this.db
@@ -86,7 +91,7 @@ export class AdminService {
 		}
 
 		await this.db.execute(
-			sql`UPDATE "users" SET "role" = 'USER' WHERE "id" = ${userId}`
+			sql`UPDATE "users" SET "role" = 'USER' WHERE "id" = ${userId}`,
 		)
 
 		const [updatedUser] = await this.db

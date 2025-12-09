@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { ApiException, api } from '../api/api'
 
-interface IUser {
+export interface User {
 	id: number
 	username: string
 	email: string
@@ -18,7 +18,7 @@ export const useUser = ({ required = false } = {}) => {
 	const query = useQuery({
 		queryKey: ['user'],
 		queryFn: async () => {
-			const { data } = await api.get<IUser>('/users/me')
+			const { data } = await api.get<User>('/users/me')
 			return data
 		},
 		retry: (failureCount, error) => {

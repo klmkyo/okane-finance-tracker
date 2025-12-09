@@ -57,6 +57,20 @@
       "when": 1765217924781,
       "tag": "0007_add_admin_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1765272027956,
+      "tag": "0008_cynical_marvel_boy",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1765272136568,
+      "tag": "0009_wooden_ink",
+      "breakpoints": true
     }
   ]
 }

@@ -93,7 +93,7 @@ export const Account = pgTable(
 		id: serial('id').primaryKey(),
 		userId: integer('user_id')
 			.notNull()
-			.references(() => User.id),
+			.references(() => User.id, { onDelete: 'cascade' }),
 		accountName: varchar('account_name').notNull(),
 		balance: numericCasted('balance', { precision: 12, scale: 2 })
 			.default(0)
@@ -115,7 +115,7 @@ export const Moneybox = pgTable(
 		id: serial('id').primaryKey(),
 		userId: integer('user_id')
 			.notNull()
-			.references(() => User.id),
+			.references(() => User.id, { onDelete: 'cascade' }),
 		balance: numericCasted('balance', { precision: 12, scale: 2 })
 			.default(0)
 			.notNull(),
@@ -135,10 +135,13 @@ export const Category = pgTable(
 	{
 		id: serial('id').primaryKey(),
 		// If null, it is a global category
-		userId: integer('user_id').references(() => User.id),
+		userId: integer('user_id').references(() => User.id, {
+			onDelete: 'cascade',
+		}),
 		categoryName: varchar('category_name').notNull(),
 		parentCategoryId: integer('parent_category_id').references(
 			(): AnyPgColumn => Category.id,
+			{ onDelete: 'cascade' },
 		),
 		...timestamps,
 	},
@@ -160,8 +163,10 @@ export const Transaction = pgTable(
 		type: transactionTypeEnum('type').notNull(),
 		accountId: integer('account_id')
 			.notNull()
-			.references(() => Account.id),
-		categoryId: integer('category_id').references(() => Category.id),
+			.references(() => Account.id, { onDelete: 'cascade' }),
+		categoryId: integer('category_id').references(() => Category.id, {
+			onDelete: 'cascade',
+		}),
 		date: timestamp('date', {
 			mode: 'date',
 			precision: 3,
@@ -198,8 +203,10 @@ export const RecurringTransaction = pgTable(
 		type: transactionTypeEnum('type').notNull(),
 		accountId: integer('account_id')
 			.notNull()
-			.references(() => Account.id),
-		categoryId: integer('category_id').references(() => Category.id),
+			.references(() => Account.id, { onDelete: 'cascade' }),
+		categoryId: integer('category_id').references(() => Category.id, {
+			onDelete: 'cascade',
+		}),
 		...timestamps,
 	},
 	(table): PgTableExtraConfigValue[] => [
@@ -231,10 +238,10 @@ export const SavingGoal = pgTable(
 		id: serial('id').primaryKey(),
 		moneyboxId: integer('moneybox_id')
 			.notNull()
-			.references(() => Moneybox.id),
+			.references(() => Moneybox.id, { onDelete: 'cascade' }),
 		userId: integer('user_id')
 			.notNull()
-			.references(() => User.id),
+			.references(() => User.id, { onDelete: 'cascade' }),
 		targetAmount: numericCasted('target_amount', {
 			precision: 12,
 			scale: 2,
@@ -259,7 +266,7 @@ export const AiChatConversation = pgTable(
 		id: serial('id').primaryKey(),
 		userId: integer('user_id')
 			.notNull()
-			.references(() => User.id),
+			.references(() => User.id, { onDelete: 'cascade' }),
 		conversationLog: jsonb('conversation_log').notNull(),
 		title: text('title'),
 		...timestamps,
@@ -285,7 +292,7 @@ export const AiRaport = pgTable(
 		reviewResponse: jsonb('review_response'),
 		accountId: integer('account_id')
 			.notNull()
-			.references(() => Account.id),
+			.references(() => Account.id, { onDelete: 'cascade' }),
 		...timestamps,
 	},
 	(table): PgTableExtraConfigValue[] => [

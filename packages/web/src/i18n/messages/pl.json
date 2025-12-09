@@ -270,5 +270,83 @@
 		"yes": "Tak",
 		"no": "Nie"
 	},
+	"Admin": {
+		"messages": {
+			"blocked": "Użytkownik został zablokowany",
+			"unblocked": "Użytkownik został odblokowany",
+			"promoted": "Użytkownik został awansowany na admina",
+			"demoted": "Użytkownik został zdegradowany z admina",
+			"deleted": "Użytkownik został usunięty"
+		},
+		"table": {
+			"title": "Zarządzanie użytkownikami ({count} użytkowników)",
+			"columns": {
+				"id": "ID",
+				"username": "Nazwa użytkownika",
+				"email": "E-mail",
+				"name": "Imię i nazwisko",
+				"role": "Rola",
+				"status": "Status",
+				"actions": "Akcje"
+			},
+			"empty": "Nie znaleziono użytkowników"
+		},
+		"role": {
+			"admin": "Admin",
+			"user": "Użytkownik"
+		},
+		"status": {
+			"active": "Aktywny",
+			"blocked": "Zablokowany"
+		},
+		"actions": {
+			"block": "Zablokuj",
+			"unblock": "Odblokuj",
+			"promote": "Awansuj",
+			"demote": "Degraduj",
+			"delete": "Usuń",
+			"clearFilters": "Wyczyść filtry"
+		},
+		"confirm": {
+			"block": {
+				"title": "Zablokować użytkownika?",
+				"description": "To uniemożliwi użytkownikowi logowanie"
+			},
+			"delete": {
+				"title": "Usunąć użytkownika?",
+				"description": "Tej akcji nie można cofnąć"
+			},
+			"yes": "Tak",
+			"no": "Nie"
+		},
+		"filters": {
+			"title": "Filtry i wyszukiwanie",
+			"searchPlaceholder": "Szukaj po imieniu, e-mailu...",
+			"rolePlaceholder": "Filtruj według roli",
+			"statusPlaceholder": "Filtruj według statusu",
+			"sortPlaceholder": "Sortuj po ID",
+			"role": {
+				"admin": "Admin",
+				"user": "Użytkownik"
+			},
+			"status": {
+				"active": "Aktywny",
+				"blocked": "Zablokowany"
+			},
+			"sort": {
+				"asc": "Rosnąco",
+				"desc": "Malejąco"
+			}
+		},
+		"stats": {
+			"total": "Łącznie użytkowników",
+			"admins": "Admini",
+			"blocked": "Zablokowani użytkownicy"
+		},
+		"forbidden": {
+			"title": "Brak dostępu",
+			"subtitle": "Nie masz uprawnień do panelu administratora"
+		}
+	},
 	"noData": "Brak danych"
 }

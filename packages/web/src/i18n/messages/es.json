@@ -265,5 +265,83 @@
     "loadingHistory": "Cargando historial de chat...",
     "newChat": "Nuevo chat"
   },
+  "Admin": {
+    "messages": {
+      "blocked": "Usuario bloqueado con éxito",
+      "unblocked": "Usuario desbloqueado con éxito",
+      "promoted": "Usuario promovido a administrador",
+      "demoted": "Usuario degradado de administrador",
+      "deleted": "Usuario eliminado con éxito"
+    },
+    "table": {
+      "title": "Gestión de usuarios ({count} usuarios)",
+      "columns": {
+        "id": "ID",
+        "username": "Usuario",
+        "email": "Correo",
+        "name": "Nombre",
+        "role": "Rol",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "empty": "No se encontraron usuarios"
+    },
+    "role": {
+      "admin": "Admin",
+      "user": "Usuario"
+    },
+    "status": {
+      "active": "Activo",
+      "blocked": "Bloqueado"
+    },
+    "actions": {
+      "block": "Bloquear",
+      "unblock": "Desbloquear",
+      "promote": "Promover",
+      "demote": "Degradar",
+      "delete": "Eliminar",
+      "clearFilters": "Limpiar filtros"
+    },
+    "confirm": {
+      "block": {
+        "title": "¿Bloquear usuario?",
+        "description": "Esto evitará que el usuario inicie sesión"
+      },
+      "delete": {
+        "title": "¿Eliminar usuario?",
+        "description": "Esta acción no se puede deshacer"
+      },
+      "yes": "Sí",
+      "no": "No"
+    },
+    "filters": {
+      "title": "Filtros y búsqueda",
+      "searchPlaceholder": "Buscar por nombre, correo...",
+      "rolePlaceholder": "Filtrar por rol",
+      "statusPlaceholder": "Filtrar por estado",
+      "sortPlaceholder": "Ordenar por ID",
+      "role": {
+        "admin": "Admin",
+        "user": "Usuario"
+      },
+      "status": {
+        "active": "Activo",
+        "blocked": "Bloqueado"
+      },
+      "sort": {
+        "asc": "Ascendente",
+        "desc": "Descendente"
+      }
+    },
+    "stats": {
+      "total": "Usuarios totales",
+      "admins": "Admins",
+      "blocked": "Usuarios bloqueados"
+    },
+    "forbidden": {
+      "title": "Prohibido",
+      "subtitle": "No tienes permiso para acceder al panel de administración"
+    }
+  },
   "noData": "No hay datos"
 }
