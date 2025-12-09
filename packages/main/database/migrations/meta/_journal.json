@@ -50,6 +50,13 @@
       "when": 1736991218331,
       "tag": "0006_add_chat_title",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1765217924781,
+      "tag": "0007_add_admin_fields",
+      "breakpoints": true
     }
   ]
 }

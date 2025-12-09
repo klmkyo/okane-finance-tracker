@@ -65,6 +65,7 @@ export const transactionTypeEnum = pgEnum('transaction_type', [
 	'withdraw',
 	'deposit',
 ])
+export const userRoleEnum = pgEnum('user_role', ['USER', 'ADMIN'])
 
 export const User = pgTable(
 	'users',
@@ -75,6 +76,8 @@ export const User = pgTable(
 		email: varchar('email').unique().notNull(),
 		firstName: varchar('first_name').notNull(),
 		lastName: varchar('last_name'),
+		role: userRoleEnum('role').default('USER').notNull(),
+		isBlocked: integer('is_blocked').default(0).notNull(),
 		...timestamps,
 	},
 	(table): PgTableExtraConfigValue[] => [
