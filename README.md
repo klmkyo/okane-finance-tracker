@@ -154,13 +154,12 @@ Zmienna `JWT_SECRET` i inne wartości środowiskowe mogą być nadpisane poprzez
 ## K8s
 
 ```
-podman machine init --cpus 4 --memory 4096 --disk-size 25
+podman machine init --cpus 4 --memory 4096 --disk-size 10
 podman machine start
 
-minikube config set rootless false
-minikube config set driver podman
+sudo minikube config set rootless false && sudo minikube config set driver podman
 
-sudo minikube start --driver=podman --container-runtime=cri-o --force --dns=8.8.8.8 --dns=1.1.1.1
+sudo minikube start --driver=podman --container-runtime=cri-o --force
 sudo minikube addons enable ingress
 sudo minikube addons enable metrics-server
 
